@@ -60,7 +60,6 @@
 /*!< AHB peripherals */
 #define    SYS_BA    0xB0000000  /*!< System Global Control */
 #define    CLK_BA    0xB0000200  /*!< Clock Control */
-#define    EBI_BA    0xB0001000  /*!< EBI Control */
 #define    SDIC_BA   0xB0001800  /*!< SDRAM (SDR/DDR/DDR2) Control */
 #define    GDMA_BA   0xB0004000  /*!< GDMA control */
 #define    USBH_BA   0xB0005000  /*!< USB Host EHCI Control */
@@ -191,22 +190,6 @@
 #define    REG_CLK_PLLSTBCNTR   (CLK_BA+0x80) /*!< PLL Stable Counter and Test Clock Control Register */
 
 /**@}*/ /* end of CLK register group */
-
-
-/*---------------------- External Bus Interface Controller -------------------------*/
-/**
-    @addtogroup EBI External Bus Interface Controller(EBI)
-    Memory Mapped Structure for EBI Controller
-@{ */
-
-#define    REG_EBI_CTL          (EBI_BA+0x000)  /*!< EBI control register */
-#define    REG_EBI_BNKCTL0      (EBI_BA+0x018)  /*!< External I/O 0 control register */
-#define    REG_EBI_BNKCTL1      (EBI_BA+0x01C)  /*!< External I/O 1 control register */
-#define    REG_EBI_BNKCTL2      (EBI_BA+0x020)  /*!< External I/O 2 control register */
-#define    REG_EBI_BNKCTL3      (EBI_BA+0x024)  /*!< External I/O 3 control register */
-#define    REG_EBI_BNKCTL4      (EBI_BA+0x028)  /*!< External I/O 4 control register */
-
-/**@}*/ /* end of EBI register group */
 
 
 /*----------------------  General Direct Memory Access Controller -------------------------*/

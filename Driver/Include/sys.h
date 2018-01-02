@@ -181,19 +181,6 @@ typedef struct datetime_t {
 #define D_CACHE         7
 #define I_D_CACHE       8
 
-/* Define constants for use external IO in service parameters.  */
-#define EXT0            0
-#define EXT1            1
-#define EXT2            2
-#define EXT3            3
-#define EXT4            4
-
-#define SIZE_256K       4
-
-
-#define BUS_DISABLE     12
-#define BUS_BIT_8       13
-#define BUS_BIT_16      14
 
 /// @endcond HIDDEN_SYMBOLS
 
@@ -256,11 +243,6 @@ BOOL    sysGetCacheState(void);             /*!< get cache state \hideinitialize
 INT32   sysGetSdramSizebyMB(void);          /*!< Get DRAM size \hideinitializer */
 void    sysInvalidCache(void);              /*!< invalid cache \hideinitializer */
 INT32   sysSetCachePages(UINT32 addr, INT32 size, INT32 cache_mode);    /*!< set cache page \hideinitializer */
-
-/* Define system library External IO functions */
-INT32   sysSetExternalIO(INT extNo, UINT32 extBaseAddr, UINT32 extSize, INT extBusWidth); /*!< set External IO \hideinitializer */
-INT32   sysSetExternalIOTiming1(INT extNo, INT tACC, INT tACS); /*!< set External IO timing1 \hideinitializer */
-INT32   sysSetExternalIOTiming2(INT extNo, INT tCOH, INT tCOS); /*!< set External IO timing2 \hideinitializer */
 
 int sysSetMMUMappingMethod(int mode);   /*!< MMU mapping \hideinitializer */
 

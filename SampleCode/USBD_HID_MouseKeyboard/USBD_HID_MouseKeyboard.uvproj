@@ -474,11 +474,6 @@
               <FilePath>..\..\Driver\Source\sys_N9H30.s</FilePath>
             </File>
             <File>
-              <FileName>sys_ebi.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Driver\Source\sys_ebi.c</FilePath>
-            </File>
-            <File>
               <FileName>usbd.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Driver\Source\usbd.c</FilePath>
