@@ -1,12 +1,9 @@
 /**************************************************************************//**
  * @file     vector_parser.c
- * @version  V1.00
- * $Revision: 2 $
- * $Date: 15/05/06 9:54a $
  * @brief    CRYPTO SHA test vector parser
  *
  * @note
- * Copyright (C) 2013 Nuvoton Technology Corp. All rights reserved.
+ * Copyright (C) 2018 Nuvoton Technology Corp. All rights reserved.
 *****************************************************************************/
 #include <stdio.h>
 #include <string.h>

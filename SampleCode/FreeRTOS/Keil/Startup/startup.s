@@ -1,7 +1,7 @@
 
 	;/***************************************************************************
     ; *                                                                         *
-    ; * Copyright (c) 2015 Nuvoton Technology. All rights reserved.             *
+    ; * Copyright (C) 2018 Nuvoton Technology. All rights reserved.             *
     ; *                                                                         *
     ; ***************************************************************************/
     ;

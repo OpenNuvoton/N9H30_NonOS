@@ -1,11 +1,9 @@
 /******************************************************************************
  * @file     hid_mouse.h
- * @brief    NUC472/NUC442 USB driver header file
- * @version  2.0.0
- * @date     22, Sep, 2014
+ * @brief    N9H30 USB driver header file
  *
  * @note
- * Copyright (C) 2014 Nuvoton Technology Corp. All rights reserved.
+ * Copyright (C) 2018 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 #ifndef __USBD_HID_H__
 #define __USBD_HID_H__
@@ -76,4 +74,4 @@ void HID_UpdateKeyboardData(void);
 
 #endif  /* __USBD_HID_H_ */
 
-/*** (C) COPYRIGHT 2013 Nuvoton Technology Corp. ***/
+/*** (C) COPYRIGHT 2018 Nuvoton Technology Corp. ***/

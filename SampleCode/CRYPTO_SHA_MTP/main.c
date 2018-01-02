@@ -1,11 +1,9 @@
 /**************************************************************************//**
  * @file     main.c
- * @version  V1.00
- * $Date: 15/05/06 9:54a $
  * @brief    This sample shows how to use SHA engine to compare output digest with MTP key.
  *          
  * @note
- * Copyright (C) 2015 Nuvoton Technology Corp. All rights reserved.
+ * Copyright (C) 2018 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 
 #include <stdio.h>

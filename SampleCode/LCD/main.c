@@ -1,12 +1,9 @@
 /**************************************************************************//**
 * @file     main.c
-* @version  V1.00
-* $Revision: 2 $
-* $Date: 15/06/12 9:11a $
 * @brief    N9H30 LCD sample source file
 *
 * @note
-* Copyright (C) 2015 Nuvoton Technology Corp. All rights reserved.
+* Copyright (C) 2018 Nuvoton Technology Corp. All rights reserved.
 *****************************************************************************/
 #include <stdio.h>
 #include <string.h>
@@ -166,5 +163,5 @@ int32_t main(void)
     
     while(1);
 }
-/*** (C) COPYRIGHT 2015 Nuvoton Technology Corp. ***/
+/*** (C) COPYRIGHT 2018 Nuvoton Technology Corp. ***/
 

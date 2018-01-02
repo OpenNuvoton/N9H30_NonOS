@@ -1,12 +1,9 @@
 /******************************************************************************
  * @file     main.c
- * @version  V1.00
- * $Revision: 1 $
- * $Date: 15/05/20 1:46p $
  * @brief    Demonstrate smartcard UART mode by connecting PG.11 and PG.12 pins
  *
  * @note
- * Copyright (C) 2015 Nuvoton Technology Corp. All rights reserved.
+ * Copyright (C) 2018 Nuvoton Technology Corp. All rights reserved.
 *****************************************************************************/
 #include "N9H30.h"
 #include "sys.h"
@@ -68,6 +65,6 @@ int main(void)
     while(1);
 }
 
-/*** (C) COPYRIGHT 2015 Nuvoton Technology Corp. ***/
+/*** (C) COPYRIGHT 2018 Nuvoton Technology Corp. ***/
 
 

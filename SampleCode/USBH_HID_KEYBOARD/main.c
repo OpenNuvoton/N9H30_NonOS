@@ -1,12 +1,9 @@
 /**************************************************************************//**
  * @file     main.c
- * @version  V1.00
- * $Revision: 1 $
- * $Date: 15/05/18 4:03p $
  * @brief    This sample shows how to manage USB keyboard devices.
  *
  * @note
- * Copyright (C) 2015 Nuvoton Technology Corp. All rights reserved.
+ * Copyright (C) 2018 Nuvoton Technology Corp. All rights reserved.
 *****************************************************************************/
 #include <stdio.h>
 #include <string.h>
@@ -155,4 +152,4 @@ int32_t main(void)
 }
 
 
-/*** (C) COPYRIGHT 2015 Nuvoton Technology Corp. ***/
+/*** (C) COPYRIGHT 2018 Nuvoton Technology Corp. ***/

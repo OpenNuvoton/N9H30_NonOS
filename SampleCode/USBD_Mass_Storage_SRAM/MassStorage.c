@@ -1,12 +1,9 @@
 /******************************************************************************
  * @file     MassStorage.c
  * @brief    N9H30 USBD driver Sample file
- * @version  V1.00
- * $Revision: 1 $
- * $Date: 15/05/11 10:06a $
  *
  * @note
- * Copyright (C) 2015 Nuvoton Technology Corp. All rights reserved.
+ * Copyright (C) 2018 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 
 /*!<Includes */

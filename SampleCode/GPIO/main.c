@@ -1,11 +1,9 @@
 /**************************************************************************//**
  * @file     main.c
- * @version  V1.00
- * $Date: 15/04/30 4:30p $
  * @brief    N9H30 Driver Sample Code
  *
  * @note
- * Copyright (C) 2015 Nuvoton Technology Corp. All rights reserved.
+ * Copyright (C) 2018 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 #include "N9H30.h"
 #include "sys.h"

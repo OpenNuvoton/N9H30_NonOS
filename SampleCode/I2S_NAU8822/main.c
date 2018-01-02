@@ -1,12 +1,9 @@
 /**************************************************************************//**
  * @file     spi_flash.c
- * @version  V1.00
- * $Revision: 1 $
- * $Date: 15/05/07 4:46p $
  * @brief    Read/write Flash via SPI interface
  *
  * @note
- * Copyright (C) 2015 Nuvoton Technology Corp. All rights reserved.
+ * Copyright (C) 2018 Nuvoton Technology Corp. All rights reserved.
  *
  ******************************************************************************/
 #include <stdio.h>

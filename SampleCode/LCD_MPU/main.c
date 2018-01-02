@@ -1,12 +1,9 @@
 /**************************************************************************//**
 * @file     main.c
-* @version  V1.00
-* $Revision: 1 $
-* $Date: 16/02/18 5:54p $
 * @brief    N9H30 LCD sample source file for ILI9431 MPU 80 mode
 *
 * @note
-* Copyright (C) 2015 Nuvoton Technology Corp. All rights reserved.
+* Copyright (C) 2018 Nuvoton Technology Corp. All rights reserved.
 *****************************************************************************/
 #include <stdio.h>
 #include <string.h>
@@ -215,5 +212,5 @@ int32_t main(void)
  
     while(1);
 }
-/*** (C) COPYRIGHT 2015 Nuvoton Technology Corp. ***/
+/*** (C) COPYRIGHT 2018 Nuvoton Technology Corp. ***/
 

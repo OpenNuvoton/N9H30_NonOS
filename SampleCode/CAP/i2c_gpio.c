@@ -1,12 +1,9 @@
 /**************************************************************************//**
  * @file     i2c_gpio.c
- * @version  V1.00
- * $Revision: 1 $
- * $Date: 15/06/05 10:20a $
  * @brief    Software I2C driver
  *
  * @note
- * Copyright (C) 2013 Nuvoton Technology Corp. All rights reserved.
+ * Copyright (C) 2018 Nuvoton Technology Corp. All rights reserved.
  *
  ******************************************************************************/
 #include <stdlib.h>

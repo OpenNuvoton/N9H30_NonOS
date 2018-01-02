@@ -1,12 +1,9 @@
 /**************************************************************************//**
  * @file     sensor_nt99141.c
- * @version  V1.00
- * $Revision: 1 $
- * $Date: 15/06/05 10:20a $
  * @brief    NT99141 sensor driver
  *
  * @note
- * Copyright (C) 2015 Nuvoton Technology Corp. All rights reserved.
+ * Copyright (C) 2018 Nuvoton Technology Corp. All rights reserved.
  *
  ******************************************************************************/
 #include <stdio.h>

@@ -1,11 +1,9 @@
 /**************************************************************************//**
  * @file     main.c
- * @version  V1.00
- * $Date: 15/05/11 3:23p $
  * @brief    N9H30 ETIMER Sample Code
  *
  * @note
- * Copyright (C) 2015 Nuvoton Technology Corp. All rights reserved.
+ * Copyright (C) 2018 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 #include "N9H30.h"
 #include "sys.h"

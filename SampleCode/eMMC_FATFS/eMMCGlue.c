@@ -1,12 +1,9 @@
 /******************************************************************************
  * @file     eMMCGlue.c
- * @version  V1.00
- * $Revision: 2 $
- * $Date: 15/06/12 9:56a $
  * @brief    FMI eMMC glue functions for FATFS
  *
  * @note
- * Copyright (C) 2015 Nuvoton Technology Corp. All rights reserved.
+ * Copyright (C) 2018 Nuvoton Technology Corp. All rights reserved.
 *****************************************************************************/
 #include <stdio.h>
 #include <stdlib.h>

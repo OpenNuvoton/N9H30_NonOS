@@ -1,12 +1,9 @@
 /******************************************************************************
  * @file     main.c
- * @version  V1.00
- * $Revision: 1 $
- * $Date: 15/05/28 5:19p $
  * @brief    Access a NAND flash formatted in YAFFS2 file system
  *
  * @note
- * Copyright (C) 2015 Nuvoton Technology Corp. All rights reserved.
+ * Copyright (C) 2018 Nuvoton Technology Corp. All rights reserved.
 *****************************************************************************/
 #include <string.h>
 
@@ -168,4 +165,4 @@ int main(void)
 
 
 
-/*** (C) COPYRIGHT 2015 Nuvoton Technology Corp. ***/
+/*** (C) COPYRIGHT 2018 Nuvoton Technology Corp. ***/

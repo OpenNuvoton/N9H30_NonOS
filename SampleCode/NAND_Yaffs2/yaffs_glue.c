@@ -13,14 +13,11 @@
 
 /******************************************************************************
  * @file     yaffs_glue.c
- * @version  V1.00
- * $Revision: 2 $
- * $Date: 15/05/29 3:19p $
  * @brief    configuration for the "direct" use of yaffs
  *           This version uses the ydevconfig mechanism to set up partitions.
  *
  * @note
- * Copyright (C) 2015 Nuvoton Technology Corp. All rights reserved.
+ * Copyright (C) 2018 Nuvoton Technology Corp. All rights reserved.
 *****************************************************************************/
 #include <string.h>
 #include "nand.h"

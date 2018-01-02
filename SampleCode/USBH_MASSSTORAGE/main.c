@@ -1,12 +1,9 @@
 /**************************************************************************//**
  * @file     main.c
- * @version  V1.00
- * $Revision: 2 $
- * $Date: 15/05/18 3:59p $
- * @brief    This sample shows how to access USB mass stroage disk.
+ * @brief    This sample shows how to access USB mass storage disk.
  *
  * @note
- * Copyright (C) 2015 Nuvoton Technology Corp. All rights reserved.
+ * Copyright (C) 2018 Nuvoton Technology Corp. All rights reserved.
 *****************************************************************************/
 #include <stdio.h>
 #include <string.h>
@@ -748,4 +745,4 @@ int32_t main(void)
 }
 
 
-/*** (C) COPYRIGHT 2013 Nuvoton Technology Corp. ***/
+/*** (C) COPYRIGHT 2018 Nuvoton Technology Corp. ***/

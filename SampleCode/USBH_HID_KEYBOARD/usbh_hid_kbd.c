@@ -1,12 +1,9 @@
 /**************************************************************************
  * @file     usbh_hid_kbd.c
- * @version  V1.00
- * $Revision: 1 $
- * $Date: 15/05/18 4:03p $
  * @brief    NUC472/NUC442 MCU USB Host HID keyboard driver
  *
  * @note
- * Copyright (C) 2014 Nuvoton Technology Corp. All rights reserved.
+ * Copyright (C) 2018 Nuvoton Technology Corp. All rights reserved.
 *****************************************************************************/
 
 #include <stdio.h>
@@ -19,7 +16,7 @@
 #include "usbh_hid_kbd.h"
 
 struct hid_kbd_dev   g_kbd_dev;    /* Support one keyboard device at the same time.         */
-/* If you want to support mulitiple keyboards, please
+/* If you want to support multiple keyboards, please
    implement an array and handle it.                     */
 
 static const uint8_t numKeys[] = { '!', '@', '#', '$', '%', '^', '&', '*', '(', ')' };
@@ -182,5 +179,5 @@ int  kbd_parse_report(HID_DEV_T *hdev, uint8_t *buf, int len)
 }
 
 
-/*** (C) COPYRIGHT 2014 Nuvoton Technology Corp. ***/
+/*** (C) COPYRIGHT 2018 Nuvoton Technology Corp. ***/
 

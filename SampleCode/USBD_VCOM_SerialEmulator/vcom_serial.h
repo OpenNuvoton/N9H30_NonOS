@@ -1,12 +1,9 @@
 /******************************************************************************
  * @file     vcom_serial.h
  * @brief    NUC400 series USB driver header file
- * @version  V1.00
- * $Revision: 1 $
- * $Date: 15/05/11 10:06a $
  *
  * @note
- * Copyright (C) 2014 Nuvoton Technology Corp. All rights reserved.
+ * Copyright (C) 2018 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 #ifndef __USBD_CDC_H__
 #define __USBD_CDC_H__
@@ -89,4 +86,4 @@ void VCOM_TransferData(void);
 
 #endif  /* __USBD_CDC_H_ */
 
-/*** (C) COPYRIGHT 2013 Nuvoton Technology Corp. ***/
+/*** (C) COPYRIGHT 2018 Nuvoton Technology Corp. ***/

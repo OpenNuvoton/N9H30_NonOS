@@ -1,11 +1,9 @@
 /**************************************************************************//**
  * @file     descriptors.c
- * @version  V1.00
- * $Date: 15/05/11 10:06a $
  * @brief    N9H30 USBD driver source file
  *
  * @note
- * Copyright (C) 2015 Nuvoton Technology Corp. All rights reserved.
+ * Copyright (C) 2018 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 #ifndef __DESCRIPTORS_C__
 #define __DESCRIPTORS_C__

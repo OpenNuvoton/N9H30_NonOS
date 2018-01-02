@@ -1,12 +1,9 @@
 /******************************************************************************
  * @file     main.c
- * @version  V1.00
- * $Revision: 2 $
- * $Date: 15/06/12 9:56a $
  * @brief    Access a FMI eMMC card formatted in FAT file system
  *
  * @note
- * Copyright (C) 2015 Nuvoton Technology Corp. All rights reserved.
+ * Copyright (C) 2018 Nuvoton Technology Corp. All rights reserved.
 *****************************************************************************/
 #include <string.h>
 
@@ -763,4 +760,4 @@ int32_t main(void)
 
 
 
-/*** (C) COPYRIGHT 2015 Nuvoton Technology Corp. ***/
+/*** (C) COPYRIGHT 2018 Nuvoton Technology Corp. ***/

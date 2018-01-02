@@ -1,12 +1,9 @@
 /******************************************************************************
  * @file     usbh_hid_kbd.h
  * @brief    NUC472/NUC442 USB Host HID keyboard driver header file
- * @version  V1.00
- * $Revision: 1 $
- * $Date: 15/05/18 4:03p $
  *
  * @note
- * Copyright (C) 2014 Nuvoton Technology Corp. All rights reserved.
+ * Copyright (C) 2018 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 #ifndef __USBD_MASS_H__
 #define __USBD_MASS_H__
@@ -44,7 +41,7 @@ enum kbd_mod
 
 struct hid_kbd_dev
 {
-	uint8_t    pre_data[8];     /* previous recevied report */
+	uint8_t    pre_data[8];     /* previous received report */
 	uint8_t    bLED;
 };
 
@@ -53,4 +50,4 @@ struct hid_kbd_dev
 
 #endif  /* __USBH_HID_KBD_H_ */
 
-/*** (C) COPYRIGHT 2014 Nuvoton Technology Corp. ***/
+/*** (C) COPYRIGHT 2018 Nuvoton Technology Corp. ***/

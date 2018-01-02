@@ -1,12 +1,9 @@
 /**************************************************************************//**
  * @file     main.c
- * @version  V1.00
- * $Revision: 2 $
- * $Date: 16/02/16 4:25p $
  * @brief    Read/write EEPROM via I2C interface
  *
  * @note
- * Copyright (C) 2015 Nuvoton Technology Corp. All rights reserved.
+ * Copyright (C) 2018 Nuvoton Technology Corp. All rights reserved.
  *
  ******************************************************************************/
 #include <stdio.h>

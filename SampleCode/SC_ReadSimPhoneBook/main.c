@@ -1,12 +1,9 @@
 /******************************************************************************
  * @file     main.c
- * @version  V1.00
- * $Revision: 1 $
- * $Date: 15/06/01 3:46p $
  * @brief    Demonstrate how to read phone book information in the SIM card.
  *
  * @note
- * Copyright (C) 2015 Nuvoton Technology Corp. All rights reserved.
+ * Copyright (C) 2018 Nuvoton Technology Corp. All rights reserved.
 *****************************************************************************/
 #include "N9H30.h"
 #include "sys.h"
@@ -281,6 +278,6 @@ exit:
     while(1);
 }
 
-/*** (C) COPYRIGHT 2015 Nuvoton Technology Corp. ***/
+/*** (C) COPYRIGHT 2018 Nuvoton Technology Corp. ***/
 
 

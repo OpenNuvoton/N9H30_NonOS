@@ -1,12 +1,9 @@
 /******************************************************************************
  * @file     massstorage.h
  * @brief    N9H30 USB mass storage header file
- * @version  V1.00
- * $Revision: 1 $
- * $Date: 15/05/11 10:06a $
  *
  * @note
- * Copyright (C) 2015 Nuvoton Technology Corp. All rights reserved.
+ * Copyright (C) 2018 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 #ifndef __USBD_MASS_H__
 #define __USBD_MASS_H__
@@ -129,4 +126,4 @@ void MSC_WriteMedia(uint32_t addr, uint32_t size, uint8_t *buffer);
 
 #endif  /* __USBD_MASS_H_ */
 
-/*** (C) COPYRIGHT 2015 Nuvoton Technology Corp. ***/
+/*** (C) COPYRIGHT 2018 Nuvoton Technology Corp. ***/

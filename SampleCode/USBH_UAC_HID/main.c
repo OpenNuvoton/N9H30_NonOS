@@ -1,13 +1,10 @@
 /**************************************************************************//**
  * @file     main.c
- * @version  V1.00
- * $Revision: 1 $
- * $Date: 15/06/10 2:04p $
  * @brief    This sample shows how to use USB Host Audio Class driver.
  *           The test device is a Game Audio (UAC+HID composite device).
  *
  * @note
- * Copyright (C) 2017 Nuvoton Technology Corp. All rights reserved.
+ * Copyright (C) 2018 Nuvoton Technology Corp. All rights reserved.
 *****************************************************************************/
 #include <stdio.h>
 #include <string.h>
@@ -580,4 +577,4 @@ int32_t main(void)
 }
 
 
-/*** (C) COPYRIGHT 2017 Nuvoton Technology Corp. ***/
+/*** (C) COPYRIGHT 2018 Nuvoton Technology Corp. ***/
