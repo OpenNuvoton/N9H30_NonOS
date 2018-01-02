@@ -46,7 +46,6 @@ typedef enum IRQn {
     EINT7_IRQn              = 11,      /*!< External Interrupt 7                       */
     ACTL_IRQn               = 12,      /*!< Audio Controller Interrupt                 */
     LCD_IRQn                = 13,      /*!< LCD Controller Interrupt                   */
-    CAP_IRQn                = 14,      /*!< Sensor Interface Controller Interrupt      */
     RTC_IRQn                = 15,      /*!< Real Time Clock Interrupt                  */
     TMR0_IRQn               = 16,      /*!< Timer 0 Interrupt                          */
     TMR1_IRQn               = 17,      /*!< Timer 1 Interrupt                          */

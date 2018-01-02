@@ -72,7 +72,6 @@
 #define    GE_BA     0xB000B000  /*!< 2-D Graphic Engine */
 #define    SDH_BA    0xB000C000  /*!< SD/SDIO Host Controller */
 #define    FMI_BA    0xB000D000  /*!< Flash Memory Card Interface */
-#define    CAP_BA    0xB000E000  /*!< Sensor (Capture) Interface Control */
 #define    CRPT_BA   0xB000F000  /*!< Crypto Engine Control */
 
 /*!< APB peripherals */
@@ -1515,41 +1514,6 @@
 
 /**@}*/ /* end of ADC register group */
 
-/*------------------ Capture Sensor Interface Controller ---------------------*/
-/**
-    @addtogroup CAP Capture Sensor Interface Controller(CAP)
-    Memory Mapped Structure for CAP Controller
-@{ */
-
-#define REG_CAP_CTL            (CAP_BA+0x000)  /*!< Image Capture Interface Control Register */
-#define REG_CAP_PAR            (CAP_BA+0x004)  /*!< Image Capture Interface Parameter Register */
-#define REG_CAP_INT            (CAP_BA+0x008)  /*!< Image Capture Interface Interrupt Registe */
-#define REG_CAP_POSTERIZE      (CAP_BA+0x00C)  /*!< YUV Component Posterizing Factor Register */
-#define REG_CAP_MD             (CAP_BA+0x010)  /*!< Motion Detection Register */
-#define REG_CAP_MDADDR         (CAP_BA+0x014)  /*!< Motion Detection Output Address Register */
-#define REG_CAP_MDYADDR        (CAP_BA+0x018)  /*!< Motion Detection Temp YOutput Address Register */
-#define REG_CAP_SEPIA          (CAP_BA+0x01C)  /*!< Sepia Effect Control Register */
-#define REG_CAP_CWSP           (CAP_BA+0x020)  /*!< Cropping Window Starting Address Register */
-#define REG_CAP_CWS            (CAP_BA+0x024)  /*!< Cropping Window Size Register */
-#define REG_CAP_PKTSL          (CAP_BA+0x028)  /*!< Packet Scaling Vertical/Horizontal Factor Register (LSB) */
-#define REG_CAP_PLNSL          (CAP_BA+0x02C)  /*!< Planar Scaling Vertical/Horizontal Factor Register (LSB) */
-#define REG_CAP_FRCTL          (CAP_BA+0x030)  /*!< Scaling Frame Rate Factor Register */
-#define REG_CAP_STRIDE         (CAP_BA+0x034)  /*!< Frame Output Pixel Stride Register */
-#define REG_CAP_FIFOTH         (CAP_BA+0x03C)  /*!< FIFO threshold Register */
-#define REG_CAP_CMPADDR        (CAP_BA+0x040)  /*!< Compare Packet Memory Base Address Register */
-#define REG_CAP_PKTSM          (CAP_BA+0x048)  /*!< Packet Scaling Vertical/Horizontal Factor Register (MSB) */
-#define REG_CAP_PLNSM          (CAP_BA+0x04C)  /*!< Planar Scaling Vertical/Horizontal Factor Register (MSB) */
-#define REG_CAP_CURADDRP       (CAP_BA+0x050)  /*!< Current Packet System Memory Address Register */
-#define REG_CAP_CURADDRY       (CAP_BA+0x054)  /*!< Current Planar Y System Memory Address Register */
-#define REG_CAP_CURADDRU       (CAP_BA+0x058)  /*!< Current Planar U System Memory Address Register */
-#define REG_CAP_CURADDRV       (CAP_BA+0x05C)  /*!< Current Planar V System Memory Address Register */
-#define REG_CAP_PKTBA0         (CAP_BA+0x060)  /*!< System Memory Packet Base Address Register */
-#define REG_CAP_PKTBA1         (CAP_BA+0x064)  /*!< System Memory Packet Base Address Register */
-#define REG_CAP_YBA            (CAP_BA+0x080)  /*!< System Memory Planar Y Base Address Register */
-#define REG_CAP_UBA            (CAP_BA+0x084)  /*!< System Memory Planar U Base Address Register */
-#define REG_CAP_VBA            (CAP_BA+0x088)  /*!< System Memory Planar V Base Address Register */
-
-/**@}*/ /* end of CAP register group */
 
 /*------------------ SDRAM Interface Controller ---------------------*/
 /**
