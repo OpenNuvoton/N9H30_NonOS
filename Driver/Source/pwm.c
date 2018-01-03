@@ -346,14 +346,6 @@ static INT pwmInitGPIO(const INT nTimerIdentity, const INT nValue)
             temp = inpw(REG_SYS_GPB_MFPL);
             temp = (temp & ~0xF00) | 0xD00;
             outpw(REG_SYS_GPB_MFPL, temp);
-        } else if(nValue == PWM0_GPC14) {
-            temp = inpw(REG_SYS_GPC_MFPH);
-            temp = (temp & ~0x0F000000) | 0xD000000;
-            outpw(REG_SYS_GPC_MFPH, temp);
-        } else if(nValue == PWM0_GPD12) {
-            temp = inpw(REG_SYS_GPD_MFPH);
-            temp = (temp & ~0x000F0000) | 0xD0000;
-            outpw(REG_SYS_GPD_MFPH, temp);
         } else
             return pwmInvalidPin;
     } else if(nTimerIdentity == PWM_TIMER1) {
@@ -365,10 +357,6 @@ static INT pwmInitGPIO(const INT nTimerIdentity, const INT nValue)
             temp = inpw(REG_SYS_GPB_MFPL);
             temp = (temp & ~0xF000) | 0xD000;
             outpw(REG_SYS_GPB_MFPL, temp);
-        } else if(nValue == PWM1_GPD13) {
-            temp = inpw(REG_SYS_GPD_MFPH);
-            temp = (temp & ~0x00F00000) | 0xD00000;
-            outpw(REG_SYS_GPD_MFPH, temp);
         } else
             return pwmInvalidPin;
     } else if(nTimerIdentity == PWM_TIMER2) {
@@ -376,10 +364,6 @@ static INT pwmInitGPIO(const INT nTimerIdentity, const INT nValue)
             temp = inpw(REG_SYS_GPA_MFPH);
             temp = (temp & ~0x0F000000) | 0xD000000;
             outpw(REG_SYS_GPA_MFPH, temp);
-        } else if(nValue == PWM2_GPD14) {
-            temp = inpw(REG_SYS_GPD_MFPH);
-            temp = (temp & ~0x0F000000) | 0xD000000;
-            outpw(REG_SYS_GPD_MFPH, temp);
         } else if(nValue == PWM2_GPH2) {
             temp = inpw(REG_SYS_GPB_MFPL);
             temp = (temp & ~0xF00) | 0xD00;
@@ -391,10 +375,6 @@ static INT pwmInitGPIO(const INT nTimerIdentity, const INT nValue)
             temp = inpw(REG_SYS_GPA_MFPH);
             temp = (temp & ~0xF0000000) | 0xD0000000;
             outpw(REG_SYS_GPA_MFPH, temp);
-        } else if(nValue == PWM3_GPD15) {
-            temp = inpw(REG_SYS_GPD_MFPH);
-            temp = (temp & ~0xF0000000) | 0xD0000000;
-            outpw(REG_SYS_GPD_MFPH, temp);
         } else if(nValue == PWM3_GPH3) {
             temp = inpw(REG_SYS_GPH_MFPL);
             temp = (temp & ~0xF000) | 0xD000;

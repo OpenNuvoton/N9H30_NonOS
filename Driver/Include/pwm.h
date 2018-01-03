@@ -97,16 +97,11 @@ extern "C"
 // for pin control
 #define PWM0_GPA12      0       ///< PWM0 output on GPA12
 #define PWM0_GPB2       1       ///< PWM0 output on GPB2
-#define PWM0_GPC14      2       ///< PWM0 output on GPC14
-#define PWM0_GPD12      3       ///< PWM0 output on GPD12
 #define PWM1_GPA13      4       ///< PWM1 output on GPA13
 #define PWM1_GPB3       5       ///< PWM1 output on GPB3
-#define PWM1_GPD13      6       ///< PWM1 output on GPD13
 #define PWM2_GPA14      7       ///< PWM2 output on GPA14
-#define PWM2_GPD14      8       ///< PWM2 output on GPD14
 #define PWM2_GPH2       9       ///< PWM2 output on GPH2
 #define PWM3_GPA15      10      ///< PWM3 output on GPA15
-#define PWM3_GPD15      11      ///< PWM3 output on GPD15
 #define PWM3_GPH3       12      ///< PWM3 output on GPH3
 
 #define PWM_ERR_ID      0xFFFF1300  ///< PWM library ID
