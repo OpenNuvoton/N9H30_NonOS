@@ -69,8 +69,6 @@ extern "C"
 #define VPOSTB_DATA16or18   (1<<26)
 #define VPOSTB_COLORTYPE_4K         (0)
 #define VPOSTB_COLORTYPE_64K        (1<<24)
-#define VPOSTB_COLORTYPE_256K       (2<<24)
-#define VPOSTB_COLORTYPE_16M        (3<<24)
 #define VPOSTB_LACE     (1<<23)
 #define VPOSTB_VR_LACE  (1<<22)
 #define VPOSTB_V_POL    (1<<21)

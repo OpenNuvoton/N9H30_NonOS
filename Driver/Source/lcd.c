@@ -36,7 +36,7 @@ static VPOST_T DEF_E50A2V1 = {  800,                            /*!< Panel width
                                 0,                              /*!< MPU bus width */
                                 VPOSTB_DATA16or18,              /*!< Display bus width */
                                 0,                              /*!< MPU mode */
-                                VPOSTB_COLORTYPE_16M,           /*!< Display colors */
+                                VPOSTB_COLORTYPE_64K,           /*!< Display colors */
                                 VPOSTB_DEVICE_SYNC_HIGHCOLOR,   /*!< Type of display panel */
                                 0x020d03a0,                     /*!< CRTCSIZE register value */
                                 0x01e00320,                     /*!< CRTCDEND register value */
@@ -70,7 +70,7 @@ static VPOST_T DEF_LSA40AT9001 = {
     0,                              /*!< MPU bus width */
     VPOSTB_DATA16or18,              /*!< Display bus width */
     0,                              /*!< MPU mode */
-    VPOSTB_COLORTYPE_16M,           /*!< Display colors */
+    VPOSTB_COLORTYPE_64K,           /*!< Display colors */
     VPOSTB_DEVICE_SYNC_HIGHCOLOR,   /*!< Type of display panel */
     0x02800425,                     /*!< CRTCSIZE register value */
     0x02580320,                     /*!< CRTCDEND register value */
