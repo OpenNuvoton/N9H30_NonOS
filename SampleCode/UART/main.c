@@ -483,7 +483,8 @@ int main (void)
     sysEnableCache(CACHE_WRITE_BACK);
     sysInitializeUART();
 	
-	outpw(REG_SYS_GPE_MFPL, (inpw(REG_SYS_GPE_MFPL) & 0xff0000ff) | (0x9999 << 8));// GPE2, 3, 4, 5 //TX, RX, RTS, CTS 
+    outpw(REG_SYS_GPI_MFPL, (inpw(REG_SYS_GPI_MFPL) & 0x000fffff) | 0x99900000);// GPI5, 6, 7, 8 //TX, RX, RTS, CTS
+    outpw(REG_SYS_GPI_MFPH, (inpw(REG_SYS_GPI_MFPH) & 0x0000000f) | 0x9);
 	
 	while(1)
 	{
