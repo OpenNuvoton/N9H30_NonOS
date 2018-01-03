@@ -55,6 +55,7 @@ static UINT ETIMER_GetModuleClock(UINT timer)
   * @param[in] u32Mode Operation mode. Possible options are
   *                 - \ref ETIMER_ONESHOT_MODE
   *                 - \ref ETIMER_PERIODIC_MODE
+  *                 - \ref ETIMER_TOGGLE_MODE
   *                 - \ref ETIMER_CONTINUOUS_MODE
   * @param[in] u32Freq Target working frequency
   * @return Real Timer working frequency
@@ -206,6 +207,53 @@ void ETIMER_Delay(UINT timer, UINT u32Usec)
     } else {
         while(inpw(REG_ETMR3_CTL) & 0x80);
     }
+}
+
+/**
+  * @brief This API is used to enable timer capture function with specified mode and capture edge
+  * @param[in] timer ETIMER number. Range from 0 ~ 3
+  * @param[in] u32CapMode Timer capture mode. Could be
+  *                 - \ref ETIMER_CAPTURE_FREE_COUNTING_MODE
+  *                 - \ref ETIMER_CAPTURE_TRIGGER_COUNTING_MODE
+  *                 - \ref ETIMER_CAPTURE_COUNTER_RESET_MODE
+  * @param[in] u32Edge Timer capture edge. Possible values are
+  *                 - \ref ETIMER_CAPTURE_FALLING_EDGE
+  *                 - \ref ETIMER_CAPTURE_RISING_EDGE
+  *                 - \ref ETIMER_CAPTURE_FALLING_THEN_RISING_EDGE
+  *                 - \ref ETIMER_CAPTURE_RISING_THEN_FALLING_EDGE
+  * @return None
+  * @note Timer frequency should be configured separately by using \ref ETIMER_Open API, or program registers directly
+  */
+void ETIMER_EnableCapture(UINT timer, UINT u32CapMode, UINT u32Edge)
+{
+    if(timer == 0) {
+        outpw(REG_ETMR0_CTL, (inpw(REG_ETMR0_CTL) & ~0x1E0000) | u32CapMode | u32Edge | 0x10000);
+    } else if(timer == 1) {
+        outpw(REG_ETMR1_CTL, (inpw(REG_ETMR1_CTL) & ~0x1E0000) | u32CapMode | u32Edge | 0x10000);
+    } else if(timer == 2) {
+        outpw(REG_ETMR2_CTL, (inpw(REG_ETMR2_CTL) & ~0x1E0000) | u32CapMode | u32Edge | 0x10000);
+    } else {
+        outpw(REG_ETMR3_CTL, (inpw(REG_ETMR3_CTL) & ~0x1E0000) | u32CapMode | u32Edge | 0x10000);
+    }
+}
+
+/**
+  * @brief This API is used to disable the Timer capture function
+  * @param[in] timer ETIMER number. Range from 0 ~ 3
+  * @return None
+  */
+void ETIMER_DisableCapture(UINT timer)
+{
+    if(timer == 0) {
+        outpw(REG_ETMR0_CTL, inpw(REG_ETMR0_CTL) & ~0x10000);
+    } else if(timer == 1) {
+        outpw(REG_ETMR1_CTL, inpw(REG_ETMR1_CTL) & ~0x10000);
+    } else if(timer == 2) {
+        outpw(REG_ETMR2_CTL, inpw(REG_ETMR2_CTL) & ~0x10000);
+    } else {
+        outpw(REG_ETMR3_CTL, inpw(REG_ETMR3_CTL) & ~0x10000);
+    }
+
 }
 
 

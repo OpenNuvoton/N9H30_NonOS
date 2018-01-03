@@ -29,7 +29,18 @@ extern "C"
 
 #define ETIMER_ONESHOT_MODE                      (0UL)          /*!< Timer working in one shot mode   */
 #define ETIMER_PERIODIC_MODE                     (1UL << 4)     /*!< Timer working in periodic mode   */
+#define ETIMER_TOGGLE_MODE                       (2UL << 4)     /*!< Timer working in toggle mode     */
 #define ETIMER_CONTINUOUS_MODE                   (3UL << 4)     /*!< Timer working in continuous mode */
+
+#define ETIMER_CAPTURE_FREE_COUNTING_MODE        (0UL)          /*!< Free counting mode    */
+#define ETIMER_CAPTURE_TRIGGER_COUNTING_MODE     (1UL << 20)    /*!< Trigger counting mode */
+#define ETIMER_CAPTURE_COUNTER_RESET_MODE        (1UL << 17)    /*!< Counter reset mode    */
+
+#define ETIMER_CAPTURE_FALLING_EDGE              (0UL)          /*!< Falling edge trigger timer capture */
+#define ETIMER_CAPTURE_RISING_EDGE               (1UL << 18)    /*!< Rising edge trigger timer capture  */
+#define ETIMER_CAPTURE_FALLING_THEN_RISING_EDGE  (2UL << 18)    /*!< Falling edge then rising edge trigger timer capture */
+#define ETIMER_CAPTURE_RISING_THEN_FALLING_EDGE  (3UL << 18)    /*!< Rising edge then falling edge trigger timer capture */
+
 
 /*@}*/ /* end of group N9H30_ETIMER_EXPORTED_CONSTANTS */
 
@@ -178,6 +189,43 @@ static __inline void ETIMER_DisableWakeup(UINT timer)
 
 
 /**
+  * @brief This function is used to enable the capture pin detection de-bounce function.
+  * @param[in] timer ETIMER number. Range from 0 ~ 3
+  * @return None
+  */
+static __inline void ETIMER_EnableCaptureDebounce(UINT timer)
+{
+    if(timer == 0) {
+        outpw(REG_ETMR0_CTL, inpw(REG_ETMR0_CTL) | 0x400000);
+    } else if(timer == 1) {
+        outpw(REG_ETMR1_CTL, inpw(REG_ETMR1_CTL) | 0x400000);
+    } else if(timer == 2) {
+        outpw(REG_ETMR2_CTL, inpw(REG_ETMR2_CTL) | 0x400000);
+    } else {
+        outpw(REG_ETMR3_CTL, inpw(REG_ETMR3_CTL) | 0x400000);
+    }
+}
+
+/**
+  * @brief This function is used to disable the capture pin detection de-bounce function.
+  * @param[in] timer ETIMER number. Range from 0 ~ 3
+  * @return None
+  */
+static __inline void ETIMER_DisableCaptureDebounce(UINT timer)
+{
+    if(timer == 0) {
+        outpw(REG_ETMR0_CTL, inpw(REG_ETMR0_CTL) & ~0x400000);
+    } else if(timer == 1) {
+        outpw(REG_ETMR1_CTL, inpw(REG_ETMR1_CTL) & ~0x400000);
+    } else if(timer == 2) {
+        outpw(REG_ETMR2_CTL, inpw(REG_ETMR2_CTL) & ~0x400000);
+    } else {
+        outpw(REG_ETMR3_CTL, inpw(REG_ETMR3_CTL) & ~0x400000);
+    }
+}
+
+
+/**
   * @brief This function is used to enable the Timer time-out interrupt function.
   * @param[in] timer ETIMER number. Range from 0 ~ 3
   * @return None
@@ -210,6 +258,42 @@ static __inline void ETIMER_DisableInt(UINT timer)
         outpw(REG_ETMR2_IER, inpw(REG_ETMR2_IER) & ~1);
     } else {
         outpw(REG_ETMR3_IER, inpw(REG_ETMR3_IER) & ~1);
+    }
+}
+
+/**
+  * @brief This function is used to enable the Timer capture trigger interrupt function.
+  * @param[in] timer ETIMER number. Range from 0 ~ 3
+  * @return None
+  */
+static __inline void ETIMER_EnableCaptureInt(UINT timer)
+{
+    if(timer == 0) {
+        outpw(REG_ETMR0_IER, inpw(REG_ETMR0_IER) | 2);
+    } else if(timer == 1) {
+        outpw(REG_ETMR1_IER, inpw(REG_ETMR1_IER) | 2);
+    } else if(timer == 2) {
+        outpw(REG_ETMR2_IER, inpw(REG_ETMR2_IER) | 2);
+    } else {
+        outpw(REG_ETMR3_IER, inpw(REG_ETMR3_IER) | 2);
+    }
+}
+
+/**
+  * @brief This function is used to disable the Timer capture trigger interrupt function.
+  * @param[in] timer ETIMER number. Range from 0 ~ 3
+  * @return None
+  */
+static __inline void ETIMER_DisableCaptureInt(UINT timer)
+{
+    if(timer == 0) {
+        outpw(REG_ETMR0_IER, inpw(REG_ETMR0_IER) & ~2);
+    } else if(timer == 1) {
+        outpw(REG_ETMR1_IER, inpw(REG_ETMR1_IER) & ~2);
+    } else if(timer == 2) {
+        outpw(REG_ETMR2_IER, inpw(REG_ETMR2_IER) & ~2);
+    } else {
+        outpw(REG_ETMR3_IER, inpw(REG_ETMR3_IER) & ~2);
     }
 }
 
@@ -255,6 +339,47 @@ static __inline void ETIMER_ClearIntFlag(UINT timer)
 }
 
 /**
+  * @brief This function indicates Timer capture interrupt occurred or not.
+  * @param[in] timer ETIMER number. Range from 0 ~ 3
+  * @return Timer capture interrupt occurred or not
+  * @retval 0 Timer capture interrupt did not occur
+  * @retval 1 Timer capture interrupt occurred
+  */
+static __inline UINT ETIMER_GetCaptureIntFlag(UINT timer)
+{
+    int reg;
+
+    if(timer == 0) {
+        reg = inpw(REG_ETMR0_ISR);
+    } else if(timer == 1) {
+        reg = inpw(REG_ETMR1_ISR);
+    } else if(timer == 2) {
+        reg = inpw(REG_ETMR2_ISR);
+    } else {
+        reg = inpw(REG_ETMR3_ISR);
+    }
+    return (reg & 2) >> 1;
+}
+
+/**
+  * @brief This function clears the Timer capture interrupt flag.
+  * @param[in] timer ETIMER number. Range from 0 ~ 3
+  * @return None
+  */
+static __inline void ETIMER_ClearCaptureIntFlag(UINT timer)
+{
+    if(timer == 0) {
+        outpw(REG_ETMR0_ISR, 2);
+    } else if(timer == 1) {
+        outpw(REG_ETMR1_ISR, 2);
+    } else if(timer == 2) {
+        outpw(REG_ETMR2_ISR, 2);
+    } else {
+        outpw(REG_ETMR3_ISR, 2);
+    }
+}
+
+/**
   * @brief This function indicates Timer has waked up system or not.
   * @param[in] timer ETIMER number. Range from 0 ~ 3
   * @return Timer has waked up system or not
@@ -295,6 +420,24 @@ static __inline void ETIMER_ClearWakeupFlag(UINT timer)
     }
 }
 
+/**
+  * @brief This function gets the Timer capture data.
+  * @param[in] timer ETIMER number. Range from 0 ~ 3
+  * @return Timer capture data value
+  */
+static __inline UINT ETIMER_GetCaptureData(UINT timer)
+{
+
+    if(timer == 0) {
+        return inpw(REG_ETMR0_TCAP);
+    } else if(timer == 1) {
+        return inpw(REG_ETMR1_TCAP);
+    } else if(timer == 2) {
+        return inpw(REG_ETMR2_TCAP);
+    } else {
+        return inpw(REG_ETMR3_TCAP);
+    }
+}
 
 /**
   * @brief This function reports the current timer counter value.
