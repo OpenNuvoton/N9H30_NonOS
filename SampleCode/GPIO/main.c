@@ -17,18 +17,18 @@ INT32 EINT0Callback(UINT32 status, UINT32 userData)
     eint_complete=1;
 
     /********/
-    GPIO_ClrISRBit(GPIOF,BIT11);
+    GPIO_ClrISRBit(GPIOH,BIT0);
     return 0;
 }
 
 volatile int gpio_complete=0;
-INT32 GPIOECallback(UINT32 status, UINT32 userData)
+INT32 GPIODCallback(UINT32 status, UINT32 userData)
 {
     /* To do */
     if(status & BIT3)
       gpio_complete=1;
     /********/
-    GPIO_ClrISRBit(GPIOE,status);
+    GPIO_ClrISRBit(GPIOD,status);
     return 0;
 }
 
@@ -47,17 +47,17 @@ int main(void)
     sysprintf("|                 GPIO Sample Code                |\n");
     sysprintf("+-------------------------------------------------+\n\n");
 
-    /* Configure Port C to input mode and pull-up */
-    GPIO_Open(GPIOC, DIR_INPUT, PULL_UP);
+    /* Configure Port B to input mode and pull-up */
+    GPIO_Open(GPIOB, DIR_INPUT, PULL_UP);
    
-    /* Set Port C output data to 0xFFF */
-    GPIO_Set(GPIOC, 0xFFF);
+    /* Set Port B output data to 0xFFF */
+    GPIO_Set(GPIOB, 0xFFF);
 
-    /* Set Port C output data to 0x000 */
-    GPIO_Clr(GPIOC, 0xFFF);
+    /* Set Port B output data to 0x000 */
+    GPIO_Clr(GPIOB, 0xFFF);
 
-    /* Configure Port C to default value */
-    GPIO_Close(GPIOC);
+    /* Configure Port B to default value */
+    GPIO_Close(GPIOB);
 
     i32Err = 0;
     sysprintf("GPIO PD.3(output mode) connect to PD.4(input mode) ......");
@@ -94,57 +94,57 @@ int main(void)
     GPIO_CloseBit(GPIOD, BIT3);
 
     /* Configure PD4 to default value */
-    GPIO_CloseBit(GPIOD, BIT3);
+    GPIO_CloseBit(GPIOD, BIT4);
 
-    /* Set MFP_GPF11 to EINT0 */
-    outpw(REG_SYS_GPF_MFPH,(inpw(REG_SYS_GPF_MFPH) & ~(0xF<<12)) | (0xF<<12));
+    /* Set MFP_GPH0 to EINT0 */
+    outpw(REG_SYS_GPH_MFPL,(inpw(REG_SYS_GPH_MFPL) & ~(0xF<<0)) | (0xF<<0));
 
-    /* Configure PF11 to input mode and pull-up */
-    GPIO_OpenBit(GPIOF, BIT11, DIR_INPUT, PULL_UP);
+    /* Configure PH0 to input mode and pull-up */
+    GPIO_OpenBit(GPIOH, BIT0, DIR_INPUT, PULL_UP);
 
-    /* Confingure PF11 to rising-edge trigger */
-    GPIO_EnableTriggerType(GPIOF, BIT11,RISING);
+    /* Confingure PH0 to rising-edge trigger */
+    GPIO_EnableTriggerType(GPIOH, BIT0,RISING);
 
     /* Enable external 0 interrupt */
     GPIO_EnableEINT(NIRQ0, (GPIO_CALLBACK)EINT0Callback, 0);
 
     /* waiting for external 0 interrupt */
-    sysprintf("waiting for PF11 rsing-edge trigger...");
+    sysprintf("waiting for PH0 rsing-edge trigger...");
     while(!eint_complete);
 
-    /* Disable PF11 trigger type */
-    GPIO_DisableTriggerType(GPIOF, BIT11);
+    /* Disable PH0 trigger type */
+    GPIO_DisableTriggerType(GPIOH, BIT0);
 
     /* Enable external 0 interrupt */
     GPIO_DisableEINT(NIRQ0);
 
     sysprintf("  [OK].\n");
 
-    /* Configure PF11 to default value */
-    GPIO_CloseBit(GPIOF, BIT11);
+    /* Configure PH0 to default value */
+    GPIO_CloseBit(GPIOH, BIT0);
 
 
-    /* Configure PE3 to output mode */
-    GPIO_OpenBit(GPIOE, BIT3, DIR_INPUT, NO_PULL_UP);
+    /* Configure PD3 to output mode */
+    GPIO_OpenBit(GPIOD, BIT3, DIR_INPUT, NO_PULL_UP);
 
-    /* Confingure PE3 to falling-edge trigger */
-    GPIO_EnableTriggerType(GPIOE, BIT3,FALLING);
+    /* Confingure PD3 to falling-edge trigger */
+    GPIO_EnableTriggerType(GPIOD, BIT3,FALLING);
 
-    /* Enable GPIOE interrupt */
-    GPIO_EnableInt(GPIOE, (GPIO_CALLBACK)GPIOECallback, 0);
+    /* Enable GPIOD interrupt */
+    GPIO_EnableInt(GPIOD, (GPIO_CALLBACK)GPIODCallback, 0);
 
-    /* waiting for external 0 interrupt */
-    sysprintf("waiting for PE3 falling-edge trigger...");
+    /* waiting for PD3 interrupt */
+    sysprintf("waiting for PD3 falling-edge trigger...");
     while(!gpio_complete);
 
-    /* Disable PE3 to trigger type */
-    GPIO_DisableTriggerType(GPIOE, BIT3);
+    /* Disable PD3 to trigger type */
+    GPIO_DisableTriggerType(GPIOD, BIT3);
 
-    /* Disable GPIOE interrupt */
-    GPIO_DisableInt(GPIOE);
+    /* Disable GPIOD interrupt */
+    GPIO_DisableInt(GPIOD);
 
-    /* Configure PE0 to default value */
-    GPIO_CloseBit(GPIOE, BIT3);
+    /* Configure PD3 to default value */
+    GPIO_CloseBit(GPIOD, BIT3);
 
     sysprintf("  [OK].\n");
 
