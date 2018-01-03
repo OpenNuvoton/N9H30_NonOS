@@ -50,10 +50,8 @@ extern "C"
 /*---------------------------------------------------------------------------------------------------------*/
 #define UART0       0    /*!< UART0  channel */
 #define UART1       1    /*!< UART1  channel */
-#define UART2       2    /*!< UART2  channel */
 #define UART3       3    /*!< UART3  channel */
 #define UART4       4    /*!< UART4  channel */
-#define UART5       5    /*!< UART5  channel */
 #define UART6       6    /*!< UART6  channel */
 #define UART7       7    /*!< UART7  channel */
 #define UART8       8    /*!< UART8  channel */

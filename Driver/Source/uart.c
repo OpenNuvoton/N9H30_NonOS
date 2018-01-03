@@ -234,51 +234,6 @@ void uart1ISR(void)
     }
 }
 
-void uart2ISR(void)
-{
-    UINT32 volatile uRegISR, uRegFSR, uRegMSR, uRegFUN_SEL;
-
-    uRegISR = inpw(REG_UART2_ISR) & 0xff;
-    uRegFUN_SEL = inpw(REG_UART2_FUN_SEL);
-
-    if(uRegISR & UART_ISR_THRE_IF_Msk)  /* TX empty interrupt, check LSR 4 kinds of error further */
-        _uartTransmitChars(UART2);
-
-    if(uRegFUN_SEL == 0x3) {
-        RS485_HANDLE(UART2);
-    } else {
-        if( uRegISR & (UART_ISR_RDA_IF_Msk | UART_ISR_TOUT_IF_Msk)) /* Received Data Available interrupt */
-            _uartReceiveChars(UART2);
-
-        if(uRegISR & UART_ISR_RLS_IF_Msk) {
-            uRegFSR = inpw(REG_UART2_FSR);
-            if(uRegFSR & UART_FSR_BIF_Msk)
-                _uart_cBIIState_2 = 1;
-        }
-
-        if(uRegISR & UART_ISR_MODEM_IF_Msk) {
-            if (_uart_cFlowControlMode == 0) {
-                uRegMSR = inpw(REG_UART2_MSR);
-
-                if (uRegMSR & 0x01)
-                    _uart_cCTSState2 = 1;
-            } else
-                _uartCheckModemStatus(UART2);  /* H/W flow control */
-        }
-
-        if(uRegISR & UART_ISR_RLS_IF_Msk) {
-            uRegFSR = inpw(REG_UART2_FSR);
-            U1DEBUG("U2 Irpt_RLS [0x%x]!\n", uRegFSR);
-
-            if(uRegFSR & UART_FSR_BIF_Msk)
-                _uart_cBIIState_2 = 1;
-
-            if (uRegFSR & UART_FSR_RX_OVER_IF_Msk)
-                U1DEBUG("U2 OEI!\n");
-        }
-    }
-}
-
 void uart3ISR(void)
 {
     UINT32 volatile uRegISR, uRegFSR, uRegMSR, uRegFUN_SEL;
@@ -354,46 +309,6 @@ void uart4ISR(void)
 
             if (uRegFSR & UART_FSR_RX_OVER_IF_Msk)
                 U1DEBUG("U4 OEI!\n");
-        }
-    }
-
-}
-
-void uart5ISR(void)
-{
-    UINT32 volatile uRegISR, uRegFSR, uRegMSR, uRegFUN_SEL;
-
-    uRegISR = inpw(REG_UART5_ISR) & 0xff;
-    uRegFUN_SEL = inpw(REG_UART5_FUN_SEL);
-
-    if(uRegISR & UART_ISR_THRE_IF_Msk)  /* TX empty interrupt, check LSR 4 kinds of error further */
-        _uartTransmitChars(UART5);
-
-    if(uRegFUN_SEL == 0x3) {
-        RS485_HANDLE(UART5);
-    } else {
-        if( uRegISR & (UART_ISR_RDA_IF_Msk | UART_ISR_TOUT_IF_Msk)) /* Received Data Available interrupt */
-            _uartReceiveChars(UART5);
-
-        if(uRegISR & UART_ISR_MODEM_IF_Msk) {
-            if (_uart_cFlowControlMode == 0) {
-                uRegMSR = inpw(REG_UART5_MSR);
-
-                if (uRegMSR & 0x01)
-                    _uart_cCTSState5 = 1;
-            } else
-                _uartCheckModemStatus(UART5);  /* H/W flow control */
-        }
-
-        if(uRegISR & UART_ISR_RLS_IF_Msk) {
-            uRegFSR = inpw(REG_UART5_FSR);
-            U1DEBUG("U5 Irpt_RLS [0x%x]!\n", uRegFSR);
-
-            if(uRegFSR & UART_FSR_BIF_Msk)
-                _uart_cBIIState_5 = 1;
-
-            if (uRegFSR & UART_FSR_RX_OVER_IF_Msk)
-                U1DEBUG("U5 OEI!\n");
         }
     }
 
@@ -827,18 +742,12 @@ static void _uartInstallISR(UINT8 ucNum)
     } else if(ucNum == UART1) {
         IRQ= UART1_IRQn;
         dev->pvUartVector = sysInstallISR((IRQ_LEVEL_1 | HIGH_LEVEL_SENSITIVE), IRQ, (PVOID)uart1ISR);
-    } else if(ucNum == UART2) {
-        IRQ= UART2_IRQn;
-        dev->pvUartVector = sysInstallISR((IRQ_LEVEL_1 | HIGH_LEVEL_SENSITIVE), IRQ, (PVOID)uart2ISR);
     } else if(ucNum == UART3) {
         IRQ= UART3_IRQn;
         dev->pvUartVector = sysInstallISR((IRQ_LEVEL_1 | HIGH_LEVEL_SENSITIVE), IRQ, (PVOID)uart3ISR);
     } else if(ucNum == UART4) {
         IRQ= UART4_IRQn;
         dev->pvUartVector = sysInstallISR((IRQ_LEVEL_1 | HIGH_LEVEL_SENSITIVE), IRQ, (PVOID)uart4ISR);
-    } else if(ucNum == UART5) {
-        IRQ= UART5_IRQn;
-        dev->pvUartVector = sysInstallISR((IRQ_LEVEL_1 | HIGH_LEVEL_SENSITIVE), IRQ, (PVOID)uart5ISR);
     } else if(ucNum == UART6) {
         IRQ= UART6_IRQn;
         dev->pvUartVector = sysInstallISR((IRQ_LEVEL_1 | HIGH_LEVEL_SENSITIVE), IRQ, (PVOID)uart6ISR);
@@ -1029,7 +938,7 @@ static INT _uartConfigureUART(PVOID pvParam)
         return UART_ERR_STOP_BITS_INVALID;
 
     /* Check the supplied number of trigger level bytes */
-    if ( (param -> ucUartNo == UART1) || (param -> ucUartNo == UART2) || (param -> ucUartNo == UART4) ||
+    if ( (param -> ucUartNo == UART1) || (param -> ucUartNo == UART4) ||
          (param -> ucUartNo == UART6) || (param -> ucUartNo == UART8) || (param -> ucUartNo == UARTA)) {
         /* UART1,2,4,6,8,A */
         if ( (param->ucRxTriggerLevel != UART_FCR_RFITL_1BYTE)   &&
@@ -1448,18 +1357,12 @@ INT uartIoctl(INT nNum, UINT32 uCmd, UINT32 uArg0, UINT32 uArg1)
             if(nNum == UART1) {
                 *(PUINT32)uArg0 = _uart_cCTSState1;                        /* CTS state */
                 _uart_cCTSState1 = 0;
-            } else if(nNum == UART2) {
-                *(PUINT32)uArg0 = _uart_cCTSState2;                        /* CTS state */
-                _uart_cCTSState2 = 0;
             } else if(nNum == UART3) {
                 *(PUINT32)uArg0 = _uart_cCTSState3;                        /* CTS state */
                 _uart_cCTSState3 = 0;
             } else if(nNum == UART4) {
                 *(PUINT32)uArg0 = _uart_cCTSState4;                        /* CTS state */
                 _uart_cCTSState4 = 0;
-            } else if(nNum == UART5) {
-                *(PUINT32)uArg0 = _uart_cCTSState5;                        /* CTS state */
-                _uart_cCTSState5 = 0;
             } else if(nNum == UART6) {
                 *(PUINT32)uArg0 = _uart_cCTSState6;                        /* CTS state */
                 _uart_cCTSState6 = 0;
@@ -1523,17 +1426,11 @@ INT uartIoctl(INT nNum, UINT32 uCmd, UINT32 uArg0, UINT32 uArg1)
                 case UART1:
                     *(PUINT32)uArg0 = _uart_cBIIState_1;
                     break;
-                case UART2:
-                    *(PUINT32)uArg0 = _uart_cBIIState_2;
-                    break;
                 case UART3:
                     *(PUINT32)uArg0 = _uart_cBIIState_3;
                     break;
                 case UART4:
                     *(PUINT32)uArg0 = _uart_cBIIState_4;
-                    break;
-                case UART5:
-                    *(PUINT32)uArg0 = _uart_cBIIState_5;
                     break;
                 case UART6:
                     *(PUINT32)uArg0 = _uart_cBIIState_6;
@@ -1559,7 +1456,7 @@ INT uartIoctl(INT nNum, UINT32 uCmd, UINT32 uArg0, UINT32 uArg1)
         /* H/W S/W flow control function */
         case UART_IOC_ENABLEHWFLOWCONTROL:
 
-            /* H/W & S/W are alterntive */
+            /* H/W & S/W are alternative */
             if(_uart_cFlowControlMode == SWFLOWCONTROL)
                 return UART_EIO;
 

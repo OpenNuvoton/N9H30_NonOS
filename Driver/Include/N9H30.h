@@ -76,10 +76,8 @@
 /*!< APB peripherals */
 #define    UART0_BA  0xB8000000  /*!< UART0 Control */
 #define    UART1_BA  0xB8000100  /*!< UART1 Control (High-Speed UART) */
-#define    UART2_BA  0xB8000200  /*!< UART2 Control (High-Speed UART) */
 #define    UART3_BA  0xB8000300  /*!< UART3 Control  */
 #define    UART4_BA  0xB8000400  /*!< UART4 Control (High-Speed UART) */
-#define    UART5_BA  0xB8000500  /*!< UART5 Control */
 #define    UART6_BA  0xB8000600  /*!< UART6 Control (High-Speed UART) */
 #define    UART7_BA  0xB8000700  /*!< UART7 Control */
 #define    UART8_BA  0xB8000800  /*!< UART8 Control (High-Speed UART) */
@@ -833,26 +831,6 @@
 #define     REG_UART1_LIN_SR    (UART1_BA+0x38)  /*!< LIN Status Register */
 
 /*
-  UART2 Control Registers
-*/
-#define     REG_UART2_RBR   (UART2_BA+0x00)  /*!< Receive Buffer Register */
-#define     REG_UART2_THR   (UART2_BA+0x00)  /*!< Transmit Holding Register */
-#define     REG_UART2_IER   (UART2_BA+0x04)  /*!< Interrupt Enable Register */
-#define     REG_UART2_FCR   (UART2_BA+0x08)  /*!< FIFO Control Register */
-#define     REG_UART2_LCR   (UART2_BA+0x0C)  /*!< Line Control Register */
-#define     REG_UART2_MCR   (UART2_BA+0x10)  /*!< Modem Control Register */
-#define     REG_UART2_MSR   (UART2_BA+0x14)  /*!< MODEM Status Register */
-#define     REG_UART2_FSR   (UART2_BA+0x18)  /*!< FIFO Status Register */
-#define     REG_UART2_ISR   (UART2_BA+0x1C)  /*!< Interrupt Status Control Register */
-#define     REG_UART2_TOR   (UART2_BA+0x20)  /*!< Time-out Register */
-#define     REG_UART2_BAUD  (UART2_BA+0x24)  /*!< Baud Rate Divider Register */
-#define     REG_UART2_IRCR  (UART2_BA+0x28)  /*!< IrDA Control Register */
-#define     REG_UART2_ALT_CSR   (UART2_BA+0x2C)  /*!< Alternate Control Register */
-#define     REG_UART2_FUN_SEL   (UART2_BA+0x30)  /*!< UART Function Select REgister */
-#define     REG_UART2_LIN_CTL   (UART2_BA+0x34)  /*!< UART LIN Control Register */
-#define     REG_UART2_LIN_SR    (UART2_BA+0x38)  /*!< LIN Status Register */
-
-/*
   UART3 Control Registers
 */
 #define     REG_UART3_RBR   (UART3_BA+0x00)  /*!< Receive Buffer Register */
@@ -892,26 +870,6 @@
 #define     REG_UART4_FUN_SEL   (UART4_BA+0x30)  /*!< UART Function Select REgister */
 #define     REG_UART4_LIN_CTL   (UART4_BA+0x34)  /*!< UART LIN Control Register */
 #define     REG_UART4_LIN_SR    (UART4_BA+0x38)  /*!< LIN Status Register */
-
-/*
-  UART5 Control Registers
-*/
-#define     REG_UART5_RBR   (UART5_BA+0x00)  /*!< Receive Buffer Register */
-#define     REG_UART5_THR   (UART5_BA+0x00)  /*!< Transmit Holding Register */
-#define     REG_UART5_IER   (UART5_BA+0x04)  /*!< Interrupt Enable Register */
-#define     REG_UART5_FCR   (UART5_BA+0x08)  /*!< FIFO Control Register */
-#define     REG_UART5_LCR   (UART5_BA+0x0C)  /*!< Line Control Register */
-#define     REG_UART5_MCR   (UART5_BA+0x10)  /*!< Modem Control Register */
-#define     REG_UART5_MSR   (UART5_BA+0x14)  /*!< MODEM Status Register */
-#define     REG_UART5_FSR   (UART5_BA+0x18)  /*!< FIFO Status Register */
-#define     REG_UART5_ISR   (UART5_BA+0x1C)  /*!< Interrupt Status Control Register */
-#define     REG_UART5_TOR   (UART5_BA+0x20)  /*!< Time-out Register */
-#define     REG_UART5_BAUD  (UART5_BA+0x24)  /*!< Baud Rate Divider Register */
-#define     REG_UART5_IRCR  (UART5_BA+0x28)  /*!< IrDA Control Register */
-#define     REG_UART5_ALT_CSR   (UART5_BA+0x2C)  /*!< Alternate Control Register */
-#define     REG_UART5_FUN_SEL   (UART5_BA+0x30)  /*!< UART Function Select REgister */
-#define     REG_UART5_LIN_CTL   (UART5_BA+0x34)  /*!< UART LIN Control Register */
-#define     REG_UART5_LIN_SR    (UART5_BA+0x38)  /*!< LIN Status Register */
 
 /*
   UART6 Control Registers

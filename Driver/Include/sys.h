@@ -65,13 +65,11 @@ typedef enum IRQn {
     CRPT_IRQn               = 35,      /*!< Cryptographic Accelerator Interrupt        */
     UART0_IRQn              = 36,      /*!< UART 0 Interrupt                           */
     UART1_IRQn              = 37,      /*!< UART 1 Interrupt                           */
-    UART2_IRQn              = 38,      /*!< UART 2 Interrupt                           */
     UART4_IRQn              = 39,      /*!< UART 4 Interrupt                           */
     UART6_IRQn              = 40,      /*!< UART 6 Interrupt                           */
     UART8_IRQn              = 41,      /*!< UART 8 Interrupt                           */
     UART10_IRQn             = 42,      /*!< UART 10 Interrupt                          */
     UART3_IRQn              = 43,      /*!< UART 3 Interrupt                           */
-    UART5_IRQn              = 44,      /*!< UART 5 Interrupt                           */
     UART7_IRQn              = 45,      /*!< UART 7 Interrupt                           */
     UART9_IRQn              = 46,      /*!< UART 9 Interrupt                           */
     ETMR0_IRQn              = 47,      /*!< Enhanced Timer 0 Interrupt                 */
