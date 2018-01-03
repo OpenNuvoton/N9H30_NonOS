@@ -839,28 +839,7 @@ void adcISR(void)
         DbgPrintf("normal AD conversion complete\n");
     }
 
-    if((isr & ADC_ISR_VBF) && (conf & ADC_CONF_VBATEN)) {
-        if(adcHandler.voltage_battery_callback!=NULL)
-            adcHandler.voltage_battery_callback(inpw(REG_ADC_VBADATA), adcHandler.voltage_battery_userData);
-        outpw(REG_ADC_ISR,ADC_ISR_VBF);
-        DbgPrintf("battery voltage complete\n");
-    }
 
-    if((isr & ADC_ISR_KPCF)&& (conf & ADC_CONF_KPCEN)) {
-        unsigned int value;
-        outpw(REG_ADC_ISR,ADC_ISR_KPCF);
-        value=inpw(REG_ADC_KPDATA);
-        if(adcHandler.keypad_conv_callback!=NULL)
-            adcHandler.keypad_conv_callback(value, adcHandler.keypad_conv_userData);
-        DbgPrintf("Menu Keypad Press Conversion Finish\n");
-    }
-
-    if((isr & ADC_ISR_KPUEF) && (ier & ADC_IER_KPUEIEN)) {
-        outpw(REG_ADC_ISR,ADC_ISR_KPUEF);
-        if(adcHandler.keypad_up_callback!=NULL)
-            adcHandler.keypad_up_callback(0, adcHandler.keypad_press_userData);
-        DbgPrintf("keypad up\n");
-    }
 
     if((isr & ADC_ISR_PEUEF) && (ier & ADC_IER_PEUEIEN)) {
         outpw(REG_ADC_ISR,ADC_ISR_PEUEF | ADC_ISR_PEDEF);

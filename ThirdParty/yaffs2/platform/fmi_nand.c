@@ -688,19 +688,9 @@ int board_nand_init(struct nand_chip *nand)
     /* initial NAND controller */
     outpw(REG_CLK_HCLKEN, (inpw(REG_CLK_HCLKEN) | 0x300000));
 
-    /* select NAND function pins */
-    if (inpw(REG_SYS_PWRON) & 0x08000000)
-    {
-        /* Set GPI1~15 for NAND */
-        outpw(REG_SYS_GPI_MFPL, 0x55555550);
-        outpw(REG_SYS_GPI_MFPH, 0x55555555);
-    }
-    else
-    {
-        /* Set GPC0~14 for NAND */
-        outpw(REG_SYS_GPC_MFPL, 0x55555555);
-        outpw(REG_SYS_GPC_MFPH, 0x05555555);
-    }
+    /* Set GPI1~15 for NAND */
+    outpw(REG_SYS_GPI_MFPL, 0x55555550);
+    outpw(REG_SYS_GPI_MFPH, 0x55555555);
 
     // Enable SM_EN
     outpw(REG_FMI_CTL, NAND_EN);

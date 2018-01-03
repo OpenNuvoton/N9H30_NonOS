@@ -287,18 +287,11 @@ void SYS_Init(void)
     /* enable FMI eMMC */
     outpw(REG_CLK_HCLKEN, (inpw(REG_CLK_HCLKEN) | 0x700000));
 
-    /* select eMMC function pins */
-    if (inpw(REG_SYS_PWRON) & 0x08000000)
-    {
-        /* Set GPI5~10 for eMMC */
-        outpw(REG_SYS_GPI_MFPL, 0x66600000);
-        outpw(REG_SYS_GPI_MFPH, 0x00000666);
-    }
-    else
-    {
-        /* Set GPC0~6 for eMMC */
-        outpw(REG_SYS_GPC_MFPL, 0x00666666);
-    }
+
+    /* Set GPI5~10 for eMMC */
+    outpw(REG_SYS_GPI_MFPL, 0x66600000);
+    outpw(REG_SYS_GPI_MFPH, 0x00000666);
+
 }
 
 

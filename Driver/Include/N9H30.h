@@ -82,7 +82,7 @@
 #define    UART7_BA  0xB8000700  /*!< UART7 Control */
 #define    UART8_BA  0xB8000800  /*!< UART8 Control (High-Speed UART) */
 #define    UART9_BA  0xB8000900  /*!< UART9 Control */
-#define    UARTA_BA  0xB8000A00  /*!< UARTA Control (High-Speed UART) */
+#define    UARTA_BA  0xB8000A00  /*!< UART10 Control (High-Speed UART) */
 #define    TMR0_BA   0xB8001000  /*!< Timer 0 */
 #define    TMR1_BA   0xB8001010  /*!< Timer 1 */
 #define    TMR2_BA   0xB8001020  /*!< Timer 2 */
@@ -140,10 +140,7 @@
 #define    REG_SYS_GPA_MFPH     (SYS_BA+0x074)  /*!< GPIOA High Byte Multiple Function Control Register */
 #define    REG_SYS_GPB_MFPL     (SYS_BA+0x078)  /*!< GPIOB Low Byte Multiple Function Control Register */
 #define    REG_SYS_GPB_MFPH     (SYS_BA+0x07C)  /*!< GPIOB High Byte Multiple Function Control Register */
-#define    REG_SYS_GPC_MFPL     (SYS_BA+0x080)  /*!< GPIOC Low Byte Multiple Function Control Register */
-#define    REG_SYS_GPC_MFPH     (SYS_BA+0x084)  /*!< GPIOC High Byte Multiple Function Control Register */
 #define    REG_SYS_GPD_MFPL     (SYS_BA+0x088)  /*!< GPIOD Low Byte Multiple Function Control Register */
-#define    REG_SYS_GPD_MFPH     (SYS_BA+0x08C)  /*!< GPIOD High Byte Multiple Function Control Register */
 #define    REG_SYS_GPE_MFPL     (SYS_BA+0x090)  /*!< GPIOE Low Byte Multiple Function Control Register */
 #define    REG_SYS_GPE_MFPH     (SYS_BA+0x094)  /*!< GPIOE High Byte Multiple Function Control Register */
 #define    REG_SYS_GPF_MFPL     (SYS_BA+0x098)  /*!< GPIOF Low Byte Multiple Function Control Register */
@@ -151,7 +148,6 @@
 #define    REG_SYS_GPG_MFPL     (SYS_BA+0x0A0)  /*!< GPIOG Low Byte Multiple Function Control Register */
 #define    REG_SYS_GPG_MFPH     (SYS_BA+0x0A4)  /*!< GPIOG High Byte Multiple Function Control Register */
 #define    REG_SYS_GPH_MFPL     (SYS_BA+0x0A8)  /*!< GPIOH Low Byte Multiple Function Control Register */
-#define    REG_SYS_GPH_MFPH     (SYS_BA+0x0AC)  /*!< GPIOH High Byte Multiple Function Control Register */
 #define    REG_SYS_GPI_MFPL     (SYS_BA+0x0B0)  /*!< GPIOI Low Byte Multiple Function Control Register */
 #define    REG_SYS_GPI_MFPH     (SYS_BA+0x0B4)  /*!< GPIOI High Byte Multiple Function Control Register */
 #define    REG_SYS_GPJ_MFPL     (SYS_BA+0x0B8)  /*!< GPIOJ Low Byte Multiple Function Control Register */
@@ -1189,19 +1185,6 @@
 #define     REG_GPIOB_ICEN      (GPIO_BA+0x068)  /*!< GPIO Port B CMOS Input Enable Register */
 #define     REG_GPIOB_ISEN      (GPIO_BA+0x06C)  /*!< GPIO Port B Schmitt-Trigger Input Enable Register */
 
-#define     REG_GPIOC_DIR       (GPIO_BA+0x080)  /*!< GPIO port C direction control register */
-#define     REG_GPIOC_DATAOUT   (GPIO_BA+0x084)  /*!< GPIO port C data output register */
-#define     REG_GPIOC_DATAIN    (GPIO_BA+0x088)  /*!< GPIO port C data input register */
-#define     REG_GPIOC_IMD       (GPIO_BA+0x08C)  /*!< GPIO Port C Interrupt Mode Register */
-#define     REG_GPIOC_IREN      (GPIO_BA+0x090)  /*!< GPIO Port C Interrupt Rising-Edge or Level-High Enable Register */
-#define     REG_GPIOC_IFEN      (GPIO_BA+0x094)  /*!< GPIO Port C Interrupt Falling-Edge or Level-Low Enable Register */
-#define     REG_GPIOC_ISR       (GPIO_BA+0x098)  /*!< GPIO Port C Interrupt Status Register */
-#define     REG_GPIOC_DBEN      (GPIO_BA+0x09C)  /*!< GPIO Port C De-bounce Enable Register */
-#define     REG_GPIOC_PUEN      (GPIO_BA+0x0A0)  /*!< GPIO Port C Pull-Up Enable Register */
-#define     REG_GPIOC_PDEN      (GPIO_BA+0x0A4)  /*!< GPIO Port C Pull-Down Enable Register */
-#define     REG_GPIOC_ICEN      (GPIO_BA+0x0A8)  /*!< GPIO Port C CMOS Input Enable Register */
-#define     REG_GPIOC_ISEN      (GPIO_BA+0x0AC)  /*!< GPIO Port C Schmitt-Trigger Input Enable Register */
-
 #define     REG_GPIOD_DIR       (GPIO_BA+0x0C0)  /*!< GPIO port D direction control register */
 #define     REG_GPIOD_DATAOUT   (GPIO_BA+0x0C4)  /*!< GPIO port D data output register */
 #define     REG_GPIOD_DATAIN    (GPIO_BA+0x0C8)  /*!< GPIO port D data input register */
@@ -1436,8 +1419,6 @@
 #define REG_ADC_XYDATA    (ADC_BA+0x020) /*!< ADC Touch XY Pressure Data */
 #define REG_ADC_ZDATA     (ADC_BA+0x024) /*!< ADC Touch Z Pressure Data */
 #define REG_ADC_DATA      (ADC_BA+0x028) /*!< ADC Normal Conversion Data */
-#define REG_ADC_VBADATA   (ADC_BA+0x02C) /*!< ADC Battery Detection Data */
-#define REG_ADC_KPDATA    (ADC_BA+0x030) /*!< ADC Key Pad Data */
 #define REG_ADC_SELFDATA  (ADC_BA+0x034) /*!< ADC Self-Test Data */
 #define REG_ADC_XYSORT0   (ADC_BA+0x1F4) /*!< ADC Touch XY Position Mean Value Sort 0 */
 #define REG_ADC_XYSORT1   (ADC_BA+0x1F8) /*!< ADC Touch XY Position Mean Value Sort 1 */

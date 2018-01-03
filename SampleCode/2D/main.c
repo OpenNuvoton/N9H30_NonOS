@@ -436,8 +436,6 @@ int32_t main(void)
     outpw(REG_SYS_GPA_MFPL, 0x22222222);
     //GPA8 ~ GPA15 (DATA8~15)
     outpw(REG_SYS_GPA_MFPH, 0x22222222);
-    //GPD8~D15 (DATA16~23)
-    outpw(REG_SYS_GPD_MFPH, (inpw(REG_SYS_GPD_MFPH)& ~0xFFFFFFFF) | 0x22222222);
 
     // LCD clock is selected from UPLL and divide to 20MHz
     outpw(REG_CLK_DIVCTL1, (inpw(REG_CLK_DIVCTL1) & ~0xff1f) | 0xe18);

@@ -40,8 +40,6 @@ typedef enum IRQn {
     EINT1_IRQn              = 5,       /*!< External Interrupt 1                       */
     EINT2_IRQn              = 6,       /*!< External Interrupt 2                       */
     EINT3_IRQn              = 7,       /*!< External Interrupt 3                       */
-    EINT4_IRQn              = 8,       /*!< External Interrupt 4                       */
-    EINT5_IRQn              = 9,       /*!< External Interrupt 5                       */
     EINT6_IRQn              = 10,      /*!< External Interrupt 6                       */
     EINT7_IRQn              = 11,      /*!< External Interrupt 7                       */
     ACTL_IRQn               = 12,      /*!< Audio Controller Interrupt                 */

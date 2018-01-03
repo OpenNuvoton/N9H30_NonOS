@@ -714,16 +714,6 @@ INT32 GPIO_EnableEINT(GPIO_NIRQ nIrq, GPIO_CALLBACK callback, UINT32 userData)
             sysEnableInterrupt(EINT3_IRQn);
             break;
 
-        case 4:
-            sysInstallISR(IRQ_LEVEL_7, EINT4_IRQn, (PVOID)GPIO_IRQHandler4);
-            sysEnableInterrupt(EINT4_IRQn);
-            break;
-
-        case 5:
-            sysInstallISR(IRQ_LEVEL_7, EINT5_IRQn, (PVOID)GPIO_IRQHandler5);
-            sysEnableInterrupt(EINT5_IRQn);
-            break;
-
         case 6:
             sysInstallISR(IRQ_LEVEL_7, EINT6_IRQn, (PVOID)GPIO_IRQHandler6);
             sysEnableInterrupt(EINT6_IRQn);

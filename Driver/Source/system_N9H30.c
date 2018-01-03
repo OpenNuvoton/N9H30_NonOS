@@ -234,7 +234,7 @@ int sysInitMMUTable(int cache_mode)
             _mmuSectionTable[i] = temp;
         }
 
-        //Create shadow non-cacheabel region
+        //Create shadow non-cacheable region
         for (i=1; i< size; i++) {
             temp = (((unsigned int)_mmuCoarsePageTable_NonCache + (unsigned int)i*1024) & 0xFFFFFC00); /*  coarse table base address */
             //temp = ((unsigned int)(0x604000 + i*1024) & 0xFFFFFC00); /* coarse table base address */
