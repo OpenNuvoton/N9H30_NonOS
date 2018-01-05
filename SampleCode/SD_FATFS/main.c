@@ -356,14 +356,6 @@ void SYS_Init(void)
     SD_Drv = 0;
 
 #if 0 // port 1
-    /* initial SD1 pin -> PE2~9 */
-    outpw(REG_SYS_GPE_MFPL, inpw(REG_SYS_GPE_MFPL) & ~0xffffff00 | 0x66666600);
-    outpw(REG_SYS_GPE_MFPH, inpw(REG_SYS_GPE_MFPH) & ~0x000000ff | 0x00000066);
-
-    /* initial SD1 pin -> PH6~13 */
-    outpw(REG_SYS_GPH_MFPL, inpw(REG_SYS_GPH_MFPL) & ~0xff000000 | 0x66000000);
-    outpw(REG_SYS_GPH_MFPH, inpw(REG_SYS_GPH_MFPH) & ~0x00ffffff | 0x00666666);
-
     /* initial SD1 pin -> PI5~10, 12~13 */
     outpw(REG_SYS_GPI_MFPL, inpw(REG_SYS_GPI_MFPL) & ~0xfff00000 | 0x44400000);
     outpw(REG_SYS_GPI_MFPH, inpw(REG_SYS_GPI_MFPH) & ~0x00ff0fff | 0x00440444);
