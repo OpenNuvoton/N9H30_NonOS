@@ -215,7 +215,7 @@ void i2sInit(void)
 
 /**
   * @brief IO control for i2s interface
-  * @param[in] cmd command for io control, value could be
+  * @param[in] cmd Command for io control, value could be
   *                                     - \ref I2S_SET_PLAY
   *                                     - \ref I2S_SET_RECORD
   *                                     - \ref I2S_SELECT_BLOCK
@@ -235,8 +235,7 @@ void i2sInit(void)
   *                                     - \ref I2S_SET_PCMSLOT
   * @param[in] arg0 argument 0 for io control
   * @param[in] arg1 argument 1 for io control
-  * @return io control status
-  * @retval \ref I2S_ERR_IO error.
+  * @retval I2S_ERR_IO Command error.
   * @retval 0 success.
   */
 int32_t i2sIoctl(uint32_t cmd, uint32_t arg0, uint32_t arg1)

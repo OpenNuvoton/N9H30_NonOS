@@ -37,7 +37,7 @@ extern void OHCI_IRQHandler(void);
 
 
 /**
-  * @brief       Initialize NUC980 USB Host controller and USB stack.
+  * @brief       Initialize N9H30 USB Host controller and USB stack.
   *
   * @return      None.
   */
@@ -84,7 +84,7 @@ void  usbh_core_init()
   * @brief    Install device connect and disconnect callback function.
   *
   * @param[in]  conn_func       Device connect callback function.
-  * @param[in]  conn_func       Device disconnect callback function.
+  * @param[in]  disconn_func       Device disconnect callback function.
   * @return      None.
   */
 void usbh_install_conn_callback(CONN_FUNC *conn_func, CONN_FUNC *disconn_func)
@@ -287,7 +287,7 @@ int usbh_ctrl_xfer(UDEV_T *udev, uint8_t bmRequestType, uint8_t bRequest, uint16
 
 
 /**
-  * @brief    Execute a bulk transfer request. This function will return immediatedly after
+  * @brief    Execute a bulk transfer request. This function will return immediately after
   *           issued the bulk transfer. USB stack will later call back utr->func() once the bulk
   *           transfer was done or aborted.
   * @param[in]  utr    The bulk transfer request.
@@ -300,7 +300,7 @@ int usbh_bulk_xfer(UTR_T *utr)
 }
 
 /**
-  * @brief    Execute an interrupt transfer request. This function will return immediatedly after
+  * @brief    Execute an interrupt transfer request. This function will return immediately after
   *           issued the interrupt transfer. USB stack will later call back utr->func() once the
   *           interrupt transfer was done or aborted.
   * @param[in]  utr    The interrupt transfer request.
@@ -314,7 +314,7 @@ int usbh_int_xfer(UTR_T *utr)
 }
 
 /**
-  * @brief    Execute an isochronous transfer request. This function will return immediatedly after
+  * @brief    Execute an isochronous transfer request. This function will return immediately after
   *           issued the isochronous transfer. USB stack will later call back utr->func() once the
   *           isochronous transfer was done or aborted.
   * @param[in]  utr    The isochronous transfer request.
@@ -397,7 +397,7 @@ void usbh_dump_interface_descriptor(DESC_IF_T *if_desc)
 
 void usbh_dump_endpoint_descriptor(DESC_EP_T *ep_desc)
 {
-    USB_debug("\n        [Endoint Descriptor]\n");
+    USB_debug("\n        [Endpoint Descriptor]\n");
     USB_debug("        ----------------------------------------------\n");
     USB_debug("          Length              = %2d\n",  ep_desc->bLength);
     USB_debug("          DescriptorType      = %02x\n", ep_desc->bDescriptorType);
@@ -880,7 +880,7 @@ static int  usbh_parse_configuration(UDEV_T *udev, uint8_t *desc_buff)
 
         desc_buff += ret;
         len -= ret;
-        USB_vdebug("IFACE parse remaning %d\n", len);
+        USB_vdebug("IFACE parse remaining %d\n", len);
     }
 
     if (len > 0) {
@@ -962,7 +962,7 @@ int  connect_device(UDEV_T *udev)
     if (udev->descriptor.iManufacturer != 0) 
     {
         usbh_get_string_descriptor(udev, udev->descriptor.iManufacturer, str_buff, MAX_DESC_BUFF_SIZE);  
-        print_usb_string("Manufactor: ", str_buff);	
+        print_usb_string("Manufacturer: ", str_buff);	
 	}
     if (udev->descriptor.iProduct != 0) 
     {
@@ -1008,7 +1008,7 @@ void disconnect_device(UDEV_T *udev)
 
     usbh_quit_xfer(udev, &(udev->ep0));    /* Quit control transfer if hw_pipe is not NULL.  */
 
-    /* Notified all actived interface device driver  */
+    /* Notified all active interface device driver  */
     iface = udev->iface_list;
     while (iface != NULL) {
         udev->iface_list = iface->next;
@@ -1100,7 +1100,7 @@ void usbh_dump_iface(IFACE_T *iface)
 
 void usbh_dump_ep_info(EP_INFO_T *ep)
 {
-    USB_debug("\n  [Endoint Info] (0x%x)\n", (int)ep);
+    USB_debug("\n  [Endpoint Info] (0x%x)\n", (int)ep);
     USB_debug("  ----------------------------------------------\n");
     USB_debug("  bEndpointAddress    = 0x%02x\n", ep->bEndpointAddress);
     USB_debug("  bmAttributes        = 0x%02x\n", ep->bmAttributes);

@@ -95,7 +95,7 @@ typedef struct msc_t {
     uint32_t    nSectorSize;
     uint32_t    uDiskSize;
     int         drv_no;                  /* Logical drive number associated with this instance */
-    FATFS       fatfs_vol;               /* FATFS volumn                                  */
+    FATFS       fatfs_vol;               /* FATFS volume                                  */
     struct msc_t  *next;                 /* point to next MSC device                      */
 }  MSC_T;
 

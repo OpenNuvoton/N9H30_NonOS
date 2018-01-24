@@ -1,5 +1,5 @@
 /**************************************************************************//**
- * @file     usbh_msc.c
+ * @file     msc_driver.c
  * @version  V1.00
  * $Revision: 4 $
  * $Date: 14/10/07 4:33p $
@@ -225,11 +225,13 @@ static int  msc_test_unit_ready(MSC_T *msc)
     return ret;
 }
 
+/// @endcond HIDDEN_SYMBOLS
+
 /**
   * @brief       Read a number of contiguous sectors from mass storage device.
   *
   * @param[in]   drv_no    FATFS drive volume number.
-  * @param[in]   sec_no    Sector number of the start secotr.
+  * @param[in]   sec_no    Sector number of the start sector.
   * @param[in]   sec_cnt   Number of sectors to be read.
   * @param[out]  buff      Memory buffer to store data read from disk.
   *
@@ -277,7 +279,7 @@ int  usbh_umas_read(int drv_no, uint32_t sec_no, int sec_cnt, uint8_t *buff)
   * @brief       Write a number of contiguous sectors to mass storage device.
   *
   * @param[in]   drv_no    FATFS drive volume number.
-  * @param[in]   sec_no    Sector number of the start secotr.
+  * @param[in]   sec_no    Sector number of the start sector.
   * @param[in]   sec_cnt   Number of sectors to be written.
   * @param[in]   buff      Memory buffer hold the data to be written..
   *
@@ -372,6 +374,8 @@ int  usbh_umas_disk_status(int drv_no)
         return STA_NODISK;
     return 0;
 }
+
+/// @cond HIDDEN_SYMBOLS
 
 static int  umass_init_device(MSC_T *msc)
 {
@@ -489,7 +493,7 @@ static int msc_probe(IFACE_T *iface)
 
     ifd = aif->ifd;
 
-    /* Is this interface mass stroage class? */
+    /* Is this interface mass storage class? */
     if (ifd->bInterfaceClass != USB_CLASS_MASS_STORAGE)
         return USBH_ERR_NOT_MATCHED;
 
@@ -498,7 +502,7 @@ static int msc_probe(IFACE_T *iface)
             (ifd->bInterfaceSubClass != MSC_SCLASS_RBC))
         return USBH_ERR_NOT_SUPPORTED;
 
-    /* Is bulk-only protocl? */
+    /* Is bulk-only protocol? */
     if (ifd->bInterfaceProtocol != MSC_SPROTO_BULK) {
         msc_debug_msg("Not bulk-only MSC device!\n");
         return USBH_ERR_NOT_SUPPORTED;

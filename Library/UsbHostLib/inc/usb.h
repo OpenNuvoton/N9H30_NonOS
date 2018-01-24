@@ -227,7 +227,7 @@ typedef struct ep_info_t {
     uint8_t     bInterval;
     uint8_t     bToggle;
     uint16_t    wMaxPacketSize;
-    void        *hw_pipe;               /*!< point to the HC assocaied endpoint    \hideinitializer */
+    void        *hw_pipe;               /*!< point to the HC associated endpoint    \hideinitializer */
 }   EP_INFO_T;
 
 typedef struct udev_t {
@@ -235,7 +235,7 @@ typedef struct udev_t {
     struct hub_dev_t *parent;           /*!< parent hub device                     \hideinitializer */
     uint8_t       port_num;             /*!< The hub port this device connected on \hideinitializer */
     uint8_t       dev_num;              /*!< device number                         \hideinitializer */
-    int8_t        cur_conf;             /*!< Currentll selected configuration      \hideinitializer */
+    int8_t        cur_conf;             /*!< Currently selected configuration      \hideinitializer */
     SPEED_E       speed;                /*!< device speed (low/full/high)          \hideinitializer */
     /*
      *  The followings are lightweight USB stack internal used .
@@ -277,7 +277,7 @@ typedef struct utr_t {
     DEV_REQ_T   setup;                /*!< buffer for setup packet               \hideinitializer */
     EP_INFO_T   *ep;                  /*!< associated endpoint                   \hideinitializer */
     uint8_t     *buff;                /*!< transfer buffer                       \hideinitializer */
-    uint8_t     bIsTransferDone;      /*!< tansfer done?                         \hideinitializer */
+    uint8_t     bIsTransferDone;      /*!< transfer done?                         \hideinitializer */
     uint32_t    data_len;             /*!< length of data to be transferred      \hideinitializer */
     uint32_t    xfer_len;             /*!< length of transferred data            \hideinitializer */
     uint8_t     bIsoNewSched;         /*!< New schedule isochronous transfer     \hideinitializer */
@@ -288,8 +288,8 @@ typedef struct utr_t {
     int         td_cnt;               /*!< number of transfer descriptors        \hideinitializer */
     int         status;               /*!< return status                         \hideinitializer */
     int         interval;             /*!< interrupt/isochronous interval        \hideinitializer */
-    void        *context;             /*!< point to deivce proprietary data area \hideinitializer */
-    FUNC_UTR_T  func;                 /*!< tansfer done call-back function       \hideinitializer */
+    void        *context;             /*!< point to device proprietary data area \hideinitializer */
+    FUNC_UTR_T  func;                 /*!< transfer done call-back function       \hideinitializer */
     struct utr_t  *next;              /* point to the next UTR of the same endpoint. \hideinitializer */
 } UTR_T;
 

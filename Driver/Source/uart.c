@@ -37,7 +37,7 @@
 //#define UART_DEBUG
 //#define UART_FLOWCONTROL_DEBUG
 //#define UART1_DEBUG
-//#define UART2_DEBUG
+
 
 #ifdef UART_DEBUG
 #define UDEBUG          sysprintf
@@ -57,11 +57,6 @@
 #define U1DEBUG(...)
 #endif  /* UART1_DEBUG */
 
-#ifdef UART2_DEBUG
-#define U2DEBUG         sysprintf
-#else
-#define U2DEBUG(...)
-#endif  /* UART1_DEBUG */
 
 /*-----------------------------------------*/
 /* global file scope (static) variables    */
@@ -1142,7 +1137,7 @@ INT uartInit(void)
 /**
   * @brief    The function is used to config UART channel.
   *
-  * @param[in]    uart: UART Port. ( UART0 / UART1 / UART2 / UART3 / UART 4 /UART 5 /
+  * @param[in]    uart: UART Port. ( UART0 / UART1 / UART3 / UART 4 /
   *                                 UART6 / UART7 / UART8 / UART9 / UARTA )
   *
   * @return   UART_EIO: UART config Fail
@@ -1167,7 +1162,7 @@ INT uartOpen(PVOID uart)
 /**
   * @brief    The function is used to read RX FIFO returned data or RX driver buffer.
   *
-  * @param[in]    nNum: UART Port. ( UART0 / UART1 / UART2 / UART3 / UART 4 /UART 5 /
+  * @param[in]    nNum: UART Port. ( UART0 / UART1 / UART3 / UART 4 /
   *                                 UART6 / UART7 / UART8 / UART9 / UARTA )
   * @param[out]   pucBuf: The buffer to receive.
   *
@@ -1204,7 +1199,7 @@ INT32 uartRead(INT nNum, PUINT8 pucBuf, UINT32 uLen)
 /**
   * @brief    The function is used to write data to TX FIFO directly or TX driver buffer.
   *
-  * @param[in]    nNum: UART channel. ( UART0 / UART1 / UART2 / UART3 / UART 4 /UART 5 /
+  * @param[in]    nNum: UART channel. ( UART0 / UART1 / UART3 / UART 4 /
   *                                     UART6 / UART7 / UART8 / UART9 / UARTA )
   * @param[out]   pucBuf: Transmit buffer pointer.
   *
@@ -1252,7 +1247,7 @@ INT32 uartWrite(INT nNum, PUINT8 pucBuf, UINT32 uLen)
 /**
   * @brief    Support some UART driver commands for application.
   *
-  * @param[in]    nNum: UART channel. ( UART0 / UART1 / UART2 / UART3 / UART 4 /UART 5 /
+  * @param[in]    nNum: UART channel. ( UART0 / UART1 / UART3 / UART 4 /
   *                                     UART6 / UART7 / UART8 / UART9 / UARTA )
   *
   * @param[in]    uCmd: Command.
@@ -1586,7 +1581,7 @@ INT uartIoctl(INT nNum, UINT32 uCmd, UINT32 uArg0, UINT32 uArg1)
 /**
   * @brief    Release memory resource, disable interrupt.
   *
-  * @param[in]    nNum: UART channel. ( UART0 / UART1 / UART2 / UART3 / UART 4 /UART 5 /
+  * @param[in]    nNum: UART channel. ( UART0 / UART1 / UART3 / UART 4 /
   *                                     UART6 / UART7 / UART8 / UART9 / UARTA )
   *
   * @return   UART_ENODEV: UART channel out of range

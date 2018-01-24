@@ -137,7 +137,7 @@ void  *USB_malloc(INT wanted_size, INT boundary)
 				_pCurrent = (USB_MHDR_T *)_MemoryPoolBase;   /* wrapped */
 			}
 			
-			found_size = -1;          /* reset the accumlator */
+			found_size = -1;          /* reset the accumulator */
 		}
 		else                         /* is a free block */
 		{
@@ -160,7 +160,7 @@ void  *USB_malloc(INT wanted_size, INT boundary)
 				if ((boundary > BOUNDARY_WORD) &&
 					((((UINT32)_pCurrent)+USB_MEM_BLOCK_SIZE >= _MemoryPoolEnd) ||
 					((((UINT32)_pCurrent)+USB_MEM_BLOCK_SIZE) % boundary != 0)))
-					found_size = -1;   /* violate boundary, reset the accumlator */
+					found_size = -1;   /* violate boundary, reset the accumulator */
 			}
 			else                      /* not the leading block */
 			{
@@ -211,7 +211,7 @@ void  *USB_malloc(INT wanted_size, INT boundary)
 			{
 				wrap = 1;
 				_pCurrent = (USB_MHDR_T *)_MemoryPoolBase;   /* wrapped */
-				found_size = -1;     /* reset accumlator */
+				found_size = -1;     /* reset accumulator */
 			}
 		}
 	} while ((wrap == 0) || (_pCurrent < pPrimitivePos));
@@ -279,7 +279,7 @@ void  USB_free(void *alloc_addr)
 	}
 	if (pMblk->magic != USB_MEM_ALLOC_MAGIC)
 	{
-		sysprintf("USB_free(), warning - try to free an unknow block at address:%x.\n", addr);
+		sysprintf("USB_free(), warning - try to free an unknown block at address:%x.\n", addr);
 		if (!_IsInUsbInterrupt)
 		{
 			ENABLE_OHCI_IRQ();

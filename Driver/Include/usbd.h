@@ -234,7 +234,7 @@ typedef struct {
 
 #define USBD   ((USBD_T *) USBD_BA)
 
-/// @endcond
+
 
 
 #define USBD_GINTSTS_USBIF_Pos           (0)                                               /*!< USBD GINTSTS: USBIF Position           */
@@ -686,7 +686,7 @@ typedef struct {
 
 #define USBD_PHYCTL_VBUSDET_Pos          (31)                                              /*!< USBD PHYCTL: VBUSDET Position          */
 #define USBD_PHYCTL_VBUSDET_Msk          (0x1ul << USBD_PHYCTL_VBUSDET_Pos)                /*!< USBD PHYCTL: VBUSDET Mask              */
-
+/// @endcond
 /** @addtogroup N9H30_USBD_EXPORTED_MACROS USBD Exported Macros
   @{
 */

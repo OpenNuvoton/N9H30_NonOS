@@ -151,8 +151,8 @@ UINT32 RTC_DoFrequencyCompensation(INT32 i32FrequencyX100)
   * @param[in]  bEnable    1: Enable access register
   *                        0: Disable access register
   *
-  * @return     E_RTC_ERR_EIO   Time-out error
-  *             E_RTC_SUCCESS   Success
+  * @retval     E_RTC_ERR_EIO   Time-out error
+  * @retval     E_RTC_SUCCESS   Success
   *
   */
 UINT32 RTC_WriteEnable (BOOL bEnable)
@@ -192,11 +192,8 @@ UINT32 RTC_WriteEnable (BOOL bEnable)
 
 /**
   * @brief      Initial RTC and install ISR
-  *
-  * @param      None
-  *
-  * @return     E_RTC_ERR_EIO   Initial RTC time-out
-  *             E_RTC_SUCCESS   Success
+  * @retval     E_RTC_ERR_EIO   Initial RTC time-out
+  * @retval     E_RTC_SUCCESS   Success
   *
   */
 UINT32 RTC_Init (void)
@@ -238,7 +235,7 @@ UINT32 RTC_Init (void)
 
     for (i32i = 0 ; i32i < RTC_WAIT_COUNT ; i32i++) {
         /*-------------------------------------------------------------------------------------------------*/
-        /* check RTC_RWEN[16] to find out RTC write enable                                                  */
+        /* check RTC_RWEN[16] to find out RTC write enable                                                 */
         /*-------------------------------------------------------------------------------------------------*/
         if ( inp32(REG_RTC_RWEN) & 0x10000) {
             break;
@@ -260,24 +257,23 @@ UINT32 RTC_Init (void)
 /**
   * @brief      Set Current Timer
   *
-  * @param[in]  *sPt\n
-  *                     Specify the time property and current time. It includes: \n
-  *                     u8cClockDisplay: \ref RTC_CLOCK_12 / \ref RTC_CLOCK_24   \n
-  *                     u8cAmPm: \ref RTC_AM / \ref RTC_PM                       \n
-  *                     u32cSecond: Second value                                 \n
-  *                     u32cMinute: Minute value                                 \n
-  *                     u32cHour: Hour value                                     \n
-  *                     u32cDayOfWeek: Day of week                               \n
-  *                     u32cDay: Day value                                       \n
-  *                     u32cMonth: Month value                                   \n
-  *                     u32Year: Year value                                      \n
-  *                     u32AlarmMaskSecond: Mask second alarm                    \n
-  *                     u32AlarmMaskMinute: Mask minute alarm                    \n
-  *                     u32AlarmMaskHour: Mask hour alarm                        \n
-  *                     *pfnAlarmCallBack: Call back function                    \n
+  * @param[in]  *sPt    Specify the time property and current time. It includes:
+  *                  -   u8cClockDisplay: \ref RTC_CLOCK_12 / \ref RTC_CLOCK_24
+  *                  -   u8cAmPm: \ref RTC_AM / \ref RTC_PM
+  *                  -   u32cSecond: Second value
+  *                  -   u32cMinute: Minute value
+  *                  -   u32cHour: Hour value
+  *                  -   u32cDayOfWeek: Day of week
+  *                  -   u32cDay: Day value
+  *                  -   u32cMonth: Month value
+  *                  -   u32Year: Year value
+  *                  -   u32AlarmMaskSecond: Mask second alarm
+  *                  -   u32AlarmMaskMinute: Mask minute alarm
+  *                  -   u32AlarmMaskHour: Mask hour alarm
+  *                  -   *pfnAlarmCallBack: Call back function
   *
-  * @return     E_RTC_ERR_EIO   Initial RTC time-out
-  *             E_RTC_SUCCESS   Success
+  * @retval     E_RTC_ERR_EIO   Initial RTC time-out
+  * @retval     E_RTC_SUCCESS   Success
   *
   */
 UINT32 RTC_Open (RTC_TIME_DATA_T *sPt)
@@ -391,24 +387,23 @@ UINT32 RTC_Open (RTC_TIME_DATA_T *sPt)
   * @brief      Read current date/time or alarm date/time from RTC
   *
   * @param[in]   eTime  \ref RTC_CURRENT_TIME / \ref RTC_ALARM_TIME
-  * @param[out]  *sPt\n
-  *                     Specify the time property and current time. It includes: \n
-  *                     u8cClockDisplay: \ref RTC_CLOCK_12 / \ref RTC_CLOCK_24   \n
-  *                     u8cAmPm: \ref RTC_AM / \ref RTC_PM                       \n
-  *                     u32cSecond: Second value                                 \n
-  *                     u32cMinute: Minute value                                 \n
-  *                     u32cHour: Hour value                                     \n
-  *                     u32cDayOfWeek: Day of week                               \n
-  *                     u32cDay: Day value                                       \n
-  *                     u32cMonth: Month value                                   \n
-  *                     u32Year: Year value                                      \n
-  *                     u32AlarmMaskSecond: Mask second alarm                    \n
-  *                     u32AlarmMaskMinute: Mask minute alarm                    \n
-  *                     u32AlarmMaskHour: Mask hour alarm                        \n
-  *                     *pfnAlarmCallBack: Call back function                    \n
+  * @param[out]  *sPt    Specify the time property and current time. It includes:
+  *                  -   u8cClockDisplay: \ref RTC_CLOCK_12 / \ref RTC_CLOCK_24
+  *                  -   u8cAmPm: \ref RTC_AM / \ref RTC_PM
+  *                  -   u32cSecond: Second value
+  *                  -   u32cMinute: Minute value
+  *                  -   u32cHour: Hour value
+  *                  -   u32cDayOfWeek: Day of week
+  *                  -   u32cDay: Day value
+  *                  -   u32cMonth: Month value
+  *                  -   u32Year: Year value
+  *                  -   u32AlarmMaskSecond: Mask second alarm
+  *                  -   u32AlarmMaskMinute: Mask minute alarm
+  *                  -   u32AlarmMaskHour: Mask hour alarm
+  *                  -   *pfnAlarmCallBack: Call back function
   *
-  * @return     E_RTC_ERR_ENOTTY   Wrong select time
-  *             E_RTC_SUCCESS   Success
+  * @retval     E_RTC_ERR_ENOTTY   Wrong select time
+  * @retval     E_RTC_SUCCESS   Success
   *
   */
 UINT32 RTC_Read (E_RTC_TIME_SELECT eTime, RTC_TIME_DATA_T *sPt)
@@ -513,27 +508,26 @@ UINT32 RTC_Read (E_RTC_TIME_SELECT eTime, RTC_TIME_DATA_T *sPt)
   * @brief      Write current date/time or alarm date/time from RTC
   *
   * @param[in]   eTime  \ref RTC_CURRENT_TIME / \ref RTC_ALARM_TIME
-  * @param[in]  *sPt\n
-  *                     Specify the time property and current time. It includes: \n
-  *                     u8cClockDisplay: \ref RTC_CLOCK_12 / \ref RTC_CLOCK_24   \n
-  *                     u8cAmPm: \ref RTC_AM / \ref RTC_PM                       \n
-  *                     u32cSecond: Second value                                 \n
-  *                     u32cMinute: Minute value                                 \n
-  *                     u32cHour: Hour value                                     \n
-  *                     u32cDayOfWeek: Day of week                               \n
-  *                     u32cDay: Day value                                       \n
-  *                     u32cMonth: Month value                                   \n
-  *                     u32Year: Year value                                      \n
-  *                     u32AlarmMaskSecond: Mask second alarm                    \n
-  *                     u32AlarmMaskMinute: Mask minute alarm                    \n
-  *                     u32AlarmMaskHour: Mask hour alarm                        \n
-  *                     *pfnAlarmCallBack: Call back function                    \n
+  * @param[in]  *sPt     Specify the time property and current time. It includes:
+  *                  -   u8cClockDisplay: \ref RTC_CLOCK_12 / \ref RTC_CLOCK_24
+  *                  -   u8cAmPm: \ref RTC_AM / \ref RTC_PM
+  *                  -   u32cSecond: Second value
+  *                  -   u32cMinute: Minute value
+  *                  -   u32cHour: Hour value
+  *                  -   u32cDayOfWeek: Day of week
+  *                  -   u32cDay: Day value
+  *                  -   u32cMonth: Month value
+  *                  -   u32Year: Year value
+  *                  -   u32AlarmMaskSecond: Mask second alarm
+  *                  -   u32AlarmMaskMinute: Mask minute alarm
+  *                  -   u32AlarmMaskHour: Mask hour alarm
+  *                  -   *pfnAlarmCallBack: Call back function
   *
-  * @return     E_RTC_ERR_ENOTTY            Wrong select time
-  *             E_RTC_ERR_CALENDAR_VALUE    Wrong calender value
-  *             E_RTC_ERR_TIME_VALUE        Wrong time value
-  *             E_RTC_ERR_DWR_VALUE         Wrong day of week value
-  *             E_RTC_SUCCESS               Success
+  * @retval     E_RTC_ERR_ENOTTY            Wrong select time
+  * @retval     E_RTC_ERR_CALENDAR_VALUE    Wrong calender value
+  * @retval     E_RTC_ERR_TIME_VALUE        Wrong time value
+  * @retval     E_RTC_ERR_DWR_VALUE         Wrong day of week value
+  * @retval     E_RTC_SUCCESS               Success
   *
   */
 UINT32 RTC_Write(E_RTC_TIME_SELECT eTime, RTC_TIME_DATA_T *sPt)
@@ -767,9 +761,9 @@ UINT32 RTC_Write(E_RTC_TIME_SELECT eTime, RTC_TIME_DATA_T *sPt)
   * @param[in]   u32Arg0    Arguments for the command
   * @param[in]   u32Arg1    Arguments for the command.
   *
-  * @return     E_RTC_ERR_ENOTTY            Wrong command or argument
-  *             E_RTC_ERR_ENODEV            Interface number incorrect
-  *             E_RTC_SUCCESS               Success
+  * @retval     E_RTC_ERR_ENOTTY            Wrong command or argument
+  * @retval     E_RTC_ERR_ENODEV            Interface number incorrect
+  * @retval     E_RTC_SUCCESS               Success
   *
   */
 UINT32 RTC_Ioctl (INT32 i32Num, E_RTC_CMD eCmd, UINT32 u32Arg0, UINT32 u32Arg1)
@@ -1091,7 +1085,7 @@ UINT32 RTC_Ioctl (INT32 i32Num, E_RTC_CMD eCmd, UINT32 u32Arg0, UINT32 u32Arg1)
   *
   * @param[in]  None
   *
-  * @return     E_RTC_SUCCESS               Success
+  * @retval     E_RTC_SUCCESS               Success
   *
   */
 UINT32 RTC_Close (void)

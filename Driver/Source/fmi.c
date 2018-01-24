@@ -16,12 +16,12 @@
   @{
 */
 
-/** @addtogroup N9H30_FMI_EMMC_Driver FMI EMMC Driver
+/** @addtogroup N9H30_FMI_Driver FMI Driver
   @{
 */
 
 
-/** @addtogroup N9H30_FMI_EMMC_EXPORTED_FUNCTIONS FMI EMMC Exported Functions
+/** @addtogroup N9H30_FMI_EXPORTED_FUNCTIONS FMI Exported Functions
   @{
 */
 /// @cond HIDDEN_SYMBOLS
@@ -820,9 +820,9 @@ unsigned int eMMC_Write(unsigned char *pu8BufAddr, unsigned int u32StartSec, uns
 }
 
 
-/*@}*/ /* end of group N9H30_FMI_EMMC_EXPORTED_FUNCTIONS */
+/*@}*/ /* end of group N9H30_FMI_EXPORTED_FUNCTIONS */
 
-/*@}*/ /* end of group N9H30_FMI_EMMC_Driver */
+/*@}*/ /* end of group N9H30_FMI_Driver */
 
 /*@}*/ /* end of group N9H30_Device_Driver */
 

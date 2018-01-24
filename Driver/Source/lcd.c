@@ -610,7 +610,7 @@ void vpostOSDSetOverlay(uint8_t u8OSDDisplayMatch, uint8_t u8OSDDisplayUnMatch, 
 
 /**
   * @brief Write MPU command
-  * @param[in] uscmd is command code
+  * @param[in] uscmd MPU command code
   * @return none
   */
 void vpostMPUWriteAddr(uint16_t uscmd)
@@ -626,7 +626,7 @@ void vpostMPUWriteAddr(uint16_t uscmd)
 
 /**
   * @brief Write MPU data
-  * @param[in] uscmd is data
+  * @param[in] usdata MPU data
   * @return none
   */
 void vpostMPUWriteData(uint16_t usdata)

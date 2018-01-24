@@ -3,7 +3,7 @@
  * @version  V1.00
  * $Revision: 2 $
  * $Date: 15/06/12 10:12a $
- * @brief    NUC980 MCU USB Host Audio Class driver
+ * @brief    N9H30 MCU USB Host Audio Class driver
  *
  * @note
  * Copyright (C) 2016 Nuvoton Technology Corp. All rights reserved.
@@ -20,15 +20,15 @@
 #include "uac.h"
 
 
-/** @addtogroup NUC980_Device_Driver NUC980 Device Driver
+/** @addtogroup N9H30_Library N9H30 Library
   @{
 */
 
-/** @addtogroup NUC980_USBH_Library USB Host Library
+/** @addtogroup N9H30_USBH_Library USB Host Library
   @{
 */
 
-/** @addtogroup NUC980_USBH_EXPORTED_FUNCTIONS USB Host Exported Functions
+/** @addtogroup N9H30_USBH_EXPORTED_FUNCTIONS USB Host Exported Functions
   @{
 */
 
@@ -41,7 +41,7 @@
  *                     - \ref UAC_MICROPHONE
  *  @return   Channel number or error code.
  *  @retval   < 0      Failed. UAC device may not present or function not supported.
- *  @retval   Otheriwse  The channle number.
+ *  @retval   Otherwise  The channel number.
  */
 int  usbh_uac_get_channel_number(UAC_DEV_T *uac, uint8_t target)
 {
@@ -99,7 +99,7 @@ uint32_t  srate_to_u32(uint8_t *srate)
 
 
 /**
- *  @brief  Get a list of sampling rate frequences supported by the UAC device.
+ *  @brief  Get a list of sampling rate frequencies supported by the UAC device.
  *  @param[in]  uac    UAC device
  *  @param[in]  target Select the control target.
  *                     - \ref UAC_SPEAKER
@@ -160,10 +160,10 @@ int  usbh_uac_get_sampling_rate(UAC_DEV_T *uac, uint8_t target, uint32_t *srate_
  *                     - \ref UAC_GET_MAX
  *                     - \ref UAC_SET_RES
  *                     - \ref UAC_GET_RES
- *  @param[in]  srate  Sampling rate frequncy to be set or get.
+ *  @param[in]  srate  Sampling rate frequency to be set or get.
  *  @return   Success or failed.
  *  @retval   0        Success
- *  @retval   Otheriwse  Error occurred
+ *  @retval   Otherwise  Error occurred
  */
 int  usbh_uac_sampling_rate_control(UAC_DEV_T *uac, uint8_t target, uint8_t req, uint32_t *srate)
 {
@@ -240,7 +240,7 @@ int  usbh_uac_sampling_rate_control(UAC_DEV_T *uac, uint8_t target, uint8_t req,
  *  @return   Success or failed.
  *  @retval   0        Success
  *  @retval   UAC_RET_DEV_NOT_SUPPORTED  This UAC device does not support this function.
- *  @retval   Otheriwse  Error occurred
+ *  @retval   Otherwise  Error occurred
  */
 int usbh_uac_mute_control(UAC_DEV_T *uac, uint8_t target, uint8_t req, uint16_t chn, uint8_t *mute)
 {
@@ -315,7 +315,7 @@ int usbh_uac_mute_control(UAC_DEV_T *uac, uint8_t target, uint8_t req, uint16_t 
  *                     - \ref UAC_CH_SIDE_LEFT
  *                     - \ref UAC_CH_SIDE_RIGHT
  *                     - \ref UAC_CH_TOP
- *  @param[in]  volume   Audio Class device volume value, which is intepreted as the following:
+ *  @param[in]  volume   Audio Class device volume value, which is interpreted as the following:
  *                       0x7FFF:    127.9961 dB
  *                       . . .
  *                       0x0100:      1.0000 dB
@@ -333,7 +333,7 @@ int usbh_uac_mute_control(UAC_DEV_T *uac, uint8_t target, uint8_t req, uint16_t 
  *  @return   Success or failed.
  *  @retval   0        Success
  *  @retval   UAC_RET_DEV_NOT_SUPPORTED  This UAC device does not support this function.
- *  @retval   Otheriwse  Error occurred
+ *  @retval   Otherwise  Error occurred
  */
 int usbh_uac_vol_control(UAC_DEV_T *uac, uint8_t target, uint8_t req, uint16_t chn, uint16_t *volume)
 {
@@ -401,11 +401,11 @@ int usbh_uac_vol_control(UAC_DEV_T *uac, uint8_t target, uint8_t req, uint16_t c
  *                     - \ref UAC_CH_SIDE_LEFT
  *                     - \ref UAC_CH_SIDE_RIGHT
  *                     - \ref UAC_CH_TOP
- *  @param[in]  bAGC   One byte data. If the channel's automaic gain control is on, then the value is 1. Otherwise, it's 0.
+ *  @param[in]  bAGC   One byte data. If the channel's automatic gain control is on, then the value is 1. Otherwise, it's 0.
  *  @return   Success or failed.
  *  @retval   0        Success
  *  @retval   UAC_RET_DEV_NOT_SUPPORTED  This UAC device does not support this function.
- *  @retval   Otheriwse  Error occurred
+ *  @retval   Otherwise  Error occurred
  */
 int  usbh_uac_auto_gain_control(UAC_DEV_T *uac, uint8_t target, uint8_t req, uint16_t chn, uint8_t *bAGC)
 {
@@ -470,7 +470,7 @@ int  usbh_uac_find_max_alt(IFACE_T *iface, uint8_t dir, uint8_t attr, uint8_t *b
 
     for (i = 0; i < iface->num_alt; i++) {
         for (j = 0; j < iface->alt[i].ifd->bNumEndpoints; j++) {
-            ep = &(iface->alt[i].ep[j]);    /* get enpoint                                */
+            ep = &(iface->alt[i].ep[j]);    /* get endpoint                                */
 
             if (((ep->bEndpointAddress & EP_ADDR_DIR_MASK) != dir) ||
                     ((ep->bmAttributes & EP_ATTR_TT_MASK) != attr))
@@ -508,7 +508,7 @@ int  usbh_uac_find_best_alt(IFACE_T *iface, uint8_t dir, uint8_t attr, int pkt_s
 
     for (i = 0; i < iface->num_alt; i++) {
         for (j = 0; j < iface->alt[i].ifd->bNumEndpoints; j++) {
-            ep = &(iface->alt[i].ep[j]);    /* get enpoint                                */
+            ep = &(iface->alt[i].ep[j]);    /* get endpoint                                */
 
             if (((ep->bEndpointAddress & EP_ADDR_DIR_MASK) != dir) ||
                     ((ep->bmAttributes & EP_ATTR_TT_MASK) != attr))
@@ -630,7 +630,7 @@ int usbh_uac_start_audio_in(UAC_DEV_T *uac, UAC_CB_FUNC *func)
     ep = asif->ep;
 
 #ifdef UAC_DEBUG
-    UAC_DBGMSG("Actived isochronous-in endpoint =>");
+    UAC_DBGMSG("Active isochronous-in endpoint =>");
     usbh_dump_ep_info(ep);
 #endif
 
@@ -843,7 +843,7 @@ int usbh_uac_start_audio_out(UAC_DEV_T *uac, UAC_CB_FUNC *func)
         if (((ep->bEndpointAddress & EP_ADDR_DIR_MASK) == EP_ADDR_DIR_OUT) &&
                 ((ep->bmAttributes & EP_ATTR_TT_MASK) == EP_ATTR_TT_ISO)) {
             asif->ep = ep;
-            UAC_DBGMSG("Aduio in endpoint 0x%x found, size: %d\n", ep->bEndpointAddress, ep->wMaxPacketSize);
+            UAC_DBGMSG("Audio in endpoint 0x%x found, size: %d\n", ep->bEndpointAddress, ep->wMaxPacketSize);
             break;
         }
     }
@@ -852,7 +852,7 @@ int usbh_uac_start_audio_out(UAC_DEV_T *uac, UAC_CB_FUNC *func)
     ep = asif->ep;
 
 #ifdef UAC_DEBUG
-    UAC_DBGMSG("Actived isochronous-out endpoint =>");
+    UAC_DBGMSG("Active isochronous-out endpoint =>");
     usbh_dump_ep_info(ep);
 #endif
 
@@ -1019,11 +1019,11 @@ int usbh_uac_open(UAC_DEV_T *uac)
     return 0;
 }
 
-/*@}*/ /* end of group NUC980_USBH_EXPORTED_FUNCTIONS */
+/*@}*/ /* end of group N9H30_USBH_EXPORTED_FUNCTIONS */
 
-/*@}*/ /* end of group NUC980_USBH_Library */
+/*@}*/ /* end of group N9H30_USBH_Library */
 
-/*@}*/ /* end of group NUC980_Device_Driver */
+/*@}*/ /* end of group N9H30_Library */
 
 /*** (C) COPYRIGHT 2016 Nuvoton Technology Corp. ***/
 

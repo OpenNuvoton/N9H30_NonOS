@@ -245,9 +245,10 @@ int sysSetMMUMappingMethod(int mode);   /*!< MMU mapping \hideinitializer */
 UINT32 sysGetClock(CLK_Type clk);
 
 typedef void (*sys_pvFunPtr)();   /* function pointer */
+/// @cond HIDDEN_SYMBOLS
 extern sys_pvFunPtr sysIrqHandlerTable[];
 extern BOOL volatile _sys_bIsAICInitial;
-
+/// @endcond
 #ifdef __cplusplus
 }
 #endif

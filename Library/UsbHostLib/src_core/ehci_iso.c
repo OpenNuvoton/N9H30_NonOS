@@ -3,7 +3,7 @@
  * @version  V1.10
  * $Revision: 11 $
  * $Date: 14/10/03 1:54p $
- * @brief   USB EHCI isochornous transfer driver.
+ * @brief   USB EHCI isochronous transfer driver.
  *
  * @note
  * Copyright (C) 2017 Nuvoton Technology Corp. All rights reserved.
@@ -232,7 +232,7 @@ void scan_isochronous_list(void)
                     }
 
                     if (sp == NULL) {                 /* link list out of control!         */
-                        USB_error("An siTD lost refernece to periodic frame list! 0x%x -> %d\n", (int)sitd, frnidx);
+                        USB_error("An siTD lost reference to periodic frame list! 0x%x -> %d\n", (int)sitd, frnidx);
                     } else {                          /* remove iTD from list              */
                         sp->Next_Link = sitd->Next_Link;
                     }
@@ -402,31 +402,31 @@ int ehci_iso_xfer(UTR_T *utr)
     if (ep->bInterval < 2) {                /* transfer interval is 1 micro-frame         */
         trans_mask = 0xFF;
         itd_cnt = 1;                        /* required 1 iTD for one UTR                 */
-        interval = 1;                       /* iTD frame interval of this ednpoint        */
+        interval = 1;                       /* iTD frame interval of this endpoint        */
     } else if (ep->bInterval < 4) {         /* transfer interval is 2 micro-frames        */
         trans_mask = 0x55;
         itd_cnt = 2;                        /* required 2 iTDs for one UTR                */
-        interval = 1;                       /* iTD frame interval of this ednpoint        */
+        interval = 1;                       /* iTD frame interval of this endpoint        */
     } else if (ep->bInterval < 8) {         /* transfer interval is 4 micro-frames        */
         trans_mask = 0x44;
         itd_cnt = 4;                        /* required 4 iTDs for one UTR                */
-        interval = 1;                       /* iTD frame interval of this ednpoint        */
+        interval = 1;                       /* iTD frame interval of this endpoint        */
     } else if (ep->bInterval < 16) {        /* transfer interval is 8 micro-frames        */
         trans_mask = 0x08;                  /* there's 1 transfer in one iTD              */
         itd_cnt = 8;                        /* required 8 iTDs for one UTR                */
-        interval = 1;                       /* iTD frame interval of this ednpoint        */
+        interval = 1;                       /* iTD frame interval of this endpoint        */
     } else if (ep->bInterval < 32) {        /* transfer interval is 16 micro-frames       */
         trans_mask = 0x10;                  /* there's 1 transfer in one iTD              */
         itd_cnt = 8;                        /* required 8 iTDs for one UTR                */
-        interval = 2;                       /* iTD frame interval of this ednpoint        */
+        interval = 2;                       /* iTD frame interval of this endpoint        */
     } else if (ep->bInterval < 64) {        /* transfer interval is 32 micro-frames       */
         trans_mask = 0x02;                  /* there's 1 transfer in one iTD              */
         itd_cnt = 8;                        /* required 8 iTDs for one UTR                */
-        interval = 4;                       /* iTD frame interval of this ednpoint        */
+        interval = 4;                       /* iTD frame interval of this endpoint        */
     } else  {                               /* transfer interval is 64 micro-frames       */
         trans_mask = 0x04;                  /* there's 1 transfer in one iTD              */
         itd_cnt = 8;                        /* required 8 iTDs for one UTR                */
-        interval = 8;                       /* iTD frame interval of this ednpoint        */
+        interval = 8;                       /* iTD frame interval of this endpoint        */
     }
 
     for (i = 0; i < itd_cnt; i++) {         /* allocate all iTDs required by UTR          */
@@ -449,7 +449,7 @@ int ehci_iso_xfer(UTR_T *utr)
     /*------------------------------------------------------------------------------------*/
 
     utr->iso_sf = iso_ep->next_frame;
-    fidx = 0;                               /* index to UTR iso frmes (total IF_PER_UTR)  */
+    fidx = 0;                               /* index to UTR iso frames (total IF_PER_UTR)  */
 
     for (itd = itd_list; (itd != NULL); ) {
         if (fidx >= IF_PER_UTR) {           /* unlikely                                   */
@@ -466,13 +466,13 @@ int ehci_iso_xfer(UTR_T *utr)
 
         for (i = 0; i < 8; i++) {           /* settle xfer into micro-frames              */
             if (!(trans_mask & (0x1<<i))) {
-                itd->Transaction[i] = 0;    /* not accesed                                */
+                itd->Transaction[i] = 0;    /* not accessed                                */
                 continue;                   /* not scheduled micro-frame                  */
             }
 
             write_itd_micro_frame(utr, fidx, itd, i);
 
-            fidx++;                         /* preceed to next UTR iso frame              */
+            fidx++;                         /* proceed to next UTR iso frame              */
 
             if (fidx == IF_PER_UTR) {       /* is the last scheduled micro-frame?         */
                 /* raise interrupt on completed               */
@@ -603,7 +603,7 @@ static void ehci_sitd_adjust_schedule(siTD_T *sitd)
             if (sitd->Sched & uframe_mask) {
                 sitd->Sched = (sitd->Sched & 0xFFFF0000) | ((sitd->Sched << 1) & 0xFFFF);
             } else {
-                break;                      /* no conflit, done.                          */
+                break;                      /* no conflict, done.                          */
             }
         }
     }
@@ -645,7 +645,7 @@ static int ehci_iso_split_xfer(UTR_T *utr, ISO_EP_T *iso_ep)
     /*------------------------------------------------------------------------------------*/
 
     utr->iso_sf = iso_ep->next_frame;
-    fidx = 0;                               /* index to UTR iso frmes (total IF_PER_UTR)  */
+    fidx = 0;                               /* index to UTR iso frames (total IF_PER_UTR)  */
 
     for (sitd = sitd_list; (sitd != NULL); fidx++) {
         if (fidx >= IF_PER_UTR) {           /* unlikely                                   */
@@ -690,7 +690,7 @@ malloc_failed:
 }
 
 /*
- *  If it's an isochronous endpoint, quit current trasnfer via UTR or hardware EP.
+ *  If it's an isochronous endpoint, quit current transfer via UTR or hardware EP.
  */
 int ehci_quit_iso_xfer(UTR_T *utr, EP_INFO_T *ep)
 {
@@ -743,7 +743,7 @@ int ehci_quit_iso_xfer(UTR_T *utr, EP_INFO_T *ep)
             }
 
             if (p == NULL) {                /* link list out of control!                  */
-                USB_error("ehci_quit_iso_xfer - An iTD lost refernece to periodic frame list! 0x%x -> %d\n", (int)itd, frnidx);
+                USB_error("ehci_quit_iso_xfer - An iTD lost reference to periodic frame list! 0x%x -> %d\n", (int)itd, frnidx);
             } else {                        /* remove iTD from list                       */
                 p->Next_Link = itd->Next_Link;
             }

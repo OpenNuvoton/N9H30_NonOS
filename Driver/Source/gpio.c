@@ -21,10 +21,10 @@
 /** @addtogroup N9H30_GPIO_EXPORTED_FUNCTIONS GPIO Exported Functions
   @{
 */
-
+/// @cond HIDDEN_SYMBOLS
 static GPIO_CFG gpioCfg;
 static INT32 maskTbl[] = {GPIOA_MASK, GPIOB_MASK, GPIOC_MASK, GPIOD_MASK, GPIOE_MASK, GPIOF_MASK, GPIOG_MASK, GPIOH_MASK, GPIOI_MASK, GPIOJ_MASK};
-
+/// @endcond
 
 /**
  * @brief       GPIO interrupt handler

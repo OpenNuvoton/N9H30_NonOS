@@ -33,7 +33,7 @@ typedef enum {
 /* Audio Interface Protocol Code (A.3)                */
 #define PR_PROTOCOL_UNDEFINED         0x00
 
-/* Audio Class-specific descritpor types (A.4)        */
+/* Audio Class-specific descriptor types (A.4)        */
 #define CS_UNDEFINED                  0x20
 #define CS_DEVICE                     0x21
 #define CS_CONFIGURATION              0x22

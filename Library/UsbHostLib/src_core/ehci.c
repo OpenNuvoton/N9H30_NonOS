@@ -398,7 +398,7 @@ static void  write_qh(UDEV_T *udev, EP_INFO_T *ep, QH_T *qh)
             chrst |= QH_CTRL_EP_FLAG;           /* non-high-speed control endpoint        */
     } else {                                    /* not a control endpoint                 */
         chrst = QH_NAK_RL | (ep->wMaxPacketSize << 16);
-        chrst |= ((ep->bEndpointAddress & 0xf) << 8);      /* Enpoint Address             */
+        chrst |= ((ep->bEndpointAddress & 0xf) << 8);      /* Endpoint Address             */
     }
 
     if (udev->speed == SPEED_LOW)
@@ -644,7 +644,7 @@ static int ehci_bulk_xfer(UTR_T *utr)
         buff += xfer_len;                   /* advanced buffer pointer                    */
         data_len -= xfer_len;
 
-        if (data_len == 0) {                /* is this the lastest qTD?                   */
+        if (data_len == 0) {                /* is this the last qTD?                   */
             qtd->Token |= QTD_IOC;          /* ask to raise an interrupt on the last qTD  */
             qtd->Next_qTD = (uint32_t)_ghost_qtd;     /* qTD list end                     */
         }
@@ -767,7 +767,7 @@ static int ehci_int_xfer(UTR_T *utr)
 }
 
 /*
- *  Quit current trasnfer via UTR or hardware EP.
+ *  Quit current transfer via UTR or hardware EP.
  */
 static int ehci_quit_xfer(UTR_T *utr, EP_INFO_T *ep)
 {
@@ -953,7 +953,7 @@ void iaad_remove_qh()
             free_ehci_qTD(qtd);
         }
 
-        if (qh->qtd_list != NULL) {         /* still have incompleted qTDs?               */
+        if (qh->qtd_list != NULL) {         /* still have incomplete qTDs?               */
             utr = qh->qtd_list->utr;
             while (qh->qtd_list) {
                 qtd = qh->qtd_list;
