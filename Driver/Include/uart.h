@@ -583,7 +583,6 @@ typedef struct UART_BUFFER_STRUCT {
 
     PINT      pucUARTFlag;
     PINT      pucLINFlag;
-    UINT32 volatile uRecCnt;
     INT32 volatile nErrno;
 
 } UART_BUFFER_T;

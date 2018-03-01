@@ -631,13 +631,11 @@ static void _uartReceiveChars(INT nNum)
         }
 
         dev->uUartRxTail = _uartRxBufGetNextOne(nNum, dev->uUartRxTail);
-        dev->uRecCnt++;
 
         /* overrun error is special case, H/W ignore the character */
         if(uRegFSR & UART_FSR_RX_OVER_IF_Msk) {
             dev->pucUARTFlag[dev->uUartRxTail] = UART_FSR_RX_OVER_IF_Msk;
             dev->uUartRxTail = _uartRxBufGetNextOne(nNum, dev->uUartRxTail);
-            dev->uRecCnt++;
         }
 
         uRegFSR = inpw(REG_UART0_FSR+(nNum * UARTOFFSET));
@@ -847,18 +845,18 @@ static INT32 _uartReadRxBuf(INT nNum, PUINT8 pucBuf, UINT32 uLen)
 
         // disable Rx interrupt ...
 
-        if(dev->uRecCnt == 0)  /* no data in Rx buffer */
+        if(dev->uUartRxHead == dev->uUartRxTail)
             return 0;
-
-        if(uLen > dev->uRecCnt)
-            uLen = dev->uRecCnt;
 
         for(i = uLen ; i > 0 ; i--) {
             *pucBuf++ = dev->pucUartRxBuf[dev->uUartRxHead];
             dev->uUartRxHead = _uartRxBufGetNextOne(nNum, dev->uUartRxHead);
+
+            if(dev->uUartRxHead == dev->uUartRxTail)
+                break;
         }
 
-        dev->uRecCnt -= uLen;  /* maintain uRecCnt value */
+        uLen = uLen-i+1;
     } else { /* pooling mode */
         for(i = 0 ; i < uLen; i++) {
             while(!(inpw(REG_UART0_FSR+uOffset) & UART_FSR_RX_EMPTY_Msk));
@@ -993,8 +991,6 @@ static INT _uartConfigureUART(PVOID pvParam)
         if(UART_DEV[param->ucUartNo].bIsUseUARTRxInt == TRUE)
             _uartEnableInterrupt(param->ucUartNo, UART_IER_RDA_IEN_Msk);
 
-        /* inital struct UART_BUFFER_STRUCT, uRecCnt */
-        UART_DEV[param->ucUartNo].uRecCnt = 0;
     }
 
     UART_DEV[param->ucUartNo].bIsUARTInitial = TRUE;  /* it's important to set TRUE */
@@ -1127,9 +1123,6 @@ INT uartInit(void)
 
     for(i = 0; i < UART_NUM ; i++)
         UART_DEV[i].bIsUseUARTRxInt = TRUE;
-
-    for(i = 0; i < UART_NUM ; i++)
-        UART_DEV[i].uRecCnt = 0;
 
     return 0;
 }
@@ -1514,7 +1507,6 @@ INT uartIoctl(INT nNum, UINT32 uCmd, UINT32 uArg0, UINT32 uArg1)
         case UART_IOC_FLUSH_RX_BUFFER:
             dev->uUartRxTail = 0;
             dev->uUartRxHead = 0;
-            dev->uRecCnt = 0;
             break;
 
         case UART_IOC_SET_RS485_MODE:
