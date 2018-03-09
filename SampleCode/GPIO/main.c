@@ -35,8 +35,6 @@ INT32 GPIODCallback(UINT32 status, UINT32 userData)
 int main(void)
 {
     int32_t i32Err;
-    *((volatile unsigned int *)REG_AIC_MDCR)=0xFFFFFFFF;  // disable all interrupt channel
-    *((volatile unsigned int *)REG_AIC_MDCRH)=0xFFFFFFFF;  // disable all interrupt channel
 
     sysDisableCache();
     sysFlushCache(I_D_CACHE);

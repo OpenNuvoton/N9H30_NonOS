@@ -29,21 +29,22 @@
 /// @cond HIDDEN_SYMBOLS
 
 /* LCD attributes */
-static VPOST_T DEF_E50A2V1 = {  800,                            /*!< Panel width */
-                                480,                            /*!< Panel height */
-                                0,                              /*!< MPU command line low indicator */
-                                0,                              /*!< MPU command width */
-                                0,                              /*!< MPU bus width */
-                                VPOSTB_DATA16or18,              /*!< Display bus width */
-                                0,                              /*!< MPU mode */
-                                VPOSTB_COLORTYPE_64K,           /*!< Display colors */
-                                VPOSTB_DEVICE_SYNC_HIGHCOLOR,   /*!< Type of display panel */
-                                0x020d03a0,                     /*!< CRTCSIZE register value */
-                                0x01e00320,                     /*!< CRTCDEND register value */
-                                0x03250321,                     /*!< CRTCHR register value */
-                                0x03780348,                     /*!< CRTCHSYNC register value */
-                                0x01f001ed
-                             };                    /*!< CRTCVR register value */
+static VPOST_T DEF_E50A2V1 = {
+    800,                            /*!< Panel width */
+    480,                            /*!< Panel height */
+    0,                              /*!< MPU command line low indicator */
+    0,                              /*!< MPU command width */
+    0,                              /*!< MPU bus width */
+    VPOSTB_DATA16or18,              /*!< Display bus width */
+    0,                              /*!< MPU mode */
+    VPOSTB_COLORTYPE_64K,           /*!< Display colors */
+    VPOSTB_DEVICE_SYNC_HIGHCOLOR,   /*!< Type of display panel */
+    0x020d03a0,                     /*!< CRTCSIZE register value */
+    0x01e00320,                     /*!< CRTCDEND register value */
+    0x03250321,                     /*!< CRTCHR register value */
+    0x03780348,                     /*!< CRTCHSYNC register value */
+    0x01f001ed
+};                    /*!< CRTCVR register value */
 
 static VPOST_T DEF_ILI9341_MPU80 = {
     240,                            /*!< Panel width */
@@ -55,11 +56,11 @@ static VPOST_T DEF_ILI9341_MPU80 = {
     VPOSTB_MPU80,                   /*!< MPU mode */
     VPOSTB_COLORTYPE_64K,           /*!< Display colors */
     VPOSTB_DEVICE_MPU,              /*!< Type of display panel */
-    0x0056015a,                     /*!< CRTCSIZE register value */
-    0x00400100,                     /*!< CRTCDEND register value */
-    0x010a0100,                     /*!< CRTCHR register value */
-    0x01320128,                     /*!< CRTCHSYNC register value */
-    0x004c004a
+    0x01600100,                     /*!< CRTCSIZE register value */
+    0x014000F0,                     /*!< CRTCDEND register value */
+    0x00FA00F5,                     /*!< CRTCHR register value */
+    0x00FC00FA,                     /*!< CRTCHSYNC register value */
+    0x01500145
 };                    /*!< CRTCVR register value */
 
 static VPOST_T DEF_LSA40AT9001 = {
