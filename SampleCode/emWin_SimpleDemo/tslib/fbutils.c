@@ -24,6 +24,7 @@
 #include "fbutils.h"
 #include "N9H30.h"
 #include "lcd.h"
+#include "GUI.h"
 
 //#define LCD_XSIZE		320
 //#define LCD_YSIZE		240

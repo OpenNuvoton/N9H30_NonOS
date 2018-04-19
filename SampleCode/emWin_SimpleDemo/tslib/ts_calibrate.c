@@ -25,6 +25,8 @@
 #include "N9H30.h"
 #include "diskio.h"
 #include "ff.h"
+#include "sys.h"
+#include "GUI.h"
 
 typedef struct {
 	int x[5], xfb[5];

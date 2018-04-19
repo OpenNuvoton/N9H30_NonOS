@@ -42,7 +42,7 @@ int Init_TouchPanel(void)
 // 	adc_init();
 // 	adc_open(ADC_TS_4WIRE, XSIZE_PHYS, YSIZE_PHYS);  //320x240
   adcOpen();
-	outpw(REG_ADC_CONF,(inpw(REG_ADC_CONF)&~(0xff<<24))|0xff<<24);
+	outpw(REG_ADC_CONF,(inpw(REG_ADC_CONF)&~(0xfful<<24))|0xfful<<24);
   adcIoctl(T_ON,(UINT32)TouchXYCallback,userdata);
   adcIoctl(Z_ON,(UINT32)TouchZCallback,userdata);
   adcIoctl(PEDEF_ON,(UINT32)PenDownCallback,userdata);

@@ -96,10 +96,10 @@ static void refresh_screen ()
 	for (i = 0; i < NR_BUTTONS; i++)
 		button_draw (&buttons [i]);
 }
-
+extern int ts_phy2log(int *sumx, int *sumy);
 int ts_TestMain(int xsize, int ysize)
 {
-	struct tsdev *ts;
+//	struct tsdev *ts;
 	int x, y;//old_x,old_y;
 	unsigned int i;
 	volatile unsigned int mode = 0;

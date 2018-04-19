@@ -349,7 +349,7 @@
           </ArmAdsMisc>
           <Cads>
             <interw>1</interw>
-            <Optim>1</Optim>
+            <Optim>3</Optim>
             <oTime>0</oTime>
             <SplitLS>0</SplitLS>
             <OneElfS>1</OneElfS>
@@ -370,7 +370,7 @@
             <v6Lto>0</v6Lto>
             <v6WtE>0</v6WtE>
             <VariousControls>
-              <MiscControls></MiscControls>
+              <MiscControls>--diag_suppress=550</MiscControls>
               <Define></Define>
               <Undefine></Undefine>
               <IncludePath>..\..\..\Driver\Source;..\..\..\Driver\Include;..\..\..\ThirdParty\FATFS\src;..\..\..\ThirdParty\emWin\Config;..\..\..\ThirdParty\emWin\Include;..\..\emWin_SimpleDemo;..\tslib;..\Application</IncludePath>

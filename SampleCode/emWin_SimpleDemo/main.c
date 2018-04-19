@@ -19,6 +19,7 @@
 #include "TouchPanel.h"
 #include "gui.h"
 #include "wm.h"
+#include "FRAMEWIN.h"
 #include "LCD_Protected.h"
 #include "LCDconf.h"
 #if GUI_WINSUPPORT
@@ -277,8 +278,13 @@ void SYS_Init(void)
 WM_HWIN CreateFramewin(void);
 void MainTask(void)
 {
+    WM_HWIN hWin;
+    char     acVersion[40] = "Framewin: Version of emWin: ";
+    
     //GUI_Init();
-    CreateFramewin();
+    hWin = CreateFramewin();
+    strcat(acVersion, GUI_GetVersionString());
+    FRAMEWIN_SetText(hWin, acVersion);
     while (1)
     {
         GUI_Delay(500);
@@ -363,7 +369,7 @@ int main(void)
     }
     f_close(&hFile);
 
-    ts_test(LCD_XSIZE, LCD_YSIZE);
+//    ts_test(LCD_XSIZE, LCD_YSIZE);
 
     g_enable_Touch = 1;
 #endif

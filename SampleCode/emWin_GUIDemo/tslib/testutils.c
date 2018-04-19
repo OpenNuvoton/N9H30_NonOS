@@ -20,6 +20,9 @@
 #include "N9H30.h"
 #include "tslib.h"
 #include "fbutils.h"
+#include "sys.h"
+#include "GUI.h"
+#include "TouchPanel.h"
 
 static int sort_by_x(const void* a, const void *b)
 {
