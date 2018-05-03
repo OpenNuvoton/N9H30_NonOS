@@ -1,5 +1,5 @@
 /**************************************************************************//**
- * @file     usbh_hid.h
+ * @file     hid.h
  * @version  V1.10
  * $Revision: 1 $
  * $Date: 15/06/12 9:58a $
@@ -24,15 +24,15 @@ extern "C"
 /// @endcond HIDDEN_SYMBOLS
 
 
-/** @addtogroup N9H30_Library N9H30 Library
+/** @addtogroup NUC980_Device_Driver NUC980 Device Driver
   @{
 */
 
-/** @addtogroup N9H30_USBH_Library USB Host Library
+/** @addtogroup NUC980_USBH_Library USB Host Library
   @{
 */
 
-/** @addtogroup N9H30_USBH_EXPORTED_CONSTANTS USB Host Exported Constants
+/** @addtogroup NUC980_USBH_EXPORTED_CONSTANTS USB Host Exported Constants
   @{
 */
 
@@ -57,10 +57,10 @@ extern "C"
 #define RT_FEATURE                  3      /*!< Report type: Feature             \hideinitializer */
 
 
-/*@}*/ /* end of group N9H30_USBH_EXPORTED_CONSTANTS */
+/*@}*/ /* end of group NUC980_USBH_EXPORTED_CONSTANTS */
 
 
-/** @addtogroup N9H30_USBH_EXPORTED_STRUCTURES USB Host Exported Structures
+/** @addtogroup NUC980_USBH_EXPORTED_STRUCTURES USB Host Exported Structures
   @{
 */
 
@@ -68,7 +68,8 @@ extern "C"
 /*  HID device                                                                                 */
 /*---------------------------------------------------------------------------------------------*/
 /*! HID device structure \hideinitializer                                                      */
-typedef struct usbhid_dev {
+typedef struct usbhid_dev
+{
     uint16_t      idVendor;             /*!< USB device vendor ID. (from device descriptor)    */
     uint16_t      idProduct;            /*!< USB device product ID. (from device descriptor)   */
     uint8_t       bSubClassCode;        /*!< Interface subclass code                           */
@@ -82,12 +83,12 @@ typedef struct usbhid_dev {
     struct usbhid_dev   *next;          /*!< Point to the next HID device                      */
 } HID_DEV_T;                            /*! HID device structure                               */
 
-/*@}*/ /* end of group N9H30_USBH_EXPORTED_STRUCTURES */
+/*@}*/ /* end of group NUC980_USBH_EXPORTED_STRUCTURES */
 
 
-/*@}*/ /* end of group N9H30_USBH_Library */
+/*@}*/ /* end of group NUC980_USBH_Library */
 
-/*@}*/ /* end of group N9H30_Library */
+/*@}*/ /* end of group NUC980_Device_Driver */
 
 #ifdef __cplusplus
 }

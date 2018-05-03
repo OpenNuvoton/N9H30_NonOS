@@ -17,15 +17,15 @@
 #include "usbh_lib.h"
 #include "..\src_uac\uac.h"
 
-/** @addtogroup N9H30_Library N9H30 Library
+/** @addtogroup NUC980_Device_Driver NUC980 Device Driver
   @{
 */
 
-/** @addtogroup N9H30_USBH_Library USB Host Library
+/** @addtogroup NUC980_USBH_Library USB Host Library
   @{
 */
 
-/** @addtogroup N9H30_USBH_EXPORTED_CONSTANTS USB Host Exported Constants
+/** @addtogroup NUC980_USBH_EXPORTED_CONSTANTS USB Host Exported Constants
   @{
 */
 
@@ -67,11 +67,11 @@
 #define UAC_CH_SIDE_RIGHT            11     /*!< Select Side Right (SR) channel.      \hideinitializer */
 #define UAC_CH_TOP                   12     /*!< Select Top (T) channel.              \hideinitializer */
 
-/*@}*/ /* end of group N9H30_USBH_EXPORTED_CONSTANTS */
+/*@}*/ /* end of group NUC980_USBH_EXPORTED_CONSTANTS */
 
 
 
-/** @addtogroup N9H30_USBH_EXPORTED_STRUCTURES USB Host Exported Structures
+/** @addtogroup NUC980_USBH_EXPORTED_STRUCTURES USB Host Exported Structures
   @{
 */
 
@@ -79,7 +79,8 @@
 /*----------------------------------------------------------------------------------------*/
 /*  Audio Control Interface                                                               */
 /*----------------------------------------------------------------------------------------*/
-typedef struct ac_if_t {
+typedef struct ac_if_t
+{
     IFACE_T        *iface;                  /*!< USB interface                            */
     uint8_t        mic_id;                  /*!< Microphone Input Terminal ID             */
     uint8_t        mic_fuid;                /*!< Microphone Feature Unit ID               */
@@ -90,7 +91,8 @@ typedef struct ac_if_t {
 /*----------------------------------------------------------------------------------------*/
 /*  Audio Streaming Interface                                                             */
 /*----------------------------------------------------------------------------------------*/
-typedef struct as_if_t {
+typedef struct as_if_t
+{
     IFACE_T        *iface;                  /*!< USB interface                            */
     EP_INFO_T      *ep;                     /*!< Currently selected streaming endpoint    */
     UTR_T          *utr[NUM_UTR];           /*!< ping-pong transfer requests              */
@@ -106,7 +108,8 @@ typedef struct as_if_t {
 /*----------------------------------------------------------------------------------------*/
 /*  Audio Class device                                                                    */
 /*----------------------------------------------------------------------------------------*/
-typedef struct uac_dev_t {
+typedef struct uac_dev_t
+{
     UDEV_T         *udev;                   /*!< pointer to this UAC device               */
     AC_IF_T        acif;                    /*!< audio control interface                  */
     AS_IF_T        asif_in;                 /*!< audio streaming in interface             */
@@ -119,7 +122,7 @@ typedef struct uac_dev_t {
 } UAC_DEV_T;                                /*! audio class device structure              */
 
 
-/*@}*/ /* end of group N9H30_USBH_EXPORTED_STRUCTURES */
+/*@}*/ /* end of group NUC980_USBH_EXPORTED_STRUCTURES */
 
 
 /// @cond HIDDEN_SYMBOLS
@@ -136,9 +139,9 @@ extern int usbh_uac_find_max_alt(IFACE_T *iface, uint8_t dir, uint8_t attr, uint
 extern "C" {
 #endif
 
-/*@}*/ /* end of group N9H30_USBH_Library */
+/*@}*/ /* end of group NUC980_USBH_Library */
 
-/*@}*/ /* end of group N9H30_Library */
+/*@}*/ /* end of group NUC980_Device_Driver */
 
 
 #ifdef __cplusplus

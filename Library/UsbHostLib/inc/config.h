@@ -3,7 +3,7 @@
  * @version  V1.00
  * @brief    This header file defines the configuration of USB Host library.
  * @note
- * Copyright (C) 2017 Nuvoton Technology Corp. All rights reserved.
+ * Copyright (C) 2018 Nuvoton Technology Corp. All rights reserved.
  *****************************************************************************/
 
 #ifndef  _USBH_CONFIG_H_
@@ -25,12 +25,16 @@
 
 #define ENABLE_OHCI_IRQ()      sysEnableInterrupt(OHCI_IRQn)
 #define DISABLE_OHCI_IRQ()     sysDisableInterrupt(OHCI_IRQn)
+#define IS_OHCI_IRQ_ENABLED()  ((inpw(REG_AIC_IMR)>>OHCI_IRQn) & 0x1)
 #define ENABLE_EHCI_IRQ()      sysEnableInterrupt(EHCI_IRQn)
 #define DISABLE_EHCI_IRQ()     sysDisableInterrupt(EHCI_IRQn)
+#define IS_EHCI_IRQ_ENABLED()  ((inpw(REG_AIC_IMR)>>EHCI_IRQn) & 0x1)
 
 #define ENABLE_OHCI                         /* Enable OHCI host controller                */
 #define ENABLE_EHCI                         /* Enable EHCI host controller                */
 
+#define EHCI_PORT_CNT          2            /* Number of EHCI roothub ports               */
+#define OHCI_PORT_CNT          2            /* Number of OHCI roothub ports               */
 //#define OHCI_PER_PORT_POWER               /* OHCI root hub per port powered             */
 
 #define OHCI_ISO_DELAY         4            /* preserved number frames while scheduling 
@@ -43,7 +47,7 @@
                                                unconditionally reclaim iTD/isTD scheduled
                                                in just elapsed EHCI_ISO_RCLM_RANGE ms.    */
 
-#define MAX_DESC_BUFF_SIZE     512          /* To hold the configuration descriptor, USB 
+#define MAX_DESC_BUFF_SIZE     1024         /* To hold the configuration descriptor, USB 
                                                core will allocate a buffer with this size
                                                for each connected device. USB core does 
                                                not release it until device disconnected.  */
@@ -82,7 +86,7 @@
 #define ENABLE_ERROR_MSG                    /* enable debug messages                      */
 #define ENABLE_DEBUG_MSG                    /* enable debug messages                      */
 //#define ENABLE_VERBOSE_DEBUG              /* verbos debug messages                      */
-#define DUMP_DESCRIPTOR                     /* dump descriptors                           */
+//#define DUMP_DESCRIPTOR                   /* dump descriptors                           */
 
 #ifdef ENABLE_ERROR_MSG
 #define USB_error            sysprintf
@@ -107,9 +111,9 @@
 #define   __IO    volatile             /*!< Defines 'read / write' permissions */
 
 
-typedef unsigned int     uint32_t;   
-typedef unsigned short   uint16_t;   
-typedef unsigned char    uint8_t;   
+typedef unsigned int     uint32_t;
+typedef unsigned short   uint16_t;
+typedef unsigned char    uint8_t;
 
 
 
@@ -119,7 +123,8 @@ typedef unsigned char    uint8_t;
     Memory Mapped Structure for USBH Controller
 @{ */
 
-typedef struct {
+typedef struct
+{
 
     /**
      * @var USBH_T::HcRevision
@@ -649,7 +654,9 @@ typedef struct {
     __IO uint32_t HcRhDescriptorB;       /*!< [0x004c] Host Controller Root Hub Descriptor B Register                   */
     __IO uint32_t HcRhStatus;            /*!< [0x0050] Host Controller Root Hub Status Register                         */
     __IO uint32_t HcRhPortStatus[2];     /*!< [0x0054] Host Controller Root Hub Port Status [1]                         */
+    /// @cond HIDDEN_SYMBOLS
     __I  uint32_t RESERVE0[105];
+    /// @endcond //HIDDEN_SYMBOLS
     __IO uint32_t HcPhyControl;          /*!< [0x0200] Host Controller PHY Control Register                             */
     __IO uint32_t HcMiscControl;         /*!< [0x0204] Host Controller Miscellaneous Control Register                   */
 
@@ -889,7 +896,8 @@ typedef struct {
     Memory Mapped Structure for HSUSBH Controller
 @{ */
 
-typedef struct {
+typedef struct
+{
 
 
     /**
@@ -1311,19 +1319,27 @@ typedef struct {
     __I  uint32_t EHCVNR;                /*!< [0x0000] EHCI Version Number Register                                     */
     __I  uint32_t EHCSPR;                /*!< [0x0004] EHCI Structural Parameters Register                              */
     __I  uint32_t EHCCPR;                /*!< [0x0008] EHCI Capability Parameters Register                              */
+    /// @cond HIDDEN_SYMBOLS
     __I  uint32_t RESERVE0[5];
+    /// @endcond //HIDDEN_SYMBOLS
     __IO uint32_t UCMDR;                 /*!< [0x0020] USB Command Register                                             */
     __IO uint32_t USTSR;                 /*!< [0x0024] USB Status Register                                              */
     __IO uint32_t UIENR;                 /*!< [0x0028] USB Interrupt Enable Register                                    */
     __IO uint32_t UFINDR;                /*!< [0x002c] USB Frame Index Register                                         */
+    /// @cond HIDDEN_SYMBOLS
     __I  uint32_t RESERVE1[1];
+    /// @endcond //HIDDEN_SYMBOLS
     __IO uint32_t UPFLBAR;               /*!< [0x0034] USB Periodic Frame List Base Address Register                    */
     __IO uint32_t UCALAR;                /*!< [0x0038] USB Current Asynchronous List Address Register                   */
     __IO uint32_t UASSTR;                /*!< [0x003c] USB Asynchronous Schedule Sleep Timer Register                   */
+    /// @cond HIDDEN_SYMBOLS
     __I  uint32_t RESERVE2[8];
+    /// @endcond //HIDDEN_SYMBOLS
     __IO uint32_t UCFGR;                 /*!< [0x0060] USB Configure Flag Register                                      */
     __IO uint32_t UPSCR[2];              /*!< [0x0064] ~ [0x0068] USB Port 0 & 1 Status and Control Register                           */
+    /// @cond HIDDEN_SYMBOLS
     __I  uint32_t RESERVE3[22];
+    /// @endcond //HIDDEN_SYMBOLS
     __IO uint32_t USBPCR0;               /*!< [0x00c4] USB PHY 0 Control Register                                       */
     __IO uint32_t USBPCR1;               /*!< [0x00c8] USB PHY 1 Control Register                                       */
 
@@ -1510,5 +1526,5 @@ typedef struct {
 
 #endif  /* _USBH_CONFIG_H_ */
 
-/*** (C) COPYRIGHT 2017 Nuvoton Technology Corp. ***/
+/*** (C) COPYRIGHT 2018 Nuvoton Technology Corp. ***/
 

@@ -3,7 +3,7 @@
  * @version  V1.00
  * $Revision: 2 $
  * $Date: 15/06/12 10:12a $
- * @brief    N9H30 MCU USB Host Audio Class driver
+ * @brief    NUC980 MCU USB Host Audio Class driver
  *
  * @note
  * Copyright (C) 2016 Nuvoton Technology Corp. All rights reserved.
@@ -20,15 +20,15 @@
 #include "uac.h"
 
 
-/** @addtogroup N9H30_Library N9H30 Library
+/** @addtogroup NUC980_Device_Driver NUC980 Device Driver
   @{
 */
 
-/** @addtogroup N9H30_USBH_Library USB Host Library
+/** @addtogroup NUC980_USBH_Library USB Host Library
   @{
 */
 
-/** @addtogroup N9H30_USBH_EXPORTED_FUNCTIONS USB Host Exported Functions
+/** @addtogroup NUC980_USBH_EXPORTED_FUNCTIONS USB Host Exported Functions
   @{
 */
 
@@ -41,7 +41,7 @@
  *                     - \ref UAC_MICROPHONE
  *  @return   Channel number or error code.
  *  @retval   < 0      Failed. UAC device may not present or function not supported.
- *  @retval   Otherwise  The channel number.
+ *  @retval   Otheriwse  The channle number.
  */
 int  usbh_uac_get_channel_number(UAC_DEV_T *uac, uint8_t target)
 {
@@ -99,7 +99,7 @@ uint32_t  srate_to_u32(uint8_t *srate)
 
 
 /**
- *  @brief  Get a list of sampling rate frequencies supported by the UAC device.
+ *  @brief  Get a list of sampling rate frequences supported by the UAC device.
  *  @param[in]  uac    UAC device
  *  @param[in]  target Select the control target.
  *                     - \ref UAC_SPEAKER
@@ -131,13 +131,16 @@ int  usbh_uac_get_sampling_rate(UAC_DEV_T *uac, uint8_t target, uint32_t *srate_
 
     *type = ft->bSamFreqType;
 
-    if (*type == 0) {
+    if (*type == 0)
+    {
         if (max_cnt < 2)
             return UAC_RET_OUT_OF_MEMORY;
 
         srate_list[0] = srate_to_u32(&ft->tSamFreq[0][0]);
         srate_list[1] = srate_to_u32(&ft->tSamFreq[1][0]);
-    } else {
+    }
+    else
+    {
         for (i = 0; i < *type; i++)
             srate_list[i] = srate_to_u32(&ft->tSamFreq[i][0]);
     }
@@ -160,10 +163,10 @@ int  usbh_uac_get_sampling_rate(UAC_DEV_T *uac, uint8_t target, uint32_t *srate_
  *                     - \ref UAC_GET_MAX
  *                     - \ref UAC_SET_RES
  *                     - \ref UAC_GET_RES
- *  @param[in]  srate  Sampling rate frequency to be set or get.
+ *  @param[in]  srate  Sampling rate frequncy to be set or get.
  *  @return   Success or failed.
  *  @retval   0        Success
- *  @retval   Otherwise  Error occurred
+ *  @retval   Otheriwse  Error occurred
  */
 int  usbh_uac_sampling_rate_control(UAC_DEV_T *uac, uint8_t target, uint8_t req, uint32_t *srate)
 {
@@ -180,7 +183,7 @@ int  usbh_uac_sampling_rate_control(UAC_DEV_T *uac, uint8_t target, uint8_t req,
 
     if (ep == NULL)
         return UAC_RET_DEV_NOT_SUPPORTED;
-        
+
     tSampleFreq = usbh_alloc_mem(8);
     if (tSampleFreq == NULL)
         return USBH_ERR_MEMORY_OUT;
@@ -207,9 +210,9 @@ int  usbh_uac_sampling_rate_control(UAC_DEV_T *uac, uint8_t target, uint8_t req,
 
     if (ret == 0)
         *srate = srate_to_u32(tSampleFreq);
-    
+
     usbh_free_mem(tSampleFreq, 8);
-    
+
     return ret;
 }
 
@@ -240,7 +243,7 @@ int  usbh_uac_sampling_rate_control(UAC_DEV_T *uac, uint8_t target, uint8_t req,
  *  @return   Success or failed.
  *  @retval   0        Success
  *  @retval   UAC_RET_DEV_NOT_SUPPORTED  This UAC device does not support this function.
- *  @retval   Otherwise  Error occurred
+ *  @retval   Otheriwse  Error occurred
  */
 int usbh_uac_mute_control(UAC_DEV_T *uac, uint8_t target, uint8_t req, uint16_t chn, uint8_t *mute)
 {
@@ -263,7 +266,7 @@ int usbh_uac_mute_control(UAC_DEV_T *uac, uint8_t target, uint8_t req, uint16_t 
     buff = usbh_alloc_mem(8);
     if (buff == NULL)
         return USBH_ERR_MEMORY_OUT;
-        
+
     buff[0] = *mute;
 
     /* Audio Class Request - Feature Unit Control Request (5.2.2.4) */
@@ -273,13 +276,13 @@ int usbh_uac_mute_control(UAC_DEV_T *uac, uint8_t target, uint8_t req, uint16_t 
                          1,                          /* wLength - parameter block length  */
                          buff,                       /* parameter block                   */
                          &xfer_len, UAC_REQ_TIMEOUT);
-    
+
     if ((ret == 0) && (req & 0x80))
         *mute = buff[0];
 
     if (xfer_len != 1)
         ret = UAC_RET_DATA_LEN;
-        
+
     usbh_free_mem(buff, 8);
 
     return ret;
@@ -315,7 +318,7 @@ int usbh_uac_mute_control(UAC_DEV_T *uac, uint8_t target, uint8_t req, uint16_t 
  *                     - \ref UAC_CH_SIDE_LEFT
  *                     - \ref UAC_CH_SIDE_RIGHT
  *                     - \ref UAC_CH_TOP
- *  @param[in]  volume   Audio Class device volume value, which is interpreted as the following:
+ *  @param[in]  volume   Audio Class device volume value, which is intepreted as the following:
  *                       0x7FFF:    127.9961 dB
  *                       . . .
  *                       0x0100:      1.0000 dB
@@ -333,7 +336,7 @@ int usbh_uac_mute_control(UAC_DEV_T *uac, uint8_t target, uint8_t req, uint16_t 
  *  @return   Success or failed.
  *  @retval   0        Success
  *  @retval   UAC_RET_DEV_NOT_SUPPORTED  This UAC device does not support this function.
- *  @retval   Otherwise  Error occurred
+ *  @retval   Otheriwse  Error occurred
  */
 int usbh_uac_vol_control(UAC_DEV_T *uac, uint8_t target, uint8_t req, uint16_t chn, uint16_t *volume)
 {
@@ -356,7 +359,7 @@ int usbh_uac_vol_control(UAC_DEV_T *uac, uint8_t target, uint8_t req, uint16_t c
     buff = usbh_alloc_mem(8);
     if (buff == NULL)
         return USBH_ERR_MEMORY_OUT;
-        
+
     buff[0] = *volume;
 
     /* Audio Class Request - Feature Unit Control Request (5.2.2.4) */
@@ -401,11 +404,11 @@ int usbh_uac_vol_control(UAC_DEV_T *uac, uint8_t target, uint8_t req, uint16_t c
  *                     - \ref UAC_CH_SIDE_LEFT
  *                     - \ref UAC_CH_SIDE_RIGHT
  *                     - \ref UAC_CH_TOP
- *  @param[in]  bAGC   One byte data. If the channel's automatic gain control is on, then the value is 1. Otherwise, it's 0.
+ *  @param[in]  bAGC   One byte data. If the channel's automaic gain control is on, then the value is 1. Otherwise, it's 0.
  *  @return   Success or failed.
  *  @retval   0        Success
  *  @retval   UAC_RET_DEV_NOT_SUPPORTED  This UAC device does not support this function.
- *  @retval   Otherwise  Error occurred
+ *  @retval   Otheriwse  Error occurred
  */
 int  usbh_uac_auto_gain_control(UAC_DEV_T *uac, uint8_t target, uint8_t req, uint16_t chn, uint8_t *bAGC)
 {
@@ -428,7 +431,7 @@ int  usbh_uac_auto_gain_control(UAC_DEV_T *uac, uint8_t target, uint8_t req, uin
     buff = usbh_alloc_mem(8);
     if (buff == NULL)
         return USBH_ERR_MEMORY_OUT;
-        
+
     buff[0] = *bAGC;
 
     /* Audio Class Request - Feature Unit Control Request (5.2.2.4) */
@@ -468,15 +471,18 @@ int  usbh_uac_find_max_alt(IFACE_T *iface, uint8_t dir, uint8_t attr, uint8_t *b
     uint8_t      i,  j;
     uint16_t     wMaxPacketSize = 0;
 
-    for (i = 0; i < iface->num_alt; i++) {
-        for (j = 0; j < iface->alt[i].ifd->bNumEndpoints; j++) {
-            ep = &(iface->alt[i].ep[j]);    /* get endpoint                                */
+    for (i = 0; i < iface->num_alt; i++)
+    {
+        for (j = 0; j < iface->alt[i].ifd->bNumEndpoints; j++)
+        {
+            ep = &(iface->alt[i].ep[j]);    /* get enpoint                                */
 
             if (((ep->bEndpointAddress & EP_ADDR_DIR_MASK) != dir) ||
                     ((ep->bmAttributes & EP_ATTR_TT_MASK) != attr))
                 continue;                   /* not interested endpoint                    */
 
-            if (ep->wMaxPacketSize > wMaxPacketSize) {
+            if (ep->wMaxPacketSize > wMaxPacketSize)
+            {
                 /* a better candidate endpoint found          */
                 *bAlternateSetting = i;
                 wMaxPacketSize = ep->wMaxPacketSize;
@@ -506,22 +512,26 @@ int  usbh_uac_find_best_alt(IFACE_T *iface, uint8_t dir, uint8_t attr, int pkt_s
     uint8_t      i,  j;
     uint16_t     wMaxPacketSize = 0xFFFF;
 
-    for (i = 0; i < iface->num_alt; i++) {
-        for (j = 0; j < iface->alt[i].ifd->bNumEndpoints; j++) {
-            ep = &(iface->alt[i].ep[j]);    /* get endpoint                                */
+    for (i = 0; i < iface->num_alt; i++)
+    {
+        for (j = 0; j < iface->alt[i].ifd->bNumEndpoints; j++)
+        {
+            ep = &(iface->alt[i].ep[j]);    /* get enpoint                                */
 
             if (((ep->bEndpointAddress & EP_ADDR_DIR_MASK) != dir) ||
                     ((ep->bmAttributes & EP_ATTR_TT_MASK) != attr))
                 continue;                   /* not interested endpoint                    */
 
-            if ((ep->wMaxPacketSize >= pkt_sz) && (ep->wMaxPacketSize < wMaxPacketSize)) {
+            if ((ep->wMaxPacketSize >= pkt_sz) && (ep->wMaxPacketSize < wMaxPacketSize))
+            {
                 /* a better candidate endpoint found          */
                 *bAlternateSetting = i;
                 wMaxPacketSize = ep->wMaxPacketSize;
             }
         }
     }
-    if (wMaxPacketSize == 0xFFFF) {
+    if (wMaxPacketSize == 0xFFFF)
+    {
         UAC_DBGMSG("Audio interface %d cannot find endpoint with wMaxPacketSize >= %d!\n", iface->if_num, pkt_sz);
         return USBH_ERR_NOT_FOUND;
     }
@@ -545,11 +555,15 @@ static void iso_in_irq(UTR_T *utr)
 
     utr->bIsoNewSched = 0;
 
-    for (i = 0; i < IF_PER_UTR; i++) {
-        if (utr->iso_status[i] == 0) {
+    for (i = 0; i < IF_PER_UTR; i++)
+    {
+        if (utr->iso_status[i] == 0)
+        {
             if ((uac->func_au_in != NULL) && (utr->iso_xlen[i] > 0))
                 uac->func_au_in(uac, utr->iso_buff[i], utr->iso_xlen[i]);
-        } else {
+        }
+        else
+        {
             UAC_DBGMSG("Iso %d err - %d\n", i, utr->iso_status[i]);
             if ((utr->iso_status[i] == USBH_ERR_NOT_ACCESS0) || (utr->iso_status[i] == USBH_ERR_NOT_ACCESS1))
                 utr->bIsoNewSched = 1;
@@ -601,7 +615,8 @@ int usbh_uac_start_audio_in(UAC_DEV_T *uac, UAC_CB_FUNC *func)
     uac->func_au_in = func;
 
     ret = usbh_set_interface(iface, bAlternateSetting);
-    if (ret < 0) {
+    if (ret < 0)
+    {
         UAC_ERRMSG("Failed to set interface %d, %d! (%d)\n", iface->if_num, bAlternateSetting, ret);
         return ret;
     }
@@ -615,11 +630,13 @@ int usbh_uac_start_audio_in(UAC_DEV_T *uac, UAC_CB_FUNC *func)
     /*------------------------------------------------------------------------------------*/
     asif->ep = NULL;
     aif = asif->iface->aif;
-    for (i = 0; i < aif->ifd->bNumEndpoints; i++) {
+    for (i = 0; i < aif->ifd->bNumEndpoints; i++)
+    {
         ep = &(aif->ep[i]);
 
         if (((ep->bEndpointAddress & EP_ADDR_DIR_MASK) == EP_ADDR_DIR_IN) &&
-                ((ep->bmAttributes & EP_ATTR_TT_MASK) == EP_ATTR_TT_ISO)) {
+                ((ep->bmAttributes & EP_ATTR_TT_MASK) == EP_ATTR_TT_ISO))
+        {
             asif->ep = ep;
             UAC_DBGMSG("Aduio in endpoint 0x%x found, size: %d\n", ep->bEndpointAddress, ep->wMaxPacketSize);
             break;
@@ -637,26 +654,31 @@ int usbh_uac_start_audio_in(UAC_DEV_T *uac, UAC_CB_FUNC *func)
     /*------------------------------------------------------------------------------------*/
     /*  Allocate isochronous in buffer                                                    */
     /*------------------------------------------------------------------------------------*/
-    for (i = 0; i < NUM_UTR; i++) {         /* allocate UTRs                              */
+    for (i = 0; i < NUM_UTR; i++)           /* allocate UTRs                              */
+    {
         asif->utr[i] = alloc_utr(udev);     /* allocate UTR                               */
-        if (asif->utr[i] == NULL) {
+        if (asif->utr[i] == NULL)
+        {
             ret = USBH_ERR_MEMORY_OUT;      /* memory allocate failed                     */
             goto err_out;                   /* abort                                      */
         }
     }
 
     buff = (uint8_t *)usbh_alloc_mem(ep->wMaxPacketSize * IF_PER_UTR * NUM_UTR);
-    if (buff == NULL) {
+    if (buff == NULL)
+    {
         ret = USBH_ERR_MEMORY_OUT;          /* memory allocate failed                     */
         goto err_out;                       /* abort                                      */
     }
 
-    for (i = 0; i < NUM_UTR; i++) {         /* dispatch buffers                           */
+    for (i = 0; i < NUM_UTR; i++)           /* dispatch buffers                           */
+    {
         /* divide buffer equally                      */
         utr = asif->utr[i];
         utr->buff = buff + (ep->wMaxPacketSize * IF_PER_UTR * i);
         utr->data_len = ep->wMaxPacketSize * IF_PER_UTR;
-        for (j = 0; j < IF_PER_UTR; j++) {
+        for (j = 0; j < IF_PER_UTR; j++)
+        {
             utr->iso_xlen[j] = ep->wMaxPacketSize;
             utr->iso_buff[j] = utr->buff + (ep->wMaxPacketSize * j);
         }
@@ -668,13 +690,15 @@ int usbh_uac_start_audio_in(UAC_DEV_T *uac, UAC_CB_FUNC *func)
 
     asif->utr[0]->bIsoNewSched = 1;
 
-    for (i = 0; i < NUM_UTR; i++) {
+    for (i = 0; i < NUM_UTR; i++)
+    {
         utr = asif->utr[i];
         utr->context = uac;
         utr->ep = ep;
         utr->func = iso_in_irq;
         ret = usbh_iso_xfer(utr);
-        if (ret < 0) {
+        if (ret < 0)
+        {
             UAC_DBGMSG("Error - failed to start UTR %d isochronous-in transfer (%d)", i, ret);
             goto err_out;
         }
@@ -686,7 +710,8 @@ int usbh_uac_start_audio_in(UAC_DEV_T *uac, UAC_CB_FUNC *func)
 
 err_out:
 
-    for (i = 0; i < NUM_UTR; i++) {         /* quit all UTRs                              */
+    for (i = 0; i < NUM_UTR; i++)           /* quit all UTRs                              */
+    {
         if (asif->utr[i])
             usbh_quit_utr(asif->utr[i]);
     }
@@ -696,7 +721,8 @@ err_out:
             (asif->utr[0]->buff != NULL))
         usbh_free_mem(asif->utr[0]->buff, asif->utr[0]->data_len * NUM_UTR);
 
-    for (i = 0; i < NUM_UTR; i++) {         /* free all UTRs                              */
+    for (i = 0; i < NUM_UTR; i++)           /* free all UTRs                              */
+    {
         if (asif->utr[i])
             free_utr(asif->utr[i]);
         asif->utr[i] = NULL;
@@ -719,14 +745,17 @@ int usbh_uac_stop_audio_in(UAC_DEV_T *uac)
     asif->flag_streaming = 0;
 
     /* Set interface alternative settings */
-    if (uac->state != UAC_STATE_DISCONNECTING) {
+    if (uac->state != UAC_STATE_DISCONNECTING)
+    {
         ret = usbh_set_interface(asif->iface, 0);
-        if (ret < 0) {
+        if (ret < 0)
+        {
             UAC_ERRMSG("Failed to set interface %d, %d! (%d)\n", asif->iface->if_num, 0, ret);
         }
     }
 
-    for (i = 0; i < NUM_UTR; i++) {         /* stop all UTRs                              */
+    for (i = 0; i < NUM_UTR; i++)           /* stop all UTRs                              */
+    {
         if (asif->utr[i])
             usbh_quit_utr(asif->utr[i]);
     }
@@ -735,14 +764,17 @@ int usbh_uac_stop_audio_in(UAC_DEV_T *uac)
             (asif->utr[0]->buff != NULL))       /* free audio buffer                          */
         usbh_free_mem(asif->utr[0]->buff, asif->utr[0]->data_len * NUM_UTR);
 
-    for (i = 0; i < NUM_UTR; i++) {         /* free all UTRs                              */
+    for (i = 0; i < NUM_UTR; i++)           /* free all UTRs                              */
+    {
         if (asif->utr[i])
             free_utr(asif->utr[i]);
         asif->utr[i] = NULL;
     }
 
-    if (uac->state != UAC_STATE_DISCONNECTING) {
-        if ((uac->asif_out.iface == NULL) || (uac->asif_out.flag_streaming == 0)) {
+    if (uac->state != UAC_STATE_DISCONNECTING)
+    {
+        if ((uac->asif_out.iface == NULL) || (uac->asif_out.flag_streaming == 0))
+        {
             uac->state = UAC_STATE_READY;
         }
     }
@@ -769,8 +801,10 @@ static void iso_out_irq(UTR_T *utr)
 
     utr->bIsoNewSched = 0;
 
-    for (i = 0; i < IF_PER_UTR; i++) {
-        if (utr->iso_status[i] != 0) {
+    for (i = 0; i < IF_PER_UTR; i++)
+    {
+        if (utr->iso_status[i] != 0)
+        {
             // UAC_DBGMSG("Iso %d err - %d\n", i, utr->iso_status[i]);
             if ((utr->iso_status[i] == USBH_ERR_NOT_ACCESS0) || (utr->iso_status[i] == USBH_ERR_NOT_ACCESS1))
                 utr->bIsoNewSched = 1;
@@ -823,7 +857,8 @@ int usbh_uac_start_audio_out(UAC_DEV_T *uac, UAC_CB_FUNC *func)
     uac->func_au_out = func;
 
     ret = usbh_set_interface(iface, bAlternateSetting);
-    if (ret < 0) {
+    if (ret < 0)
+    {
         UAC_ERRMSG("Failed to set interface %d, %d! (%d)\n", iface->if_num, bAlternateSetting, ret);
         return ret;
     }
@@ -837,11 +872,13 @@ int usbh_uac_start_audio_out(UAC_DEV_T *uac, UAC_CB_FUNC *func)
     /*------------------------------------------------------------------------------------*/
     asif->ep = NULL;
     aif = asif->iface->aif;
-    for (i = 0; i < aif->ifd->bNumEndpoints; i++) {
+    for (i = 0; i < aif->ifd->bNumEndpoints; i++)
+    {
         ep = &(aif->ep[i]);
 
         if (((ep->bEndpointAddress & EP_ADDR_DIR_MASK) == EP_ADDR_DIR_OUT) &&
-                ((ep->bmAttributes & EP_ATTR_TT_MASK) == EP_ATTR_TT_ISO)) {
+                ((ep->bmAttributes & EP_ATTR_TT_MASK) == EP_ATTR_TT_ISO))
+        {
             asif->ep = ep;
             UAC_DBGMSG("Audio in endpoint 0x%x found, size: %d\n", ep->bEndpointAddress, ep->wMaxPacketSize);
             break;
@@ -859,21 +896,25 @@ int usbh_uac_start_audio_out(UAC_DEV_T *uac, UAC_CB_FUNC *func)
     /*------------------------------------------------------------------------------------*/
     /*  Allocate isochronous in buffer                                                    */
     /*------------------------------------------------------------------------------------*/
-    for (i = 0; i < NUM_UTR; i++) {         /* allocate UTRs                              */
+    for (i = 0; i < NUM_UTR; i++)           /* allocate UTRs                              */
+    {
         asif->utr[i] = alloc_utr(udev);     /* allocate UTR                               */
-        if (asif->utr[i] == NULL) {
+        if (asif->utr[i] == NULL)
+        {
             ret = USBH_ERR_MEMORY_OUT;      /* memory allocate failed                     */
             goto err_out;                   /* abort                                      */
         }
     }
 
     buff = (uint8_t *)usbh_alloc_mem(ep->wMaxPacketSize * IF_PER_UTR * NUM_UTR);
-    if (buff == NULL) {
+    if (buff == NULL)
+    {
         ret = USBH_ERR_MEMORY_OUT;          /* memory allocate failed                     */
         goto err_out;                       /* abort                                      */
     }
 
-    for (i = 0; i < NUM_UTR; i++) {         /* dispatch buffers                           */
+    for (i = 0; i < NUM_UTR; i++)           /* dispatch buffers                           */
+    {
         /* divide buffer equally                      */
         asif->utr[i]->buff = buff + (ep->wMaxPacketSize * IF_PER_UTR * i);
         asif->utr[i]->data_len = ep->wMaxPacketSize * IF_PER_UTR;
@@ -885,19 +926,22 @@ int usbh_uac_start_audio_out(UAC_DEV_T *uac, UAC_CB_FUNC *func)
 
     asif->utr[0]->bIsoNewSched = 1;
 
-    for (i = 0; i < NUM_UTR; i++) {
+    for (i = 0; i < NUM_UTR; i++)
+    {
         utr = asif->utr[i];
         utr->context = uac;
         utr->ep = ep;
         utr->func = iso_out_irq;
 
-        for (j = 0; j < IF_PER_UTR; j++) {  /* get audio out data from user               */
+        for (j = 0; j < IF_PER_UTR; j++)    /* get audio out data from user               */
+        {
             utr->iso_buff[j] = utr->buff + (ep->wMaxPacketSize * j);
             utr->iso_xlen[j] = uac->func_au_out(uac, utr->iso_buff[j], ep->wMaxPacketSize);
         }
 
         ret = usbh_iso_xfer(utr);
-        if (ret < 0) {
+        if (ret < 0)
+        {
             UAC_DBGMSG("Error - failed to start UTR %d isochronous-in transfer (%d)", i, ret);
             goto err_out;
         }
@@ -909,7 +953,8 @@ int usbh_uac_start_audio_out(UAC_DEV_T *uac, UAC_CB_FUNC *func)
 
 err_out:
 
-    for (i = 0; i < NUM_UTR; i++) {         /* quit all UTRs                              */
+    for (i = 0; i < NUM_UTR; i++)           /* quit all UTRs                              */
+    {
         if (asif->utr[i])
             usbh_quit_utr(asif->utr[i]);
     }
@@ -919,7 +964,8 @@ err_out:
             (asif->utr[0]->buff != NULL))
         usbh_free_mem(asif->utr[0]->buff, asif->utr[0]->data_len * NUM_UTR);
 
-    for (i = 0; i < NUM_UTR; i++) {         /* free all UTRs                              */
+    for (i = 0; i < NUM_UTR; i++)           /* free all UTRs                              */
+    {
         if (asif->utr[i])
             free_utr(asif->utr[i]);
         asif->utr[i] = NULL;
@@ -940,14 +986,17 @@ int usbh_uac_stop_audio_out(UAC_DEV_T *uac)
     int          i, ret;
 
     /* Set interface alternative settings */
-    if (uac->state != UAC_STATE_DISCONNECTING) {
+    if (uac->state != UAC_STATE_DISCONNECTING)
+    {
         ret = usbh_set_interface(asif->iface, 0);
-        if (ret < 0) {
+        if (ret < 0)
+        {
             UAC_ERRMSG("Failed to set interface %d, %d! (%d)\n", asif->iface->if_num, 0, ret);
         }
     }
 
-    for (i = 0; i < NUM_UTR; i++) {         /* stop all UTRs                              */
+    for (i = 0; i < NUM_UTR; i++)           /* stop all UTRs                              */
+    {
         if (asif->utr[i])
             usbh_quit_utr(asif->utr[i]);
     }
@@ -956,14 +1005,17 @@ int usbh_uac_stop_audio_out(UAC_DEV_T *uac)
             (asif->utr[0]->buff != NULL))       /* free audio buffer                          */
         usbh_free_mem(asif->utr[0]->buff, asif->utr[0]->data_len * NUM_UTR);
 
-    for (i = 0; i < NUM_UTR; i++) {         /* free all UTRs                              */
+    for (i = 0; i < NUM_UTR; i++)           /* free all UTRs                              */
+    {
         if (asif->utr[i])
             free_utr(asif->utr[i]);
         asif->utr[i] = NULL;
     }
 
-    if (uac->state != UAC_STATE_DISCONNECTING) {
-        if ((uac->asif_in.iface == NULL) || (uac->asif_in.flag_streaming == 0)) {
+    if (uac->state != UAC_STATE_DISCONNECTING)
+    {
+        if ((uac->asif_in.iface == NULL) || (uac->asif_in.flag_streaming == 0))
+        {
             uac->state = UAC_STATE_READY;
         }
     }
@@ -990,12 +1042,14 @@ int usbh_uac_open(UAC_DEV_T *uac)
     /*------------------------------------------------------------------------------------*/
     iface = uac->asif_in.iface;
 
-    if (iface != NULL) {
+    if (iface != NULL)
+    {
         if (usbh_uac_find_max_alt(iface, EP_ADDR_DIR_IN, EP_ATTR_TT_ISO, &bAlternateSetting) != 0)
             return UAC_RET_FUNC_NOT_FOUND;
 
         ret = usbh_set_interface(iface, bAlternateSetting);
-        if (ret < 0) {
+        if (ret < 0)
+        {
             UAC_ERRMSG("Failed to set interface %d, %d! (%d)\n", iface->if_num, bAlternateSetting, ret);
             return ret;
         }
@@ -1006,12 +1060,14 @@ int usbh_uac_open(UAC_DEV_T *uac)
     /*------------------------------------------------------------------------------------*/
     iface = uac->asif_out.iface;
 
-    if (iface != NULL) {
+    if (iface != NULL)
+    {
         if (usbh_uac_find_max_alt(iface, EP_ADDR_DIR_OUT, EP_ATTR_TT_ISO, &bAlternateSetting) != 0)
             return UAC_RET_FUNC_NOT_FOUND;
 
         ret = usbh_set_interface(iface, bAlternateSetting);
-        if (ret < 0) {
+        if (ret < 0)
+        {
             UAC_ERRMSG("Failed to set interface %d, %d! (%d)\n", iface->if_num, bAlternateSetting, ret);
             return ret;
         }
@@ -1019,11 +1075,11 @@ int usbh_uac_open(UAC_DEV_T *uac)
     return 0;
 }
 
-/*@}*/ /* end of group N9H30_USBH_EXPORTED_FUNCTIONS */
+/*@}*/ /* end of group NUC980_USBH_EXPORTED_FUNCTIONS */
 
-/*@}*/ /* end of group N9H30_USBH_Library */
+/*@}*/ /* end of group NUC980_USBH_Library */
 
-/*@}*/ /* end of group N9H30_Library */
+/*@}*/ /* end of group NUC980_Device_Driver */
 
 /*** (C) COPYRIGHT 2016 Nuvoton Technology Corp. ***/
 
