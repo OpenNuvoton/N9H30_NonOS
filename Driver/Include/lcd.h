@@ -1,9 +1,9 @@
 /**************************************************************************//**
 * @file     lcd.h
+* @version  V1.00
 * @brief    N9H30 LCD driver header file
 *
-* @note
-* Copyright (C) 2018 Nuvoton Technology Corp. All rights reserved.
+* @copyright (C) 2018 Nuvoton Technology Corp. All rights reserved.
 *****************************************************************************/
 #ifndef _LCD_H_
 #define _LCD_H_
@@ -69,6 +69,8 @@ extern "C"
 #define VPOSTB_DATA16or18   (1<<26)
 #define VPOSTB_COLORTYPE_4K         (0)
 #define VPOSTB_COLORTYPE_64K        (1<<24)
+#define VPOSTB_COLORTYPE_256K       (2<<24)
+#define VPOSTB_COLORTYPE_16M        (3<<24)
 #define VPOSTB_LACE     (1<<23)
 #define VPOSTB_VR_LACE  (1<<22)
 #define VPOSTB_V_POL    (1<<21)
@@ -136,7 +138,8 @@ extern "C"
 #define VA_SCALE_INTERPOLATION  (0)     /*!< Scale mode is interpolation */
 #define VA_SCALE_DUPLICATION    (1<<15) /*!< Scale mode is duplication */
 
-typedef enum va_hcmode_e {
+typedef enum va_hcmode_e
+{
     HC_MODE0,           /*!< 32X32X2bpp 4 color */
     HC_MODE1,           /*!< 32X32X2bpp 3 color and 1 transparent */
     HC_MODE2,           /*!< 64X64X2bpp 4 color */
@@ -145,7 +148,8 @@ typedef enum va_hcmode_e {
     HC_MODE5            /*!< 128X128X1bpp 1 color and 1 transparent */
 } VA_HCMODE_E;
 
-typedef struct {
+typedef struct
+{
     uint32_t ucVASrcFormat;         /*!< User input Display source format */
     uint32_t nScreenWidth;          /*!< Driver output,LCD width */
     uint32_t nScreenHeight;         /*!< Driver output,LCD height */
@@ -153,7 +157,8 @@ typedef struct {
     uint8_t ucROT90;                /*!< Rotate 90 degree or not */
 } LCDFORMATEX;
 
-typedef struct {
+typedef struct
+{
     uint32_t ucOSDSrcFormat;         /*!< User input, OSD source format */
     uint32_t nXstart;                /*!< User input, OSD X axis position */
     uint32_t nYstart;                /*!< User input, OSD Y axis position */
@@ -166,7 +171,8 @@ typedef struct {
 #define DIS_PANEL_E50A2V1       0
 #define DIS_PANEL_ILI9341_MPU80 1
 #define DIS_LSA40AT9001         2
-typedef struct {
+typedef struct
+{
     uint32_t u32DevWidth;           /*!< Panel width */
     uint32_t u32DevHeight;          /*!< Panel height */
     uint32_t u32CmdLow;             /*!< MPU command line low indicator */
@@ -233,5 +239,4 @@ uint32_t vpostMPUReadData(void);
 
 #endif //__LCD_H__
 
-/*** (C) COPYRIGHT 2018 Nuvoton Technology Corp. ***/
 

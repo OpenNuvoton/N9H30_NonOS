@@ -1,9 +1,9 @@
 /**************************************************************************//**
 * @file     gpio.h
+* @version  V1.00
 * @brief    N9H30 GPIO driver header file
 *
-* @note
-* Copyright (C) 2018 Nuvoton Technology Corp. All rights reserved.
+* @copyright (C) 2018 Nuvoton Technology Corp. All rights reserved.
 *****************************************************************************/
 
 #ifndef __GPIO_H__
@@ -59,7 +59,8 @@ typedef INT32 (*EINT_CALLBACK)(UINT32 status, UINT32 userData);
 
 /** \brief  Structure type of GPIO_PORT
  */
-typedef enum {
+typedef enum
+{
     GPIOA=0x000,   /*!< Port A offset of GPIO base address      */
     GPIOB=0x040,   /*!< Port B offset of GPIO base address      */
     GPIOC=0x080,   /*!< Port C offset of GPIO base address      */
@@ -74,28 +75,32 @@ typedef enum {
 
 /** \brief  Structure type of GPIO_DIR
  */
-typedef enum {
+typedef enum
+{
     DIR_INPUT,   /*!< GPIO Output mode      */
     DIR_OUTPUT   /*!< GPIO Input mode      */
 } GPIO_DIR;
 
 /** \brief  Structure type of GPIO_PULL
  */
-typedef enum {
+typedef enum
+{
     NO_PULL_UP, /*!< GPIO Pull-Up Disable */
     PULL_UP     /*!< GPIO Pull-Up Enable */
 } GPIO_PULL;
 
 /** \brief  Structure type of GPIO_DRV
  */
-typedef enum {
+typedef enum
+{
     DRV_LOW,   /*!< GPIO Set to Low */
     DRV_HIGH   /*!< GPIO Set to High */
 } GPIO_DRV;
 
 /** \brief  Structure type of GPIO_NIRQ
  */
-typedef enum {
+typedef enum
+{
     NIRQ0=0,   /*!< External interrupt 0 */
     NIRQ1,     /*!< External interrupt 1 */
     NIRQ2,     /*!< External interrupt 2 */
@@ -108,7 +113,8 @@ typedef enum {
 
 /** \brief  Structure type of GPIO_TRIGGER_TYPE
  */
-typedef enum {
+typedef enum
+{
     LOW,                   /*!< Trigger type set low */
     HIGH,                  /*!< Trigger type set high */
     FALLING,               /*!< Trigger type set falling edge */
@@ -117,7 +123,8 @@ typedef enum {
 } GPIO_TRIGGER_TYPE;
 
 /// @cond HIDDEN_SYMBOLS
-typedef struct {
+typedef struct
+{
     UINT16          bitBusyFlag[MAX_PORT];
     GPIO_CALLBACK   IRQCallback[MAX_PORT];
     UINT32          IRQUserData[MAX_PORT];
@@ -175,4 +182,3 @@ INT32 GPIO_DisableDebounce(void);
 
 #endif //__GPIO_H__
 
-/*** (C) COPYRIGHT 2018 Nuvoton Technology Corp. ***/

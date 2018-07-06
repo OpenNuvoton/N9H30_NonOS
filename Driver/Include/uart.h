@@ -1,9 +1,9 @@
 /**************************************************************************//**
 * @file     uart.h
+* @version  V1.00
 * @brief    N9H30 UART driver header file
 *
-* @note
-* Copyright (C) 2018 Nuvoton Technology Corp. All rights reserved.
+* @copyright (C) 2015 Nuvoton Technology Corp. All rights reserved.
 *****************************************************************************/
 
 #ifndef __UART_H__
@@ -50,8 +50,10 @@ extern "C"
 /*---------------------------------------------------------------------------------------------------------*/
 #define UART0       0    /*!< UART0  channel */
 #define UART1       1    /*!< UART1  channel */
+#define UART2       2    /*!< UART2  channel */
 #define UART3       3    /*!< UART3  channel */
 #define UART4       4    /*!< UART4  channel */
+#define UART5       5    /*!< UART5  channel */
 #define UART6       6    /*!< UART6  channel */
 #define UART7       7    /*!< UART7  channel */
 #define UART8       8    /*!< UART8  channel */
@@ -570,7 +572,8 @@ extern "C"
 /*----------------------------------------------------*/
 /* Define UART buffer structure                       */
 /*----------------------------------------------------*/
-typedef struct UART_BUFFER_STRUCT {
+typedef struct UART_BUFFER_STRUCT
+{
     UINT32 volatile  uUartTxHead, uUartTxTail;
     UINT32 volatile  uUartRxHead, uUartRxTail;
 
@@ -590,7 +593,8 @@ typedef struct UART_BUFFER_STRUCT {
 
 /** \brief  Structure type of UART data
  */
-typedef struct UART_STRUCT {
+typedef struct UART_STRUCT
+{
     UINT32      uFreq;       /*!< UART clock frequency */
     UINT32      uBaudRate;   /*!< Baudrate */
     UINT8       ucUartNo;    /*!< UART Port */
@@ -602,7 +606,8 @@ typedef struct UART_STRUCT {
 
 /** \brief  Structure type of UART register
  */
-typedef struct UART_REGISTER_STRUCT {
+typedef struct UART_REGISTER_STRUCT
+{
     UINT32 uUartReg[14][2]; /*!< Store UART register value */
 } UART_REGISTER_T;
 

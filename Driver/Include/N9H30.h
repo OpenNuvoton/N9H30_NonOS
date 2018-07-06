@@ -1,11 +1,11 @@
 /**************************************************************************//**
  * @file     N9H30.h
+ * @version  V1.00
  * @brief    N9H30 peripheral access layer header file.
  *           This file contains all the peripheral register's definitions
  *           and memory mapping for NuMicro N9H30 MCU.
  *
- * @note
- * Copyright (C) 2018 Nuvoton Technology Corp. All rights reserved.
+ * @copyright (C) 2018 Nuvoton Technology Corp. All rights reserved.
  *****************************************************************************/
 /**
    \mainpage NuMicro N9H30 Family Driver Reference Guide
@@ -60,7 +60,10 @@
 /*!< AHB peripherals */
 #define    SYS_BA    0xB0000000  /*!< System Global Control */
 #define    CLK_BA    0xB0000200  /*!< Clock Control */
+#define    EBI_BA    0xB0001000  /*!< EBI Control */
 #define    SDIC_BA   0xB0001800  /*!< SDRAM (SDR/DDR/DDR2) Control */
+#define    EMC0_BA   0xB0002000  /*!< Ethernet MAC 0 Control */
+#define    EMC1_BA   0xB0003000  /*!< Ethernet MAC 1 Control */
 #define    GDMA_BA   0xB0004000  /*!< GDMA control */
 #define    USBH_BA   0xB0005000  /*!< USB Host EHCI Control */
 #define    USBD_BA   0xB0006000  /*!< USB Device Control */
@@ -71,18 +74,20 @@
 #define    GE_BA     0xB000B000  /*!< 2-D Graphic Engine */
 #define    SDH_BA    0xB000C000  /*!< SD/SDIO Host Controller */
 #define    FMI_BA    0xB000D000  /*!< Flash Memory Card Interface */
-#define    CRPT_BA   0xB000F000  /*!< Crypto Engine Control */
+#define    CAP_BA    0xB000E000  /*!< Sensor (Capture) Interface Control */
 
 /*!< APB peripherals */
 #define    UART0_BA  0xB8000000  /*!< UART0 Control */
 #define    UART1_BA  0xB8000100  /*!< UART1 Control (High-Speed UART) */
+#define    UART2_BA  0xB8000200  /*!< UART2 Control (High-Speed UART) */
 #define    UART3_BA  0xB8000300  /*!< UART3 Control  */
 #define    UART4_BA  0xB8000400  /*!< UART4 Control (High-Speed UART) */
+#define    UART5_BA  0xB8000500  /*!< UART5 Control */
 #define    UART6_BA  0xB8000600  /*!< UART6 Control (High-Speed UART) */
 #define    UART7_BA  0xB8000700  /*!< UART7 Control */
 #define    UART8_BA  0xB8000800  /*!< UART8 Control (High-Speed UART) */
 #define    UART9_BA  0xB8000900  /*!< UART9 Control */
-#define    UARTA_BA  0xB8000A00  /*!< UART10 Control (High-Speed UART) */
+#define    UARTA_BA  0xB8000A00  /*!< UARTA Control (High-Speed UART) */
 #define    TMR0_BA   0xB8001000  /*!< Timer 0 */
 #define    TMR1_BA   0xB8001010  /*!< Timer 1 */
 #define    TMR2_BA   0xB8001020  /*!< Timer 2 */
@@ -105,7 +110,8 @@
 #define    SPI1_BA   0xB8006300  /*!< Serial Peripheral Interface 1 */
 #define    PWM_BA    0xB8007000  /*!< Pulse Width Modulation (PWM) Control */
 #define    ADC_BA    0xB800A000  /*!< ADC Control */
-#define    MTP_BA    0xB800C000  /*!< MTP Control */
+#define    CAN0_BA   0xB800B000  /*!< CAN 0 Control */
+#define    CAN1_BA   0xB800B400  /*!< CAN 1 Control */
 
 /*@}*/ /* end of group N9H30_PERIPHERAL_MEM_MAP */
 
@@ -140,7 +146,10 @@
 #define    REG_SYS_GPA_MFPH     (SYS_BA+0x074)  /*!< GPIOA High Byte Multiple Function Control Register */
 #define    REG_SYS_GPB_MFPL     (SYS_BA+0x078)  /*!< GPIOB Low Byte Multiple Function Control Register */
 #define    REG_SYS_GPB_MFPH     (SYS_BA+0x07C)  /*!< GPIOB High Byte Multiple Function Control Register */
+#define    REG_SYS_GPC_MFPL     (SYS_BA+0x080)  /*!< GPIOC Low Byte Multiple Function Control Register */
+#define    REG_SYS_GPC_MFPH     (SYS_BA+0x084)  /*!< GPIOC High Byte Multiple Function Control Register */
 #define    REG_SYS_GPD_MFPL     (SYS_BA+0x088)  /*!< GPIOD Low Byte Multiple Function Control Register */
+#define    REG_SYS_GPD_MFPH     (SYS_BA+0x08C)  /*!< GPIOD High Byte Multiple Function Control Register */
 #define    REG_SYS_GPE_MFPL     (SYS_BA+0x090)  /*!< GPIOE Low Byte Multiple Function Control Register */
 #define    REG_SYS_GPE_MFPH     (SYS_BA+0x094)  /*!< GPIOE High Byte Multiple Function Control Register */
 #define    REG_SYS_GPF_MFPL     (SYS_BA+0x098)  /*!< GPIOF Low Byte Multiple Function Control Register */
@@ -148,6 +157,7 @@
 #define    REG_SYS_GPG_MFPL     (SYS_BA+0x0A0)  /*!< GPIOG Low Byte Multiple Function Control Register */
 #define    REG_SYS_GPG_MFPH     (SYS_BA+0x0A4)  /*!< GPIOG High Byte Multiple Function Control Register */
 #define    REG_SYS_GPH_MFPL     (SYS_BA+0x0A8)  /*!< GPIOH Low Byte Multiple Function Control Register */
+#define    REG_SYS_GPH_MFPH     (SYS_BA+0x0AC)  /*!< GPIOH High Byte Multiple Function Control Register */
 #define    REG_SYS_GPI_MFPL     (SYS_BA+0x0B0)  /*!< GPIOI Low Byte Multiple Function Control Register */
 #define    REG_SYS_GPI_MFPH     (SYS_BA+0x0B4)  /*!< GPIOI High Byte Multiple Function Control Register */
 #define    REG_SYS_GPJ_MFPL     (SYS_BA+0x0B8)  /*!< GPIOJ Low Byte Multiple Function Control Register */
@@ -185,6 +195,100 @@
 
 /**@}*/ /* end of CLK register group */
 
+
+/*---------------------- External Bus Interface Controller -------------------------*/
+/**
+    @addtogroup EBI External Bus Interface Controller(EBI)
+    Memory Mapped Structure for EBI Controller
+@{ */
+
+#define    REG_EBI_CTL          (EBI_BA+0x000)  /*!< EBI control register */
+#define    REG_EBI_BNKCTL0      (EBI_BA+0x018)  /*!< External I/O 0 control register */
+#define    REG_EBI_BNKCTL1      (EBI_BA+0x01C)  /*!< External I/O 1 control register */
+#define    REG_EBI_BNKCTL2      (EBI_BA+0x020)  /*!< External I/O 2 control register */
+#define    REG_EBI_BNKCTL3      (EBI_BA+0x024)  /*!< External I/O 3 control register */
+#define    REG_EBI_BNKCTL4      (EBI_BA+0x028)  /*!< External I/O 4 control register */
+
+/**@}*/ /* end of EBI register group */
+
+
+/*---------------------- Ethernet MAC Controller -------------------------*/
+/**
+    @addtogroup EMAC Ethernet MAC Controller(EMAC)
+    Memory Mapped Structure for EMAC Controller
+@{ */
+
+#define     REG_EMAC0_CAMCMR      (EMC0_BA+0x000) /*!< CAM Command Register */
+#define     REG_EMAC0_CAMEN       (EMC0_BA+0x004) /*!< CAM Enable Register */
+#define     REG_EMAC0_CAM0M       (EMC0_BA+0x008)  /*!< CAM0 Most Significant Word Register */
+#define     REG_EMAC0_CAM0L       (EMC0_BA+0x00c)  /*!< CAM0 Least Significant Word Register */
+#define     REG_EMAC0_CAMxM_Reg(x)(REG_EMAC0_CAM0M+(x)*0x8)  /*!< CAMx Most Significant Word Register */
+#define     REG_EMAC0_CAMxL_Reg(x)(REG_EMAC0_CAM0L+(x)*0x8)  /*!< CAMx Least Significant Word Register */
+#define     REG_EMAC0_TXDLSA      (EMC0_BA+0x088) /*!< Transmit Descriptor Link List Start Address Register */
+#define     REG_EMAC0_RXDLSA      (EMC0_BA+0x08C) /*!< Receive Descriptor Link List Start Address Register */
+#define     REG_EMAC0_MCMDR       (EMC0_BA+0x090) /*!< MAC Command Register */
+#define     REG_EMAC0_MIID        (EMC0_BA+0x094) /*!< MII Management Data Register */
+#define     REG_EMAC0_MIIDA       (EMC0_BA+0x098) /*!< MII Management Control and Address Register */
+#define     REG_EMAC0_FFTCR       (EMC0_BA+0x09C) /*!< FIFO Threshold Control Register */
+#define     REG_EMAC0_TSDR        (EMC0_BA+0x0a0) /*!< Transmit Start Demand Register */
+#define     REG_EMAC0_RSDR        (EMC0_BA+0x0a4) /*!< Receive Start Demand Register */
+#define     REG_EMAC0_DMARFC      (EMC0_BA+0x0a8) /*!< Maximum Receive Frame Control Register */
+#define     REG_EMAC0_MIEN        (EMC0_BA+0x0ac) /*!< MAC Interrupt Enable Register */
+#define     REG_EMAC0_MISTA       (EMC0_BA+0x0b0) /*!< MAC Interrupt Status Register */
+#define     REG_EMAC0_MGSTA       (EMC0_BA+0x0b4) /*!< MAC General Status Register */
+#define     REG_EMAC0_MPCNT       (EMC0_BA+0x0b8) /*!< Missed Packet Count Register */
+#define     REG_EMAC0_MRPC        (EMC0_BA+0x0bc) /*!< MAC Receive Pause Count Register */
+#define     REG_EMAC0_DMARFS      (EMC0_BA+0x0c8) /*!< DMA Receive Frame Status Register */
+#define     REG_EMAC0_CTXDSA      (EMC0_BA+0x0cc) /*!< Current Transmit Descriptor Start Address Register */
+#define     REG_EMAC0_CTXBSA      (EMC0_BA+0x0d0) /*!< Current Transmit Buffer Start Address Register */
+#define     REG_EMAC0_CRXDSA      (EMC0_BA+0x0d4) /*!< Current Receive Descriptor Start Address Register */
+#define     REG_EMAC0_CRXBSA      (EMC0_BA+0x0d8) /*!< Current Receive Buffer Start Address Register */
+#define     REG_EMAC0_TSCTL       (EMC0_BA+0x100) /*!< Time Stamp Control Register */
+#define     REG_EMAC0_TSSEC       (EMC0_BA+0x110) /*!< Time Stamp Counter Second Register */
+#define     REG_EMAC0_TSSUBSEC    (EMC0_BA+0x114) /*!< Time Stamp Counter Sub Second Register */
+#define     REG_EMAC0_TSINC       (EMC0_BA+0x118) /*!< Time Stamp Increment Register  */
+#define     REG_EMAC0_TSADDEN     (EMC0_BA+0x11c) /*!< Time Stamp Addend Register */
+#define     REG_EMAC0_TSUPDSEC    (EMC0_BA+0x120) /*!< Time Stamp Update Second Register */
+#define     REG_EMAC0_TSUPDSUBSEC (EMC0_BA+0x124) /*!< Time Stamp Update Sub Second Register */
+#define     REG_EMAC0_TSALMSEC    (EMC0_BA+0x128) /*!< Time Stamp Alarm Second Register */
+#define     REG_EMAC0_TSALMSUBSEC (EMC0_BA+0x12c) /*!< Time Stamp Alarm Sub Second Register */
+
+#define     REG_EMAC1_CAMCMR      (EMC1_BA+0x000) /*!< CAM Command Register */
+#define     REG_EMAC1_CAMEN       (EMC1_BA+0x004) /*!< CAM Enable Register */
+#define     REG_EMAC1_CAM0M       (EMC1_BA+0x008)  /*!< CAM0 Most Significant Word Register */
+#define     REG_EMAC1_CAM0L       (EMC1_BA+0x00c)  /*!< CAM0 Least Significant Word Register */
+#define     REG_EMAC1_CAMxM_Reg(x)(REG_EMAC1_CAM0M+(x)*0x8)  /*!< CAMx Most Significant Word Register */
+#define     REG_EMAC1_CAMxL_Reg(x)(REG_EMAC1_CAM0L+(x)*0x8)  /*!< CAMx Least Significant Word Register */
+#define     REG_EMAC1_TXDLSA      (EMC1_BA+0x088) /*!< Transmit Descriptor Link List Start Address Register */
+#define     REG_EMAC1_RXDLSA      (EMC1_BA+0x08C) /*!< Receive Descriptor Link List Start Address Register */
+#define     REG_EMAC1_MCMDR       (EMC1_BA+0x090) /*!< MAC Command Register */
+#define     REG_EMAC1_MIID        (EMC1_BA+0x094) /*!< MII Management Data Register */
+#define     REG_EMAC1_MIIDA       (EMC1_BA+0x098) /*!< MII Management Control and Address Register */
+#define     REG_EMAC1_FFTCR       (EMC1_BA+0x09C) /*!< FIFO Threshold Control Register */
+#define     REG_EMAC1_TSDR        (EMC1_BA+0x0a0) /*!< Transmit Start Demand Register */
+#define     REG_EMAC1_RSDR        (EMC1_BA+0x0a4) /*!< Receive Start Demand Register */
+#define     REG_EMAC1_DMARFC      (EMC1_BA+0x0a8) /*!< Maximum Receive Frame Control Register */
+#define     REG_EMAC1_MIEN        (EMC1_BA+0x0ac) /*!< MAC Interrupt Enable Register */
+#define     REG_EMAC1_MISTA       (EMC1_BA+0x0b0) /*!< MAC Interrupt Status Register */
+#define     REG_EMAC1_MGSTA       (EMC1_BA+0x0b4) /*!< MAC General Status Register */
+#define     REG_EMAC1_MPCNT       (EMC1_BA+0x0b8) /*!< Missed Packet Count Register */
+#define     REG_EMAC1_MRPC        (EMC1_BA+0x0bc) /*!< MAC Receive Pause Count Register */
+#define     REG_EMAC1_DMARFS      (EMC1_BA+0x0c8) /*!< DMA Receive Frame Status Register */
+#define     REG_EMAC1_CTXDSA      (EMC1_BA+0x0cc) /*!< Current Transmit Descriptor Start Address Register */
+#define     REG_EMAC1_CTXBSA      (EMC1_BA+0x0d0) /*!< Current Transmit Buffer Start Address Register */
+#define     REG_EMAC1_CRXDSA      (EMC1_BA+0x0d4) /*!< Current Receive Descriptor Start Address Register */
+#define     REG_EMAC1_CRXBSA      (EMC1_BA+0x0d8) /*!< Current Receive Buffer Start Address Register */
+#define     REG_EMAC1_TSCTL       (EMC1_BA+0x100) /*!< Time Stamp Control Register */
+#define     REG_EMAC1_TSSEC       (EMC1_BA+0x110) /*!< Time Stamp Counter Second Register */
+#define     REG_EMAC1_TSSUBSEC    (EMC1_BA+0x114) /*!< Time Stamp Counter Sub Second Register */
+#define     REG_EMAC1_TSINC       (EMC1_BA+0x118) /*!< Time Stamp Increment Register  */
+#define     REG_EMAC1_TSADDEN     (EMC1_BA+0x11c) /*!< Time Stamp Addend Register */
+#define     REG_EMAC1_TSUPDSEC    (EMC1_BA+0x120) /*!< Time Stamp Update Second Register */
+#define     REG_EMAC1_TSUPDSUBSEC (EMC1_BA+0x124) /*!< Time Stamp Update Sub Second Register */
+#define     REG_EMAC1_TSALMSEC    (EMC1_BA+0x128) /*!< Time Stamp Alarm Second Register */
+#define     REG_EMAC1_TSALMSUBSEC (EMC1_BA+0x12c) /*!< Time Stamp Alarm Sub Second Register */
+
+/**@}*/ /* end of EMAC register group */
 
 /*----------------------  General Direct Memory Access Controller -------------------------*/
 /**
@@ -605,180 +709,6 @@
 /**@}*/ /* end of SDH register group */
 
 
-/*---------------------- Cryptographic Accelerator -------------------------*/
-/**
-    @addtogroup CRYPTO Cryptographic Accelerator(CRYPTO)
-    Memory Mapped Structure for Cryptographic Accelerator registers
-@{ */
-
-/* Crypto Control Registers */
-#define     CRPT_INTEN          (CRPT_BA+0x000)  /*!< Crypto Interrupt Enable Control Register      */
-#define     CRPT_INTSTS         (CRPT_BA+0x004)  /*!< Crypto Interrupt Flag                         */
-
-/* PRNG Registers */
-#define     CRPT_PRNG_CTL       (CRPT_BA+0x008)  /*!< PRNG Control Register                         */
-#define     CRPT_PRNG_SEED      (CRPT_BA+0x00C)  /*!< Seed for PRNG                                 */
-#define     CRPT_PRNG_KEY0      (CRPT_BA+0x010)  /*!< PRNG Generated Key 0                          */
-#define     CRPT_PRNG_KEY1      (CRPT_BA+0x014)  /*!< PRNG Generated Key 1                          */
-#define     CRPT_PRNG_KEY2      (CRPT_BA+0x018)  /*!< PRNG Generated Key 2                          */
-#define     CRPT_PRNG_KEY3      (CRPT_BA+0x01C)  /*!< PRNG Generated Key 3                          */
-#define     CRPT_PRNG_KEY4      (CRPT_BA+0x020)  /*!< PRNG Generated Key 4                          */
-#define     CRPT_PRNG_KEY5      (CRPT_BA+0x024)  /*!< PRNG Generated Key 5                          */
-#define     CRPT_PRNG_KEY6      (CRPT_BA+0x028)  /*!< PRNG Generated Key 6                          */
-#define     CRPT_PRNG_KEY7      (CRPT_BA+0x02C)  /*!< PRNG Generated Key 7                          */
-
-/* AES/TDES feedback Registers */
-#define     CRPT_AES_FDBCK0     (CRPT_BA+0x050)  /*!< AES Engine Output Feedback Data after Cryptographic Operation   */
-#define     CRPT_AES_FDBCK1     (CRPT_BA+0x054)  /*!< AES Engine Output Feedback Data after Cryptographic Operation   */
-#define     CRPT_AES_FDBCK2     (CRPT_BA+0x058)  /*!< AES Engine Output Feedback Data after Cryptographic Operation   */
-#define     CRPT_AES_FDBCK3     (CRPT_BA+0x05C)  /*!< AES Engine Output Feedback Data after Cryptographic Operation   */
-#define     CRPT_TDES_FDBCKH    (CRPT_BA+0x060)  /*!< TDES/DES Engine Output Feedback High Word Data after Cryptographic Operation  */
-#define     CRPT_TDES_FDBCKL    (CRPT_BA+0x064)  /*!< TDES/DES Engine Output Feedback Low Word Data after Cryptographic Operation   */
-
-/* AES Control Registers */
-#define     CRPT_AES_CTL        (CRPT_BA+0x100)   /*!< AES Control Register                               */
-#define     CRPT_AES_STS        (CRPT_BA+0x104)   /*!< AES Engine Flag                                    */
-#define     CRPT_AES_DATIN      (CRPT_BA+0x108)   /*!< AES Engine Data Input Port Register                */
-#define     CRPT_AES_DATOUT     (CRPT_BA+0x10C)   /*!< AES Engine Data Output Port Register               */
-#define     CRPT_AES0_KEY0      (CRPT_BA+0x110)   /*!< AES Key Word 0 Register for Channel 0              */
-#define     CRPT_AES0_KEY1      (CRPT_BA+0x114)   /*!< AES Key Word 1 Register for Channel 0              */
-#define     CRPT_AES0_KEY2      (CRPT_BA+0x118)   /*!< AES Key Word 2 Register for Channel 0              */
-#define     CRPT_AES0_KEY3      (CRPT_BA+0x11C)   /*!< AES Key Word 3 Register for Channel 0              */
-#define     CRPT_AES0_KEY4      (CRPT_BA+0x120)   /*!< AES Key Word 4 Register for Channel 0              */
-#define     CRPT_AES0_KEY5      (CRPT_BA+0x124)   /*!< AES Key Word 5 Register for Channel 0              */
-#define     CRPT_AES0_KEY6      (CRPT_BA+0x128)   /*!< AES Key Word 6 Register for Channel 0              */
-#define     CRPT_AES0_KEY7      (CRPT_BA+0x12C)   /*!< AES Key Word 7 Register for Channel 0              */
-#define     CRPT_AES0_IV0       (CRPT_BA+0x130)   /*!< AES Initial Vector Word 0 Register for Channel 0   */
-#define     CRPT_AES0_IV1       (CRPT_BA+0x134)   /*!< AES Initial Vector Word 1 Register for Channel 0   */
-#define     CRPT_AES0_IV2       (CRPT_BA+0x138)   /*!< AES Initial Vector Word 2 Register for Channel 0   */
-#define     CRPT_AES0_IV3       (CRPT_BA+0x13C)   /*!< AES Initial Vector Word 3 Register for Channel 0   */
-#define     CRPT_AES0_SADDR     (CRPT_BA+0x140)   /*!< AES DMA Source Address Register for Channel 0      */
-#define     CRPT_AES0_DADDR     (CRPT_BA+0x144)   /*!< AES DMA Destination Address Register for Channel 0 */
-#define     CRPT_AES0_CNT       (CRPT_BA+0x148)   /*!< AES Byte Count Register for Channel 0              */
-#define     CRPT_AES1_KEY0      (CRPT_BA+0x14C)   /*!< AES Key Word 0 Register for Channel 1              */
-#define     CRPT_AES1_KEY1      (CRPT_BA+0x150)   /*!< AES Key Word 1 Register for Channel 1              */
-#define     CRPT_AES1_KEY2      (CRPT_BA+0x154)   /*!< AES Key Word 2 Register for Channel 1              */
-#define     CRPT_AES1_KEY3      (CRPT_BA+0x158)   /*!< AES Key Word 3 Register for Channel 1              */
-#define     CRPT_AES1_KEY4      (CRPT_BA+0x15C)   /*!< AES Key Word 4 Register for Channel 1              */
-#define     CRPT_AES1_KEY5      (CRPT_BA+0x160)   /*!< AES Key Word 5 Register for Channel 1              */
-#define     CRPT_AES1_KEY6      (CRPT_BA+0x164)   /*!< AES Key Word 6 Register for Channel 1              */
-#define     CRPT_AES1_KEY7      (CRPT_BA+0x168)   /*!< AES Key Word 7 Register for Channel 1              */
-#define     CRPT_AES1_IV0       (CRPT_BA+0x16C)   /*!< AES Initial Vector Word 0 Register for Channel 1   */
-#define     CRPT_AES1_IV1       (CRPT_BA+0x170)   /*!< AES Initial Vector Word 1 Register for Channel 1   */
-#define     CRPT_AES1_IV2       (CRPT_BA+0x174)   /*!< AES Initial Vector Word 2 Register for Channel 1   */
-#define     CRPT_AES1_IV3       (CRPT_BA+0x178)   /*!< AES Initial Vector Word 3 Register for Channel 1   */
-#define     CRPT_AES1_SADDR     (CRPT_BA+0x17C)   /*!< AES DMA Source Address Register for Channel 1      */
-#define     CRPT_AES1_DADDR     (CRPT_BA+0x180)   /*!< AES DMA Destination Address Register for Channel 1 */
-#define     CRPT_AES1_CNT       (CRPT_BA+0x184)   /*!< AES Byte Count Register for Channel 1              */
-#define     CRPT_AES2_KEY0      (CRPT_BA+0x188)   /*!< AES Key Word 0 Register for Channel 2              */
-#define     CRPT_AES2_KEY1      (CRPT_BA+0x18C)   /*!< AES Key Word 1 Register for Channel 2              */
-#define     CRPT_AES2_KEY2      (CRPT_BA+0x190)   /*!< AES Key Word 2 Register for Channel 2              */
-#define     CRPT_AES2_KEY3      (CRPT_BA+0x194)   /*!< AES Key Word 3 Register for Channel 2              */
-#define     CRPT_AES2_KEY4      (CRPT_BA+0x198)   /*!< AES Key Word 4 Register for Channel 2              */
-#define     CRPT_AES2_KEY5      (CRPT_BA+0x19C)   /*!< AES Key Word 5 Register for Channel 2              */
-#define     CRPT_AES2_KEY6      (CRPT_BA+0x1A0)   /*!< AES Key Word 6 Register for Channel 2              */
-#define     CRPT_AES2_KEY7      (CRPT_BA+0x1A4)   /*!< AES Key Word 7 Register for Channel 2              */
-#define     CRPT_AES2_IV0       (CRPT_BA+0x1A8)   /*!< AES Initial Vector Word 0 Register for Channel 2   */
-#define     CRPT_AES2_IV1       (CRPT_BA+0x1AC)   /*!< AES Initial Vector Word 1 Register for Channel 2   */
-#define     CRPT_AES2_IV2       (CRPT_BA+0x1B0)   /*!< AES Initial Vector Word 2 Register for Channel 2   */
-#define     CRPT_AES2_IV3       (CRPT_BA+0x1B4)   /*!< AES Initial Vector Word 3 Register for Channel 2   */
-#define     CRPT_AES2_SADDR     (CRPT_BA+0x1B8)   /*!< AES DMA Source Address Register for Channel 2      */
-#define     CRPT_AES2_DADDR     (CRPT_BA+0x1BC)   /*!< AES DMA Destination Address Register for Channel 2 */
-#define     CRPT_AES2_CNT       (CRPT_BA+0x1C0)   /*!< AES Byte Count Register for Channel 2              */
-#define     CRPT_AES3_KEY0      (CRPT_BA+0x1C4)   /*!< AES Key Word 0 Register for Channel 3              */
-#define     CRPT_AES3_KEY1      (CRPT_BA+0x1C8)   /*!< AES Key Word 1 Register for Channel 3              */
-#define     CRPT_AES3_KEY2      (CRPT_BA+0x1CC)   /*!< AES Key Word 2 Register for Channel 3              */
-#define     CRPT_AES3_KEY3      (CRPT_BA+0x1D0)   /*!< AES Key Word 3 Register for Channel 3              */
-#define     CRPT_AES3_KEY4      (CRPT_BA+0x1D4)   /*!< AES Key Word 4 Register for Channel 3              */
-#define     CRPT_AES3_KEY5      (CRPT_BA+0x1D8)   /*!< AES Key Word 5 Register for Channel 3              */
-#define     CRPT_AES3_KEY6      (CRPT_BA+0x1DC)   /*!< AES Key Word 6 Register for Channel 3              */
-#define     CRPT_AES3_KEY7      (CRPT_BA+0x1E0)   /*!< AES Key Word 7 Register for Channel 3              */
-#define     CRPT_AES3_IV0       (CRPT_BA+0x1E4)   /*!< AES Initial Vector Word 0 Register for Channel 3   */
-#define     CRPT_AES3_IV1       (CRPT_BA+0x1E8)   /*!< AES Initial Vector Word 1 Register for Channel 3   */
-#define     CRPT_AES3_IV2       (CRPT_BA+0x1EC)   /*!< AES Initial Vector Word 2 Register for Channel 3   */
-#define     CRPT_AES3_IV3       (CRPT_BA+0x1F0)   /*!< AES Initial Vector Word 3 Register for Channel 3   */
-#define     CRPT_AES3_SADDR     (CRPT_BA+0x1F4)   /*!< AES DMA Source Address Register for Channel 3      */
-#define     CRPT_AES3_DADDR     (CRPT_BA+0x1F8)   /*!< AES DMA Destination Address Register for Channel 3 */
-#define     CRPT_AES3_CNT       (CRPT_BA+0x1FC)   /*!< AES Byte Count Register for Channel 3              */
-
-/* DES/TDES Control Registers */
-#define     CRPT_TDES_CTL       (CRPT_BA+0x200)   /*!< TDES/DES Control Register                          */
-#define     CRPT_TDES_STS       (CRPT_BA+0x204)   /*!< TDES/DES Engine Flag                               */
-#define     CRPT_TDES0_KEY1H    (CRPT_BA+0x208)   /*!< TDES/DES Key 1 High Word Register for Channel 0    */
-#define     CRPT_TDES0_KEY1L    (CRPT_BA+0x20C)   /*!< TDES/DES Key 1 Low Word Register for Channel 0     */
-#define     CRPT_TDES0_KEY2H    (CRPT_BA+0x210)   /*!< TDES/DES Key 2 High Word Register for Channel 0    */
-#define     CRPT_TDES0_KEY2L    (CRPT_BA+0x214)   /*!< TDES/DES Key 2 Low Word Register for Channel 0     */
-#define     CRPT_TDES0_KEY3H    (CRPT_BA+0x218)   /*!< TDES/DES Key 3 High Word Register for Channel 0    */
-#define     CRPT_TDES0_KEY3L    (CRPT_BA+0x21C)   /*!< TDES/DES Key 3 Low Word Register for Channel 0     */
-#define     CRPT_TDES0_IVH      (CRPT_BA+0x220)   /*!< TDES/DES Initial Vector High Word Register for Channel 0 */
-#define     CRPT_TDES0_IVL      (CRPT_BA+0x224)   /*!< TDES/DES Initial Vector Low Word Register for Channel 0  */
-#define     CRPT_TDES0_SADDR    (CRPT_BA+0x228)   /*!< TDES/DES DMA Source Address Register for Channel 0       */
-#define     CRPT_TDES0_DADDR    (CRPT_BA+0x22C)   /*!< TDES/DES DMA Destination Address Register for Channel 0  */
-#define     CRPT_TDES0_CNT      (CRPT_BA+0x230)   /*!< TDES/DES Byte Count Register for Channel 0         */
-#define     CRPT_TDES_DATIN     (CRPT_BA+0x234)   /*!< TDES/DES Engine Input data Word Register           */
-#define     CRPT_TDES_DATOUT    (CRPT_BA+0x238)   /*!< TDES/DES Engine Output data Word Register          */
-#define     CRPT_TDES1_KEY1H    (CRPT_BA+0x248)   /*!< TDES/DES Key 1 High Word Register for Channel 1    */
-#define     CRPT_TDES1_KEY1L    (CRPT_BA+0x24C)   /*!< TDES/DES Key 1 Low Word Register for Channel 1     */
-#define     CRPT_TDES1_KEY2H    (CRPT_BA+0x250)   /*!< TDES/DES Key 2 High Word Register for Channel 1    */
-#define     CRPT_TDES1_KEY2L    (CRPT_BA+0x254)   /*!< TDES/DES Key 2 Low Word Register for Channel 1     */
-#define     CRPT_TDES1_KEY3H    (CRPT_BA+0x258)   /*!< TDES/DES Key 3 High Word Register for Channel 1    */
-#define     CRPT_TDES1_KEY3L    (CRPT_BA+0x25C)   /*!< TDES/DES Key 3 Low Word Register for Channel 1     */
-#define     CRPT_TDES1_IVH      (CRPT_BA+0x260)   /*!< TDES/DES Initial Vector High Word Register for Channel 1 */
-#define     CRPT_TDES1_IVL      (CRPT_BA+0x264)   /*!< TDES/DES Initial Vector Low Word Register for Channel 1  */
-#define     CRPT_TDES1_SADDR    (CRPT_BA+0x268)   /*!< TDES/DES DMA Source Address Register for Channel 1       */
-#define     CRPT_TDES1_DADDR    (CRPT_BA+0x26C)   /*!< TDES/DES DMA Destination Address Register for Channel 1  */
-#define     CRPT_TDES1_CNT      (CRPT_BA+0x270)   /*!< TDES/DES Byte Count Register for Channel 1         */
-#define     CRPT_TDES2_KEY1H    (CRPT_BA+0x288)   /*!< TDES/DES Key 1 High Word Register for Channel 2    */
-#define     CRPT_TDES2_KEY1L    (CRPT_BA+0x28C)   /*!< TDES/DES Key 1 Low Word Register for Channel 2     */
-#define     CRPT_TDES2_KEY2H    (CRPT_BA+0x290)   /*!< TDES/DES Key 2 High Word Register for Channel 2    */
-#define     CRPT_TDES2_KEY2L    (CRPT_BA+0x294)   /*!< TDES/DES Key 2 Low Word Register for Channel 2     */
-#define     CRPT_TDES2_KEY3H    (CRPT_BA+0x298)   /*!< TDES/DES Key 3 High Word Register for Channel 2    */
-#define     CRPT_TDES2_KEY3L    (CRPT_BA+0x29C)   /*!< TDES/DES Key 3 Low Word Register for Channel 2     */
-#define     CRPT_TDES2_IVH      (CRPT_BA+0x2A0)   /*!< TDES/DES Initial Vector High Word Register for Channel 2 */
-#define     CRPT_TDES2_IVL      (CRPT_BA+0x2A4)   /*!< TDES/DES Initial Vector Low Word Register for Channel 2  */
-#define     CRPT_TDES2_SADDR    (CRPT_BA+0x2A8)   /*!< TDES/DES DMA Source Address Register for Channel 2       */
-#define     CRPT_TDES2_DADDR    (CRPT_BA+0x2AC)   /*!< TDES/DES DMA Destination Address Register for Channel 2  */
-#define     CRPT_TDES2_CNT      (CRPT_BA+0x2B0)   /*!< TDES/DES Byte Count Register for Channel 3         */
-#define     CRPT_TDES3_KEY1H    (CRPT_BA+0x2C8)   /*!< TDES/DES Key 1 High Word Register for Channel 3    */
-#define     CRPT_TDES3_KEY1L    (CRPT_BA+0x2CC)   /*!< TDES/DES Key 1 Low Word Register for Channel 3     */
-#define     CRPT_TDES3_KEY2H    (CRPT_BA+0x2D0)   /*!< TDES/DES Key 2 High Word Register for Channel 3    */
-#define     CRPT_TDES3_KEY2L    (CRPT_BA+0x2D4)   /*!< TDES/DES Key 2 Low Word Register for Channel 3     */
-#define     CRPT_TDES3_KEY3H    (CRPT_BA+0x2D8)   /*!< TDES/DES Key 3 High Word Register for Channel 3    */
-#define     CRPT_TDES3_KEY3L    (CRPT_BA+0x2DC)   /*!< TDES/DES Key 3 Low Word Register for Channel 3     */
-#define     CRPT_TDES3_IVH      (CRPT_BA+0x2E0)   /*!< TDES/DES Initial Vector High Word Register for Channel 3 */
-#define     CRPT_TDES3_IVL      (CRPT_BA+0x2E4)   /*!< TDES/DES Initial Vector Low Word Register for Channel 3  */
-#define     CRPT_TDES3_SADDR    (CRPT_BA+0x2E8)   /*!< TDES/DES DMA Source Address Register for Channel 3       */
-#define     CRPT_TDES3_DADDR    (CRPT_BA+0x2EC)   /*!< TDES/DES DMA Destination Address Register for Channel 3  */
-#define     CRPT_TDES3_CNT      (CRPT_BA+0x2F0)   /*!< TDES/DES Byte Count Register for Channel 3         */
-
-/* SHA/HMAC Control Registers */
-#define     CRPT_HMAC_CTL       (CRPT_BA+0x300)   /*!< SHA/HMAC Control Register                          */
-#define     CRPT_HMAC_STS       (CRPT_BA+0x304)   /*!< SHA/HMAC Status Flag                               */
-#define     CRPT_HMAC_DGST0     (CRPT_BA+0x308)   /*!< SHA/HMAC Digest Message 0                          */
-#define     CRPT_HMAC_DGST1     (CRPT_BA+0x30C)   /*!< SHA/HMAC Digest Message 1                          */
-#define     CRPT_HMAC_DGST2     (CRPT_BA+0x310)   /*!< SHA/HMAC Digest Message 2                          */
-#define     CRPT_HMAC_DGST3     (CRPT_BA+0x314)   /*!< SHA/HMAC Digest Message 3                          */
-#define     CRPT_HMAC_DGST4     (CRPT_BA+0x318)   /*!< SHA/HMAC Digest Message 4                          */
-#define     CRPT_HMAC_DGST5     (CRPT_BA+0x31C)   /*!< SHA/HMAC Digest Message 5                          */
-#define     CRPT_HMAC_DGST6     (CRPT_BA+0x320)   /*!< SHA/HMAC Digest Message 6                          */
-#define     CRPT_HMAC_DGST7     (CRPT_BA+0x324)   /*!< SHA/HMAC Digest Message 7                          */
-#define     CRPT_HMAC_DGST8     (CRPT_BA+0x328)   /*!< SHA/HMAC Digest Message 8                          */
-#define     CRPT_HMAC_DGST9     (CRPT_BA+0x32C)   /*!< SHA/HMAC Digest Message 8                          */
-#define     CRPT_HMAC_DGST10    (CRPT_BA+0x330)   /*!< SHA/HMAC Digest Message 10                         */
-#define     CRPT_HMAC_DGST11    (CRPT_BA+0x334)   /*!< SHA/HMAC Digest Message 11                         */
-#define     CRPT_HMAC_DGST12    (CRPT_BA+0x338)   /*!< SHA/HMAC Digest Message 12                         */
-#define     CRPT_HMAC_DGST13    (CRPT_BA+0x33C)   /*!< SHA/HMAC Digest Message 13                         */
-#define     CRPT_HMAC_DGST14    (CRPT_BA+0x340)   /*!< SHA/HMAC Digest Message 14                         */
-#define     CRPT_HMAC_DGST15    (CRPT_BA+0x344)   /*!< SHA/HMAC Digest Message 15                         */
-#define     CRPT_HMAC_KEYCNT    (CRPT_BA+0x348)   /*!< SHA/HMAC Key Byte Count                            */
-#define     CRPT_HMAC_SADDR     (CRPT_BA+0x34C)   /*!< SHA/HMAC Key Byte Count                            */
-#define     CRPT_HMAC_DMACNT    (CRPT_BA+0x350)   /*!< SHA/HMAC Byte Count Register                       */
-#define     CRPT_HMAC_DATIN     (CRPT_BA+0x354)   /*!< SHA/HMAC Engine Non-DMA Mode Data Input Port Register  */
-
-/**@}*/ /* end of Cryptographic Accelerator register group */
-
-
-
 
 /*---------------------- Universal Asynchronous Receiver/Transmitter Controller -------------------------*/
 /**
@@ -827,6 +757,26 @@
 #define     REG_UART1_LIN_SR    (UART1_BA+0x38)  /*!< LIN Status Register */
 
 /*
+  UART2 Control Registers
+*/
+#define     REG_UART2_RBR   (UART2_BA+0x00)  /*!< Receive Buffer Register */
+#define     REG_UART2_THR   (UART2_BA+0x00)  /*!< Transmit Holding Register */
+#define     REG_UART2_IER   (UART2_BA+0x04)  /*!< Interrupt Enable Register */
+#define     REG_UART2_FCR   (UART2_BA+0x08)  /*!< FIFO Control Register */
+#define     REG_UART2_LCR   (UART2_BA+0x0C)  /*!< Line Control Register */
+#define     REG_UART2_MCR   (UART2_BA+0x10)  /*!< Modem Control Register */
+#define     REG_UART2_MSR   (UART2_BA+0x14)  /*!< MODEM Status Register */
+#define     REG_UART2_FSR   (UART2_BA+0x18)  /*!< FIFO Status Register */
+#define     REG_UART2_ISR   (UART2_BA+0x1C)  /*!< Interrupt Status Control Register */
+#define     REG_UART2_TOR   (UART2_BA+0x20)  /*!< Time-out Register */
+#define     REG_UART2_BAUD  (UART2_BA+0x24)  /*!< Baud Rate Divider Register */
+#define     REG_UART2_IRCR  (UART2_BA+0x28)  /*!< IrDA Control Register */
+#define     REG_UART2_ALT_CSR   (UART2_BA+0x2C)  /*!< Alternate Control Register */
+#define     REG_UART2_FUN_SEL   (UART2_BA+0x30)  /*!< UART Function Select REgister */
+#define     REG_UART2_LIN_CTL   (UART2_BA+0x34)  /*!< UART LIN Control Register */
+#define     REG_UART2_LIN_SR    (UART2_BA+0x38)  /*!< LIN Status Register */
+
+/*
   UART3 Control Registers
 */
 #define     REG_UART3_RBR   (UART3_BA+0x00)  /*!< Receive Buffer Register */
@@ -866,6 +816,26 @@
 #define     REG_UART4_FUN_SEL   (UART4_BA+0x30)  /*!< UART Function Select REgister */
 #define     REG_UART4_LIN_CTL   (UART4_BA+0x34)  /*!< UART LIN Control Register */
 #define     REG_UART4_LIN_SR    (UART4_BA+0x38)  /*!< LIN Status Register */
+
+/*
+  UART5 Control Registers
+*/
+#define     REG_UART5_RBR   (UART5_BA+0x00)  /*!< Receive Buffer Register */
+#define     REG_UART5_THR   (UART5_BA+0x00)  /*!< Transmit Holding Register */
+#define     REG_UART5_IER   (UART5_BA+0x04)  /*!< Interrupt Enable Register */
+#define     REG_UART5_FCR   (UART5_BA+0x08)  /*!< FIFO Control Register */
+#define     REG_UART5_LCR   (UART5_BA+0x0C)  /*!< Line Control Register */
+#define     REG_UART5_MCR   (UART5_BA+0x10)  /*!< Modem Control Register */
+#define     REG_UART5_MSR   (UART5_BA+0x14)  /*!< MODEM Status Register */
+#define     REG_UART5_FSR   (UART5_BA+0x18)  /*!< FIFO Status Register */
+#define     REG_UART5_ISR   (UART5_BA+0x1C)  /*!< Interrupt Status Control Register */
+#define     REG_UART5_TOR   (UART5_BA+0x20)  /*!< Time-out Register */
+#define     REG_UART5_BAUD  (UART5_BA+0x24)  /*!< Baud Rate Divider Register */
+#define     REG_UART5_IRCR  (UART5_BA+0x28)  /*!< IrDA Control Register */
+#define     REG_UART5_ALT_CSR   (UART5_BA+0x2C)  /*!< Alternate Control Register */
+#define     REG_UART5_FUN_SEL   (UART5_BA+0x30)  /*!< UART Function Select REgister */
+#define     REG_UART5_LIN_CTL   (UART5_BA+0x34)  /*!< UART LIN Control Register */
+#define     REG_UART5_LIN_SR    (UART5_BA+0x38)  /*!< LIN Status Register */
 
 /*
   UART6 Control Registers
@@ -1185,6 +1155,19 @@
 #define     REG_GPIOB_ICEN      (GPIO_BA+0x068)  /*!< GPIO Port B CMOS Input Enable Register */
 #define     REG_GPIOB_ISEN      (GPIO_BA+0x06C)  /*!< GPIO Port B Schmitt-Trigger Input Enable Register */
 
+#define     REG_GPIOC_DIR       (GPIO_BA+0x080)  /*!< GPIO port C direction control register */
+#define     REG_GPIOC_DATAOUT   (GPIO_BA+0x084)  /*!< GPIO port C data output register */
+#define     REG_GPIOC_DATAIN    (GPIO_BA+0x088)  /*!< GPIO port C data input register */
+#define     REG_GPIOC_IMD       (GPIO_BA+0x08C)  /*!< GPIO Port C Interrupt Mode Register */
+#define     REG_GPIOC_IREN      (GPIO_BA+0x090)  /*!< GPIO Port C Interrupt Rising-Edge or Level-High Enable Register */
+#define     REG_GPIOC_IFEN      (GPIO_BA+0x094)  /*!< GPIO Port C Interrupt Falling-Edge or Level-Low Enable Register */
+#define     REG_GPIOC_ISR       (GPIO_BA+0x098)  /*!< GPIO Port C Interrupt Status Register */
+#define     REG_GPIOC_DBEN      (GPIO_BA+0x09C)  /*!< GPIO Port C De-bounce Enable Register */
+#define     REG_GPIOC_PUEN      (GPIO_BA+0x0A0)  /*!< GPIO Port C Pull-Up Enable Register */
+#define     REG_GPIOC_PDEN      (GPIO_BA+0x0A4)  /*!< GPIO Port C Pull-Down Enable Register */
+#define     REG_GPIOC_ICEN      (GPIO_BA+0x0A8)  /*!< GPIO Port C CMOS Input Enable Register */
+#define     REG_GPIOC_ISEN      (GPIO_BA+0x0AC)  /*!< GPIO Port C Schmitt-Trigger Input Enable Register */
+
 #define     REG_GPIOD_DIR       (GPIO_BA+0x0C0)  /*!< GPIO port D direction control register */
 #define     REG_GPIOD_DATAOUT   (GPIO_BA+0x0C4)  /*!< GPIO port D data output register */
 #define     REG_GPIOD_DATAIN    (GPIO_BA+0x0C8)  /*!< GPIO port D data input register */
@@ -1419,6 +1402,8 @@
 #define REG_ADC_XYDATA    (ADC_BA+0x020) /*!< ADC Touch XY Pressure Data */
 #define REG_ADC_ZDATA     (ADC_BA+0x024) /*!< ADC Touch Z Pressure Data */
 #define REG_ADC_DATA      (ADC_BA+0x028) /*!< ADC Normal Conversion Data */
+#define REG_ADC_VBADATA   (ADC_BA+0x02C) /*!< ADC Battery Detection Data */
+#define REG_ADC_KPDATA    (ADC_BA+0x030) /*!< ADC Key Pad Data */
 #define REG_ADC_SELFDATA  (ADC_BA+0x034) /*!< ADC Self-Test Data */
 #define REG_ADC_XYSORT0   (ADC_BA+0x1F4) /*!< ADC Touch XY Position Mean Value Sort 0 */
 #define REG_ADC_XYSORT1   (ADC_BA+0x1F8) /*!< ADC Touch XY Position Mean Value Sort 1 */
@@ -1436,6 +1421,41 @@
 
 /**@}*/ /* end of ADC register group */
 
+/*------------------ Capture Sensor Interface Controller ---------------------*/
+/**
+    @addtogroup CAP Capture Sensor Interface Controller(CAP)
+    Memory Mapped Structure for CAP Controller
+@{ */
+
+#define REG_CAP_CTL            (CAP_BA+0x000)  /*!< Image Capture Interface Control Register */
+#define REG_CAP_PAR            (CAP_BA+0x004)  /*!< Image Capture Interface Parameter Register */
+#define REG_CAP_INT            (CAP_BA+0x008)  /*!< Image Capture Interface Interrupt Registe */
+#define REG_CAP_POSTERIZE      (CAP_BA+0x00C)  /*!< YUV Component Posterizing Factor Register */
+#define REG_CAP_MD             (CAP_BA+0x010)  /*!< Motion Detection Register */
+#define REG_CAP_MDADDR         (CAP_BA+0x014)  /*!< Motion Detection Output Address Register */
+#define REG_CAP_MDYADDR        (CAP_BA+0x018)  /*!< Motion Detection Temp YOutput Address Register */
+#define REG_CAP_SEPIA          (CAP_BA+0x01C)  /*!< Sepia Effect Control Register */
+#define REG_CAP_CWSP           (CAP_BA+0x020)  /*!< Cropping Window Starting Address Register */
+#define REG_CAP_CWS            (CAP_BA+0x024)  /*!< Cropping Window Size Register */
+#define REG_CAP_PKTSL          (CAP_BA+0x028)  /*!< Packet Scaling Vertical/Horizontal Factor Register (LSB) */
+#define REG_CAP_PLNSL          (CAP_BA+0x02C)  /*!< Planar Scaling Vertical/Horizontal Factor Register (LSB) */
+#define REG_CAP_FRCTL          (CAP_BA+0x030)  /*!< Scaling Frame Rate Factor Register */
+#define REG_CAP_STRIDE         (CAP_BA+0x034)  /*!< Frame Output Pixel Stride Register */
+#define REG_CAP_FIFOTH         (CAP_BA+0x03C)  /*!< FIFO threshold Register */
+#define REG_CAP_CMPADDR        (CAP_BA+0x040)  /*!< Compare Packet Memory Base Address Register */
+#define REG_CAP_PKTSM          (CAP_BA+0x048)  /*!< Packet Scaling Vertical/Horizontal Factor Register (MSB) */
+#define REG_CAP_PLNSM          (CAP_BA+0x04C)  /*!< Planar Scaling Vertical/Horizontal Factor Register (MSB) */
+#define REG_CAP_CURADDRP       (CAP_BA+0x050)  /*!< Current Packet System Memory Address Register */
+#define REG_CAP_CURADDRY       (CAP_BA+0x054)  /*!< Current Planar Y System Memory Address Register */
+#define REG_CAP_CURADDRU       (CAP_BA+0x058)  /*!< Current Planar U System Memory Address Register */
+#define REG_CAP_CURADDRV       (CAP_BA+0x05C)  /*!< Current Planar V System Memory Address Register */
+#define REG_CAP_PKTBA0         (CAP_BA+0x060)  /*!< System Memory Packet Base Address Register */
+#define REG_CAP_PKTBA1         (CAP_BA+0x064)  /*!< System Memory Packet Base Address Register */
+#define REG_CAP_YBA            (CAP_BA+0x080)  /*!< System Memory Planar Y Base Address Register */
+#define REG_CAP_UBA            (CAP_BA+0x084)  /*!< System Memory Planar U Base Address Register */
+#define REG_CAP_VBA            (CAP_BA+0x088)  /*!< System Memory Planar V Base Address Register */
+
+/**@}*/ /* end of CAP register group */
 
 /*------------------ SDRAM Interface Controller ---------------------*/
 /**
@@ -1459,30 +1479,93 @@
 
 /**@}*/ /* end of SDIC register group */
 
-
-/*------------------- Multi-Time Programmable Controller --------------------*/
+/*---------------------- Controller Area Network -------------------------*/
 /**
-    @addtogroup MTP Multi-Time Programmable Controller (MTP)
-    Memory Mapped Structure for MTP Controller
+    @addtogroup CAN Controller Area Network(CAN)
+    Memory Mapped Structure for CAN Controller
 @{ */
 
-#define     MTP_KEYEN           (MTP_BA+0x000)   /*!< MTP Key Enable Register                       */
-#define     MTP_USERDATA        (MTP_BA+0x00C)   /*!< MTP User Defined Data Register                */
-#define     MTP_KEY0            (MTP_BA+0x010)   /*!< MTP KEY 0 Register                            */
-#define     MTP_KEY1            (MTP_BA+0x014)   /*!< MTP KEY 1 Register                            */
-#define     MTP_KEY2            (MTP_BA+0x018)   /*!< MTP KEY 2 Register                            */
-#define     MTP_KEY3            (MTP_BA+0x01C)   /*!< MTP KEY 3 Register                            */
-#define     MTP_KEY4            (MTP_BA+0x020)   /*!< MTP KEY 4 Register                            */
-#define     MTP_KEY5            (MTP_BA+0x024)   /*!< MTP KEY 5 Register                            */
-#define     MTP_KEY6            (MTP_BA+0x028)   /*!< MTP KEY 6 Register                            */
-#define     MTP_KEY7            (MTP_BA+0x02C)   /*!< MTP KEY 7 Register                            */
-#define     MTP_PCYCLE          (MTP_BA+0x030)   /*!< MTP Program Cycle Program Count Register      */
-#define     MTP_CTL             (MTP_BA+0x034)   /*!< MTP Control Register                          */
-#define     MTP_PSTART          (MTP_BA+0x038)   /*!< MTP Program Start Registe                     */
-#define     MTP_STATUS          (MTP_BA+0x040)   /*!< MTP Status Registe                            */
-#define     MTP_REGLCTL         (MTP_BA+0x050)   /*!< MTP Register Write-Protection Control Register*/
+#define REG_CAN0_CON       (CAN0_BA+0x00) /*!< Control Register */
+#define REG_CAN0_STATUS    (CAN0_BA+0x04) /*!< Status Register */
+#define REG_CAN0_ERR       (CAN0_BA+0x08) /*!< Error Counter Register */
+#define REG_CAN0_BTIME     (CAN0_BA+0x0C) /*!< Bit Time Register */
+#define REG_CAN0_IIDR      (CAN0_BA+0x10) /*!< Interrupt Identifier Register */
+#define REG_CAN0_TEST      (CAN0_BA+0x14) /*!< Test Register */
+#define REG_CAN0_BRPE      (CAN0_BA+0x18) /*!< BRP Extension Register */
+#define REG_CAN0_IF1_CREQ  (CAN0_BA+0x20) /*!< IF1 Command Request Register */
+#define REG_CAN0_IF2_CREQ  (CAN0_BA+0x80) /*!< IF2 Command Request Register */
+#define REG_CAN0_IF1_CMASK (CAN0_BA+0x24) /*!< IF1 Command Mask Register */
+#define REG_CAN0_IF2_CMASK (CAN0_BA+0x84) /*!< IF2 Command Mask Register */
+#define REG_CAN0_IF1_MASK1 (CAN0_BA+0x28) /*!< IF1 Msak 1 Register */
+#define REG_CNA0_IF2_MASK1 (CAN0_BA+0x88) /*!< IF2 Mask 1 Register */
+#define REG_CAN0_IF1_MASK2 (CAN0_BA+0x2C) /*!< IF1 Mask 2 Register */
+#define REG_CAN0_IF2_MASK2 (CAN0_BA+0x8C) /*!< IF2 Mask 2 REgister */
+#define REG_CAN0_IF1_ARB1  (CAN0_BA+0x30) /*!< IF1 Arbitration 1 Register */
+#define REG_CAN0_IF2_ARB1  (CAN0_BA+0x90) /*!< IF2 Arbitration 1 Register */
+#define REG_CAN0_IF1_ARB2  (CAN0_BA+0x34) /*!< IF1 Arbitration 2 Register */
+#define REG_CAN0_IF2_ARB2  (CAN0_BA+0x94) /*!< IF2 Arbitration 2 Register */
+#define REG_CAN0_IF1_MCON  (CAN0_BA+0x38) /*!< IF1 Message Control Register */
+#define REG_CAN0_IF2_MCON  (CAN0_BA+0x98) /*!< IF2 Message Control Register */
+#define REG_CAN0_IF1_DAT_A1 (CAN0_BA+0x3C) /*!< IF1 Data A1 Register */
+#define REG_CAN0_IF1_DAT_A2 (CAN0_BA+0x40) /*!< IF1 Data A2 Register */
+#define REG_CAN0_IF1_DAT_B1 (CAN0_BA+0x44) /*!< IF1 Data B1 Register */
+#define REG_CAN0_IF1_DAT_B2 (CAN0_BA+0x48) /*!< IF1 Data B2 Register */
+#define REG_CAN0_IF2_DAT_A1 (CAN0_BA+0x9C) /*!< IF2 Data A1 Register */
+#define REG_CAN0_IF2_DAT_A2 (CAN0_BA+0xA0) /*!< IF2 Data A2 Register */
+#define REG_CAN0_IF2_DAT_B1 (CAN0_BA+0xA4) /*!< IF2 Data B1 Register */
+#define REG_CAN0_IF2_DAT_B2 (CAN0_BA+0xA8) /*!< IF2 Data B2 Register */
+#define REG_CAN0_TXREQ1     (CAN0_BA+0x100) /*!< Transmission Request Register 1 */
+#define REG_CAN0_TXREQ2     (CAN0_BA+0x104) /*!< Transmission Request Register 2 */
+#define REG_CAN0_NDAT1      (CAN0_BA+0x120) /*!< New Data Register 1 */
+#define REG_CAN0_NDAT2      (CAN0_BA+0x124) /*!< New Data Register 2 */
+#define REG_CAN0_IPND1      (CAN0_BA+0x140) /*!< Interrupt Pending Register 1 */
+#define REG_CAN0_IPND2      (CAN0_BA+0x142) /*!< Interrupt Pending Register 2 */
+#define REG_CAN0_MVLD1      (CAN0_BA+0x160) /*!< Message Valid Register 1 */
+#define REG_CAN0_MVLD2      (CAN0_BA+0x164) /*!< Message Valid Register 2 */
+#define REG_CAN0_WU_EN      (CAN0_BA+0x168) /*!< Wake-up Function Enable */
+#define REG_CAN0_WU_STATUS  (CAN0_BA+0x16C) /*!< Wake-up Function Status */
 
-/**@}*/ /* end of MTP register group */
+#define REG_CAN1_CON       (CAN1_BA+0x00) /*!< Control Register */
+#define REG_CAN1_STATUS    (CAN1_BA+0x04) /*!< Status Register */
+#define REG_CAN1_ERR       (CAN1_BA+0x08) /*!< Error Counter Register */
+#define REG_CAN1_BTIME     (CAN1_BA+0x0C) /*!< Bit Time Register */
+#define REG_CAN1_IIDR      (CAN1_BA+0x10) /*!< Interrupt Identifier Register */
+#define REG_CAN1_TEST      (CAN1_BA+0x14) /*!< Test Register */
+#define REG_CAN1_BRPE      (CAN1_BA+0x18) /*!< BRP Extension Register */
+#define REG_CAN1_IF1_CREQ  (CAN1_BA+0x20) /*!< IF1 Command Request Register */
+#define REG_CAN1_IF2_CREQ  (CAN1_BA+0x80) /*!< IF2 Command Request Register */
+#define REG_CAN1_IF1_CMASK (CAN1_BA+0x24) /*!< IF1 Command Mask Register */
+#define REG_CAN1_IF2_CMASK (CAN1_BA+0x84) /*!< IF2 Command Mask Register */
+#define REG_CAN1_IF1_MASK1 (CAN1_BA+0x28) /*!< IF1 Msak 1 Register */
+#define REG_CNA1_IF2_MASK1 (CAN1_BA+0x88) /*!< IF2 Mask 1 Register */
+#define REG_CAN1_IF1_MASK2 (CAN1_BA+0x2C) /*!< IF1 Mask 2 Register */
+#define REG_CAN1_IF2_MASK2 (CAN1_BA+0x8C) /*!< IF2 Mask 2 REgister */
+#define REG_CAN1_IF1_ARB1  (CAN1_BA+0x30) /*!< IF1 Arbitration 1 Register */
+#define REG_CAN1_IF2_ARB1  (CAN1_BA+0x90) /*!< IF2 Arbitration 1 Register */
+#define REG_CAN1_IF1_ARB2  (CAN1_BA+0x34) /*!< IF1 Arbitration 2 Register */
+#define REG_CAN1_IF2_ARB2  (CAN1_BA+0x94) /*!< IF2 Arbitration 2 Register */
+#define REG_CAN1_IF1_MCON  (CAN1_BA+0x38) /*!< IF1 Message Control Register */
+#define REG_CAN1_IF2_MCON  (CAN1_BA+0x98) /*!< IF2 Message Control Register */
+#define REG_CAN1_IF1_DAT_A1 (CAN1_BA+0x3C) /*!< IF1 Data A1 Register */
+#define REG_CAN1_IF1_DAT_A2 (CAN1_BA+0x40) /*!< IF1 Data A2 Register */
+#define REG_CAN1_IF1_DAT_B1 (CAN1_BA+0x44) /*!< IF1 Data B1 Register */
+#define REG_CAN1_IF1_DAT_B2 (CAN1_BA+0x48) /*!< IF1 Data B2 Register */
+#define REG_CAN1_IF2_DAT_A1 (CAN1_BA+0x9C) /*!< IF2 Data A1 Register */
+#define REG_CAN1_IF2_DAT_A2 (CAN1_BA+0xA0) /*!< IF2 Data A2 Register */
+#define REG_CAN1_IF2_DAT_B1 (CAN1_BA+0xA4) /*!< IF2 Data B1 Register */
+#define REG_CAN1_IF2_DAT_B2 (CAN1_BA+0xA8) /*!< IF2 Data B2 Register */
+#define REG_CAN1_TXREQ1     (CAN1_BA+0x100) /*!< Transmission Request Register 1 */
+#define REG_CAN1_TXREQ2     (CAN1_BA+0x104) /*!< Transmission Request Register 2 */
+#define REG_CAN1_NDAT1      (CAN1_BA+0x120) /*!< New Data Register 1 */
+#define REG_CAN1_NDAT2      (CAN1_BA+0x124) /*!< New Data Register 2 */
+#define REG_CAN1_IPND1      (CAN1_BA+0x140) /*!< Interrupt Pending Register 1 */
+#define REG_CAN1_IPND2      (CAN1_BA+0x142) /*!< Interrupt Pending Register 2 */
+#define REG_CAN1_MVLD1      (CAN1_BA+0x160) /*!< Message Valid Register 1 */
+#define REG_CAN1_MVLD2      (CAN1_BA+0x164) /*!< Message Valid Register 2 */
+#define REG_CAN1_WU_EN      (CAN1_BA+0x168) /*!< Wake-up Function Enable */
+#define REG_CAN1_WU_STATUS  (CAN1_BA+0x16C) /*!< Wake-up Function Status */
+
+/**@}*/ /* end of CAN register group */
 
 
 /*------------------- JPEG Controller --------------------*/

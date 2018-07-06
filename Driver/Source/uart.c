@@ -1,9 +1,9 @@
 /**************************************************************************//**
 * @file     uart.c
+* @version  V1.00
 * @brief    N9H30 UART driver source file
 *
-* @note
-* Copyright (C) 2018 Nuvoton Technology Corp. All rights reserved.
+* @copyright (C) 2018 Nuvoton Technology Corp. All rights reserved.
 *****************************************************************************/
 #include <stdio.h>
 #include <stdlib.h>
@@ -37,7 +37,7 @@
 //#define UART_DEBUG
 //#define UART_FLOWCONTROL_DEBUG
 //#define UART1_DEBUG
-
+//#define UART2_DEBUG
 
 #ifdef UART_DEBUG
 #define UDEBUG          sysprintf
@@ -57,6 +57,11 @@
 #define U1DEBUG(...)
 #endif  /* UART1_DEBUG */
 
+#ifdef UART2_DEBUG
+#define U2DEBUG         sysprintf
+#else
+#define U2DEBUG(...)
+#endif  /* UART1_DEBUG */
 
 /*-----------------------------------------*/
 /* global file scope (static) variables    */
@@ -66,12 +71,6 @@ static UART_BUFFER_T UART_DEV[UART_NUM];
 static UINT32 UARTTXBUFSIZE[UART_NUM] = {500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500};  /* UART0~10 Tx buffer size */
 static UINT32 UARTRXBUFSIZE[UART_NUM] = {500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500};    /* UART0~10 Rx buffer size */
 
-/*
-    IrDA register settings
-*/
-//static BOOL _uart_bIsPerformIrDA = FALSE;  /* Default IrDA function disable */
-static UINT32 _uart_IrDATxReg = (UART_IRCR_TX_SELECT_Msk | UART_IRCR_INV_RX_Msk);
-static UINT32 _uart_IrDARxReg = (UART_IRCR_INV_RX_Msk);
 
 /*
     UART flag declarations.
@@ -229,6 +228,51 @@ void uart1ISR(void)
     }
 }
 
+void uart2ISR(void)
+{
+    UINT32 volatile uRegISR, uRegFSR, uRegMSR, uRegFUN_SEL;
+
+    uRegISR = inpw(REG_UART2_ISR) & 0xff;
+    uRegFUN_SEL = inpw(REG_UART2_FUN_SEL);
+
+    if(uRegISR & UART_ISR_THRE_IF_Msk)  /* TX empty interrupt, check LSR 4 kinds of error further */
+        _uartTransmitChars(UART2);
+
+    if(uRegFUN_SEL == 0x3) {
+        RS485_HANDLE(UART2);
+    } else {
+        if( uRegISR & (UART_ISR_RDA_IF_Msk | UART_ISR_TOUT_IF_Msk)) /* Received Data Available interrupt */
+            _uartReceiveChars(UART2);
+
+        if(uRegISR & UART_ISR_RLS_IF_Msk) {
+            uRegFSR = inpw(REG_UART2_FSR);
+            if(uRegFSR & UART_FSR_BIF_Msk)
+                _uart_cBIIState_2 = 1;
+        }
+
+        if(uRegISR & UART_ISR_MODEM_IF_Msk) {
+            if (_uart_cFlowControlMode == 0) {
+                uRegMSR = inpw(REG_UART2_MSR);
+
+                if (uRegMSR & 0x01)
+                    _uart_cCTSState2 = 1;
+            } else
+                _uartCheckModemStatus(UART2);  /* H/W flow control */
+        }
+
+        if(uRegISR & UART_ISR_RLS_IF_Msk) {
+            uRegFSR = inpw(REG_UART2_FSR);
+            U1DEBUG("U2 Irpt_RLS [0x%x]!\n", uRegFSR);
+
+            if(uRegFSR & UART_FSR_BIF_Msk)
+                _uart_cBIIState_2 = 1;
+
+            if (uRegFSR & UART_FSR_RX_OVER_IF_Msk)
+                U1DEBUG("U2 OEI!\n");
+        }
+    }
+}
+
 void uart3ISR(void)
 {
     UINT32 volatile uRegISR, uRegFSR, uRegMSR, uRegFUN_SEL;
@@ -304,6 +348,46 @@ void uart4ISR(void)
 
             if (uRegFSR & UART_FSR_RX_OVER_IF_Msk)
                 U1DEBUG("U4 OEI!\n");
+        }
+    }
+
+}
+
+void uart5ISR(void)
+{
+    UINT32 volatile uRegISR, uRegFSR, uRegMSR, uRegFUN_SEL;
+
+    uRegISR = inpw(REG_UART5_ISR) & 0xff;
+    uRegFUN_SEL = inpw(REG_UART5_FUN_SEL);
+
+    if(uRegISR & UART_ISR_THRE_IF_Msk)  /* TX empty interrupt, check LSR 4 kinds of error further */
+        _uartTransmitChars(UART5);
+
+    if(uRegFUN_SEL == 0x3) {
+        RS485_HANDLE(UART5);
+    } else {
+        if( uRegISR & (UART_ISR_RDA_IF_Msk | UART_ISR_TOUT_IF_Msk)) /* Received Data Available interrupt */
+            _uartReceiveChars(UART5);
+
+        if(uRegISR & UART_ISR_MODEM_IF_Msk) {
+            if (_uart_cFlowControlMode == 0) {
+                uRegMSR = inpw(REG_UART5_MSR);
+
+                if (uRegMSR & 0x01)
+                    _uart_cCTSState5 = 1;
+            } else
+                _uartCheckModemStatus(UART5);  /* H/W flow control */
+        }
+
+        if(uRegISR & UART_ISR_RLS_IF_Msk) {
+            uRegFSR = inpw(REG_UART5_FSR);
+            U1DEBUG("U5 Irpt_RLS [0x%x]!\n", uRegFSR);
+
+            if(uRegFSR & UART_FSR_BIF_Msk)
+                _uart_cBIIState_5 = 1;
+
+            if (uRegFSR & UART_FSR_RX_OVER_IF_Msk)
+                U1DEBUG("U5 OEI!\n");
         }
     }
 
@@ -735,12 +819,18 @@ static void _uartInstallISR(UINT8 ucNum)
     } else if(ucNum == UART1) {
         IRQ= UART1_IRQn;
         dev->pvUartVector = sysInstallISR((IRQ_LEVEL_1 | HIGH_LEVEL_SENSITIVE), IRQ, (PVOID)uart1ISR);
+    } else if(ucNum == UART2) {
+        IRQ= UART2_IRQn;
+        dev->pvUartVector = sysInstallISR((IRQ_LEVEL_1 | HIGH_LEVEL_SENSITIVE), IRQ, (PVOID)uart2ISR);
     } else if(ucNum == UART3) {
         IRQ= UART3_IRQn;
         dev->pvUartVector = sysInstallISR((IRQ_LEVEL_1 | HIGH_LEVEL_SENSITIVE), IRQ, (PVOID)uart3ISR);
     } else if(ucNum == UART4) {
         IRQ= UART4_IRQn;
         dev->pvUartVector = sysInstallISR((IRQ_LEVEL_1 | HIGH_LEVEL_SENSITIVE), IRQ, (PVOID)uart4ISR);
+    } else if(ucNum == UART5) {
+        IRQ= UART5_IRQn;
+        dev->pvUartVector = sysInstallISR((IRQ_LEVEL_1 | HIGH_LEVEL_SENSITIVE), IRQ, (PVOID)uart5ISR);
     } else if(ucNum == UART6) {
         IRQ= UART6_IRQn;
         dev->pvUartVector = sysInstallISR((IRQ_LEVEL_1 | HIGH_LEVEL_SENSITIVE), IRQ, (PVOID)uart6ISR);
@@ -931,7 +1021,7 @@ static INT _uartConfigureUART(PVOID pvParam)
         return UART_ERR_STOP_BITS_INVALID;
 
     /* Check the supplied number of trigger level bytes */
-    if ( (param -> ucUartNo == UART1) || (param -> ucUartNo == UART4) ||
+    if ( (param -> ucUartNo == UART1) || (param -> ucUartNo == UART2) || (param -> ucUartNo == UART4) ||
          (param -> ucUartNo == UART6) || (param -> ucUartNo == UART8) || (param -> ucUartNo == UARTA)) {
         /* UART1,2,4,6,8,A */
         if ( (param->ucRxTriggerLevel != UART_FCR_RFITL_1BYTE)   &&
@@ -1000,15 +1090,24 @@ static INT _uartConfigureUART(PVOID pvParam)
 static INT _uartPerformIrDA(INT nNum, UINT32 uCmd, UINT32 uCmd1)  /* UART2 only */
 {
     UINT32 uOffset = nNum * UARTOFFSET;
+    UINT32 baud;
 
     switch(uCmd) {
         case ENABLEIrDA:
             //_uart_bIsPerformIrDA = TRUE;
 
+            baud = inpw(REG_UART0_BAUD+uOffset);
+            baud = baud & (0x0000ffff);
+            baud = baud + 2;
+            baud = baud / 16;
+            baud = baud - 2;
+
+            outpw(REG_UART0_BAUD+uOffset, baud);
+
             if(uCmd1 == IrDA_TX)
-                outpw(REG_UART0_IRCR+uOffset, _uart_IrDATxReg);
+                outpw(REG_UART0_IRCR+uOffset, UART_IRCR_TX_SELECT_Msk);
             else if(uCmd1 == IrDA_RX)
-                outpw(REG_UART0_IRCR+uOffset, _uart_IrDARxReg);
+                outpw(REG_UART0_IRCR+uOffset, 0x0);
             else
                 return UART_ERR_IrDA_COMMAND_INVALID;
 
@@ -1130,7 +1229,7 @@ INT uartInit(void)
 /**
   * @brief    The function is used to config UART channel.
   *
-  * @param[in]    uart: UART Port. ( UART0 / UART1 / UART3 / UART 4 /
+  * @param[in]    uart: UART Port. ( UART0 / UART1 / UART2 / UART3 / UART 4 /UART 5 /
   *                                 UART6 / UART7 / UART8 / UART9 / UARTA )
   *
   * @return   UART_EIO: UART config Fail
@@ -1155,7 +1254,7 @@ INT uartOpen(PVOID uart)
 /**
   * @brief    The function is used to read RX FIFO returned data or RX driver buffer.
   *
-  * @param[in]    nNum: UART Port. ( UART0 / UART1 / UART3 / UART 4 /
+  * @param[in]    nNum: UART Port. ( UART0 / UART1 / UART2 / UART3 / UART 4 /UART 5 /
   *                                 UART6 / UART7 / UART8 / UART9 / UARTA )
   * @param[out]   pucBuf: The buffer to receive.
   *
@@ -1192,7 +1291,7 @@ INT32 uartRead(INT nNum, PUINT8 pucBuf, UINT32 uLen)
 /**
   * @brief    The function is used to write data to TX FIFO directly or TX driver buffer.
   *
-  * @param[in]    nNum: UART channel. ( UART0 / UART1 / UART3 / UART 4 /
+  * @param[in]    nNum: UART channel. ( UART0 / UART1 / UART2 / UART3 / UART 4 /UART 5 /
   *                                     UART6 / UART7 / UART8 / UART9 / UARTA )
   * @param[out]   pucBuf: Transmit buffer pointer.
   *
@@ -1240,7 +1339,7 @@ INT32 uartWrite(INT nNum, PUINT8 pucBuf, UINT32 uLen)
 /**
   * @brief    Support some UART driver commands for application.
   *
-  * @param[in]    nNum: UART channel. ( UART0 / UART1 / UART3 / UART 4 /
+  * @param[in]    nNum: UART channel. ( UART0 / UART1 / UART2 / UART3 / UART 4 /UART 5 /
   *                                     UART6 / UART7 / UART8 / UART9 / UARTA )
   *
   * @param[in]    uCmd: Command.
@@ -1345,12 +1444,18 @@ INT uartIoctl(INT nNum, UINT32 uCmd, UINT32 uArg0, UINT32 uArg1)
             if(nNum == UART1) {
                 *(PUINT32)uArg0 = _uart_cCTSState1;                        /* CTS state */
                 _uart_cCTSState1 = 0;
+            } else if(nNum == UART2) {
+                *(PUINT32)uArg0 = _uart_cCTSState2;                        /* CTS state */
+                _uart_cCTSState2 = 0;
             } else if(nNum == UART3) {
                 *(PUINT32)uArg0 = _uart_cCTSState3;                        /* CTS state */
                 _uart_cCTSState3 = 0;
             } else if(nNum == UART4) {
                 *(PUINT32)uArg0 = _uart_cCTSState4;                        /* CTS state */
                 _uart_cCTSState4 = 0;
+            } else if(nNum == UART5) {
+                *(PUINT32)uArg0 = _uart_cCTSState5;                        /* CTS state */
+                _uart_cCTSState5 = 0;
             } else if(nNum == UART6) {
                 *(PUINT32)uArg0 = _uart_cCTSState6;                        /* CTS state */
                 _uart_cCTSState6 = 0;
@@ -1414,11 +1519,17 @@ INT uartIoctl(INT nNum, UINT32 uCmd, UINT32 uArg0, UINT32 uArg1)
                 case UART1:
                     *(PUINT32)uArg0 = _uart_cBIIState_1;
                     break;
+                case UART2:
+                    *(PUINT32)uArg0 = _uart_cBIIState_2;
+                    break;
                 case UART3:
                     *(PUINT32)uArg0 = _uart_cBIIState_3;
                     break;
                 case UART4:
                     *(PUINT32)uArg0 = _uart_cBIIState_4;
+                    break;
+                case UART5:
+                    *(PUINT32)uArg0 = _uart_cBIIState_5;
                     break;
                 case UART6:
                     *(PUINT32)uArg0 = _uart_cBIIState_6;
@@ -1573,7 +1684,7 @@ INT uartIoctl(INT nNum, UINT32 uCmd, UINT32 uArg0, UINT32 uArg1)
 /**
   * @brief    Release memory resource, disable interrupt.
   *
-  * @param[in]    nNum: UART channel. ( UART0 / UART1 / UART3 / UART 4 /
+  * @param[in]    nNum: UART channel. ( UART0 / UART1 / UART2 / UART3 / UART 4 /UART 5 /
   *                                     UART6 / UART7 / UART8 / UART9 / UARTA )
   *
   * @return   UART_ENODEV: UART channel out of range
@@ -1614,5 +1725,4 @@ INT32 uartRelease(INT nNum)
 /*@}*/ /* end of group N9H30_Device_Driver */
 
 
-/*** (C) COPYRIGHT 2018 Nuvoton Technology Corp. ***/
 

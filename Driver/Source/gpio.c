@@ -1,9 +1,9 @@
 /**************************************************************************//**
 * @file     gpio.c
+* @version  V1.00
 * @brief    N9H30 GPIO driver source file
 *
-* @note
-* Copyright (C) 2018 Nuvoton Technology Corp. All rights reserved.
+* @copyright (C) 2018 Nuvoton Technology Corp. All rights reserved.
 *****************************************************************************/
 
 #include "N9H30.h"
@@ -21,10 +21,10 @@
 /** @addtogroup N9H30_GPIO_EXPORTED_FUNCTIONS GPIO Exported Functions
   @{
 */
-/// @cond HIDDEN_SYMBOLS
+
 static GPIO_CFG gpioCfg;
 static INT32 maskTbl[] = {GPIOA_MASK, GPIOB_MASK, GPIOC_MASK, GPIOD_MASK, GPIOE_MASK, GPIOF_MASK, GPIOG_MASK, GPIOH_MASK, GPIOI_MASK, GPIOJ_MASK};
-/// @endcond
+
 
 /**
  * @brief       GPIO interrupt handler
@@ -33,15 +33,15 @@ static INT32 maskTbl[] = {GPIOA_MASK, GPIOB_MASK, GPIOC_MASK, GPIOD_MASK, GPIOE_
  */
 void GPIO_IRQHandler(void)
 {
-    UINT32 reg;
+    UINT32 reg; 
     INT32 i,mask;
-    reg = inpw(REG_AIC_ISRH);
+    reg = inpw(REG_AIC_ISRH); 
     mask = 0x02000000; /* INT56 */
     reg = inpw(REG_GPIO_ISR);
-    for(i=0; i<MAX_PORT; i++)
-        if( gpioCfg.IRQCallback[i] != NULL && (reg & (1<<i)) ) {
-            gpioCfg.IRQCallback[i](inpw(REG_GPIOA_ISR+i*0x40), gpioCfg.IRQUserData[i]);
-        }
+    for(i=0;i<MAX_PORT;i++)
+    if( gpioCfg.IRQCallback[i] != NULL && (reg & (1<<i)) ){
+      gpioCfg.IRQCallback[i](inpw(REG_GPIOA_ISR+i*0x40), gpioCfg.IRQUserData[i]);
+    }
     outpw(REG_AIC_SCCRH, mask);   /* Clear interrupt */
 }
 
@@ -52,12 +52,12 @@ void GPIO_IRQHandler(void)
  */
 void GPIO_IRQHandler0(void)
 {
-    UINT32 reg;
+    UINT32 reg;    
     INT32 mask;
     reg = inpw(REG_AIC_ISR);
     mask = 0x10;
-    if(gpioCfg.EINTIRQCallback[0] != NULL) {
-        gpioCfg.EINTIRQCallback[0](reg, gpioCfg.EINTIRQUserData[0]);
+    if(gpioCfg.EINTIRQCallback[0] != NULL){
+      gpioCfg.EINTIRQCallback[0](reg, gpioCfg.EINTIRQUserData[0]);
     }
     outpw(REG_AIC_SCCR, mask);   /* Clear interrupt */
 }
@@ -69,12 +69,12 @@ void GPIO_IRQHandler0(void)
  */
 void GPIO_IRQHandler1(void)
 {
-    UINT32 reg;
+    UINT32 reg;    
     INT32 mask;
-    reg = inpw(REG_AIC_ISR);
+    reg = inpw(REG_AIC_ISR); 
     mask = 0x20;
-    if(gpioCfg.EINTIRQCallback[1] != NULL) {
-        gpioCfg.EINTIRQCallback[1](reg, gpioCfg.EINTIRQUserData[1]);
+    if(gpioCfg.EINTIRQCallback[1] != NULL){
+      gpioCfg.EINTIRQCallback[1](reg, gpioCfg.EINTIRQUserData[1]);
     }
     outpw(REG_AIC_SCCR, mask);   /* Clear interrupt */
 }
@@ -86,12 +86,12 @@ void GPIO_IRQHandler1(void)
  */
 void GPIO_IRQHandler2(void)
 {
-    UINT32 reg;
+    UINT32 reg;    
     INT32 mask;
-    reg = inpw(REG_AIC_ISR);
+    reg = inpw(REG_AIC_ISR); 
     mask = 0x40;
-    if(gpioCfg.EINTIRQCallback[2] != NULL) {
-        gpioCfg.EINTIRQCallback[2](reg, gpioCfg.EINTIRQUserData[2]);
+    if(gpioCfg.EINTIRQCallback[2] != NULL){
+      gpioCfg.EINTIRQCallback[2](reg, gpioCfg.EINTIRQUserData[2]);
     }
     outpw(REG_AIC_SCCR, mask);   /* Clear interrupt */
 }
@@ -103,12 +103,12 @@ void GPIO_IRQHandler2(void)
  */
 void GPIO_IRQHandler3(void)
 {
-    UINT32 reg;
+    UINT32 reg;    
     INT32 mask;
-    reg = inpw(REG_AIC_ISR);
+    reg = inpw(REG_AIC_ISR); 
     mask = 0x80;
-    if(gpioCfg.EINTIRQCallback[3] != NULL) {
-        gpioCfg.EINTIRQCallback[3](reg, gpioCfg.EINTIRQUserData[3]);
+    if(gpioCfg.EINTIRQCallback[3] != NULL){
+      gpioCfg.EINTIRQCallback[3](reg, gpioCfg.EINTIRQUserData[3]);
     }
     outpw(REG_AIC_SCCR, mask);   /* Clear interrupt */
 }
@@ -120,12 +120,12 @@ void GPIO_IRQHandler3(void)
  */
 void GPIO_IRQHandler4(void)
 {
-    UINT32 reg;
+    UINT32 reg;    
     INT32 mask;
-    reg = inpw(REG_AIC_ISR);
+    reg = inpw(REG_AIC_ISR); 
     mask = 0x100;
-    if(gpioCfg.EINTIRQCallback[4] != NULL) {
-        gpioCfg.EINTIRQCallback[4](reg, gpioCfg.EINTIRQUserData[4]);
+    if(gpioCfg.EINTIRQCallback[4] != NULL){
+      gpioCfg.EINTIRQCallback[4](reg, gpioCfg.EINTIRQUserData[4]);
     }
     outpw(REG_AIC_SCCR, mask);   /* Clear interrupt */
 }
@@ -137,12 +137,12 @@ void GPIO_IRQHandler4(void)
  */
 void GPIO_IRQHandler5(void)
 {
-    UINT32 reg;
+    UINT32 reg;    
     INT32 mask;
-    reg = inpw(REG_AIC_ISR);
+    reg = inpw(REG_AIC_ISR); 
     mask = 0x200;
-    if(gpioCfg.EINTIRQCallback[5] != NULL) {
-        gpioCfg.EINTIRQCallback[5](reg, gpioCfg.EINTIRQUserData[5]);
+    if(gpioCfg.EINTIRQCallback[5] != NULL){
+      gpioCfg.EINTIRQCallback[5](reg, gpioCfg.EINTIRQUserData[5]);
     }
     outpw(REG_AIC_SCCR, mask);   /* Clear interrupt */
 }
@@ -154,12 +154,12 @@ void GPIO_IRQHandler5(void)
  */
 void GPIO_IRQHandler6(void)
 {
-    UINT32 reg;
+    UINT32 reg;    
     INT32 mask;
-    reg = inpw(REG_AIC_ISR);
+    reg = inpw(REG_AIC_ISR); 
     mask = 0x400;
-    if(gpioCfg.EINTIRQCallback[6] != NULL) {
-        gpioCfg.EINTIRQCallback[6](reg, gpioCfg.EINTIRQUserData[6]);
+    if(gpioCfg.EINTIRQCallback[6] != NULL){
+      gpioCfg.EINTIRQCallback[6](reg, gpioCfg.EINTIRQUserData[6]);
     }
     outpw(REG_AIC_SCCR, mask);   /* Clear interrupt */
 }
@@ -171,12 +171,12 @@ void GPIO_IRQHandler6(void)
  */
 void GPIO_IRQHandler7(void)
 {
-    UINT32 reg;
+    UINT32 reg;    
     INT32 mask;
-    reg = inpw(REG_AIC_ISR);
+    reg = inpw(REG_AIC_ISR); 
     mask = 0x800;
-    if(gpioCfg.EINTIRQCallback[7] != NULL) {
-        gpioCfg.EINTIRQCallback[7](reg, gpioCfg.EINTIRQUserData[7]);
+    if(gpioCfg.EINTIRQCallback[7] != NULL){
+      gpioCfg.EINTIRQCallback[7](reg, gpioCfg.EINTIRQUserData[7]);
     }
     outpw(REG_AIC_SCCR, mask);   /* Clear interrupt */
 }
@@ -198,29 +198,36 @@ INT32 GPIO_Open(GPIO_PORT port, GPIO_DIR direction, GPIO_PULL pull)
     UINT32 mask;
     INT32 portIndex;
     INT32 offset;
-
+    
     outpw(REG_CLK_PCLKEN0,inpw(REG_CLK_PCLKEN0) | (1<<3)); //Enable GPIO engin clock.
     offset = (INT32)port;
     portIndex = port / 0x40;
-    mask = maskTbl[portIndex];
-
-    if(gpioCfg.bitBusyFlag[portIndex] != 0) {
+    mask = maskTbl[portIndex];    
+    
+    if(gpioCfg.bitBusyFlag[portIndex] != 0)
+    {
         return GPIO_ERR_PORT_BUSY;
     }
-
+    
     /* Set all bits in the port to busy */
     gpioCfg.bitBusyFlag[portIndex] = mask;
-
+    
     /* Set port direction */
-    if(direction == DIR_OUTPUT) {
+    if(direction == DIR_OUTPUT)
+    {
         outpw(REG_GPIOA_DIR + offset , mask);
-    } else {
-        outpw(REG_GPIOA_DIR + offset , 0);
+    }
+    else
+    {
+        outpw(REG_GPIOA_DIR + offset , 0); 
     }
 
-    if(pull == PULL_UP) {
+    if(pull == PULL_UP)
+    {
         outpw(REG_GPIOA_PUEN + offset , mask);
-    } else {
+    }
+    else
+    {
         outpw(REG_GPIOA_PUEN + offset , 0);
     }
 
@@ -242,17 +249,17 @@ INT32 GPIO_Close(GPIO_PORT port)
     INT32 offset;
     INT32 portIndex;
 
-    offset = (INT32)port;
+    offset = (INT32)port;    
     portIndex = (port / 0x40);
-
+    
     /* Clean the busy flag */
     gpioCfg.bitBusyFlag[portIndex] = 0;
-
+    
     /* Reset to input */
     outpw(REG_GPIOA_DIR + offset, 0);
 
     /* Reset to pull-up */
-    outpw(REG_GPIOA_PUEN + offset, 0);
+    outpw(REG_GPIOA_PUEN + offset, 0); 
 
     return SUCCESSFUL;
 }
@@ -272,9 +279,9 @@ INT32 GPIO_Set(GPIO_PORT port, UINT32 bitMap)
 {
     INT32 offset;
     INT32 reg;
-
+    
     offset = (INT32)port;
-
+    
     reg = inpw(REG_GPIOA_DATAOUT + offset);
     reg = reg | bitMap;
     outpw(REG_GPIOA_DATAOUT + offset, reg);
@@ -282,24 +289,24 @@ INT32 GPIO_Set(GPIO_PORT port, UINT32 bitMap)
     return SUCCESSFUL;
 }
 
-/**
-* @brief       Clear GPIO port OUT Data
-*
-* @param[in]   port        GPIO port. It could be \ref GPIOA, \ref GPIOB, ... or \ref GPIOJ
-* @param[in]   bitMap      GPIO port data. It could be 0x00 ~ 0xFF.
-*
-* @retval      <0          Fail
-* @retval      0           Success
-*
-* @details     Clear GPIO port output data to 0.
-*/
+ /**
+ * @brief       Clear GPIO port OUT Data
+ *
+ * @param[in]   port        GPIO port. It could be \ref GPIOA, \ref GPIOB, ... or \ref GPIOJ
+ * @param[in]   bitMap      GPIO port data. It could be 0x00 ~ 0xFF.
+ *
+ * @retval      <0          Fail
+ * @retval      0           Success
+ *
+ * @details     Clear GPIO port output data to 0.
+ */
 INT32 GPIO_Clr(GPIO_PORT port, UINT32 bitMap)
 {
     INT32 offset;
     INT32 reg;
-
+    
     offset = (INT32)port;
-
+    
     reg = inpw(REG_GPIOA_DATAOUT + offset);
     reg = reg & (~bitMap);
     outpw(REG_GPIOA_DATAOUT + offset, reg);
@@ -307,51 +314,54 @@ INT32 GPIO_Clr(GPIO_PORT port, UINT32 bitMap)
     return SUCCESSFUL;
 }
 
-/**
-* @brief       Read GPIO port in data
-*
-* @param[in]   port        GPIO port. It could be \ref GPIOA, \ref GPIOB, ... or \ref GPIOJ
-*
-* @retval      It could be 0 to 0xFF. If port is  \ref GPIOA ,  \ref BIT0 is PA0 input data,
-*               \ref BIT1 is PA1 input data, ...  \ref BIT15 is PA15 input data.
-*
-* @details     Read the input data from GPIO port.
-*/
+ /**
+ * @brief       Read GPIO port in data
+ *
+ * @param[in]   port        GPIO port. It could be \ref GPIOA, \ref GPIOB, ... or \ref GPIOJ
+ *
+ * @retval      It could be 0 to 0xFF. If port is  \ref GPIOA ,  \ref BIT0 is PA0 input data, 
+ *               \ref BIT1 is PA1 input data, ...  \ref BIT15 is PA15 input data.
+ *
+ * @details     Read the input data from GPIO port.
+ */
 UINT32 GPIO_ReadPort(GPIO_PORT port)
 {
     UINT32 reg;
     INT32 offset;
-
+    
     offset = (INT32)port;
-
+    
     reg = inpw(REG_GPIOA_DATAIN + offset);
 
     return reg;
 }
 
-/**
-* @brief       Set GPIO port direction
-*
-* @param[in]   port        GPIO port. It could be \ref GPIOA, \ref GPIOB, ... or \ref GPIOJ
-* @param[in]   direction   GPIO port direction. It could be \ref DIR_INPUT, \ref DIR_OUTPUT.
-* @retval      <0              Fail
-* @retval      0               Success
-*
-* @details     Set the direction into specified GPIO port.
-*/
+ /**
+ * @brief       Set GPIO port direction
+ *
+ * @param[in]   port        GPIO port. It could be \ref GPIOA, \ref GPIOB, ... or \ref GPIOJ
+ * @param[in]   direction   GPIO port direction. It could be \ref DIR_INPUT, \ref DIR_OUTPUT.
+ * @retval      <0              Fail
+ * @retval      0               Success
+ *
+ * @details     Set the direction into specified GPIO port.
+ */
 INT32 GPIO_SetPortDir(GPIO_PORT port, GPIO_DIR direction)
 {
     INT32 offset;
     INT32 mask;
     INT32 portIndex;
-
+    
     offset = (INT32)port;
     portIndex = (port / 0x40);
     mask = maskTbl[portIndex];
-
-    if(direction == DIR_OUTPUT) {
+    
+    if(direction == DIR_OUTPUT)
+    {
         outpw(REG_GPIOA_DIR + offset, mask);
-    } else {
+    }
+    else
+    {
         outpw(REG_GPIOA_DIR + offset, 0x0);
     }
 
@@ -382,26 +392,29 @@ INT32 GPIO_OpenBit(GPIO_PORT port, UINT32 bit, GPIO_DIR direction, GPIO_PULL pul
     offset = (INT32)port;
     portIndex = (port / 0x040);
     mask = (UINT32)bit;
-
-    if((gpioCfg.bitBusyFlag[portIndex]&mask) != 0) {
+    
+    if((gpioCfg.bitBusyFlag[portIndex]&mask) != 0)
+    {
         return GPIO_ERR_BIT_BUSY;
     }
 
     gpioCfg.bitBusyFlag[portIndex] = gpioCfg.bitBusyFlag[portIndex] | mask;
-
+    
     reg = inpw(REG_GPIOA_DIR + offset);
     reg = reg & (~mask);
 
-    if(direction == DIR_OUTPUT) {
+    if(direction == DIR_OUTPUT)
+    {
         reg = reg | mask;
     }
-
+    
     outpw(REG_GPIOA_DIR + offset, reg);
 
     reg = inpw(REG_GPIOA_PUEN + offset);
     reg = reg & (~mask);
 
-    if(pull == PULL_UP) {
+    if(pull == PULL_UP)
+    {
         reg = reg | mask;
     }
 
@@ -410,30 +423,30 @@ INT32 GPIO_OpenBit(GPIO_PORT port, UINT32 bit, GPIO_DIR direction, GPIO_PULL pul
     return SUCCESSFUL;
 }
 
-/**
-* @brief       Set GPIO pin OUT Data
-*
-* @param[in]   port        GPIO port. It could be \ref GPIOA, \ref GPIOB, ... or \ref GPIOJ
-* @param[in]   bit         GPIO pin. It could be \ref BIT0 \ref BIT1, ... or \ref BIT31
-*
-* @retval      <0              Fail
-* @retval      0               Success
-*
-* @details     Set the Data into specified GPIO pin.
-*/
+ /**
+ * @brief       Set GPIO pin OUT Data
+ *
+ * @param[in]   port        GPIO port. It could be \ref GPIOA, \ref GPIOB, ... or \ref GPIOJ
+ * @param[in]   bit         GPIO pin. It could be \ref BIT0 \ref BIT1, ... or \ref BIT31
+ *
+ * @retval      <0              Fail
+ * @retval      0               Success
+ *
+ * @details     Set the Data into specified GPIO pin.
+ */
 INT32 GPIO_CloseBit(GPIO_PORT port, UINT32 bit)
 {
     UINT32 reg;
     UINT32 mask;
     INT32 portIndex;
     INT32 offset;
-
+    
     offset = (INT32)port;
     portIndex = (port / 0x40);
     mask = (UINT32)bit;
-
+    
     gpioCfg.bitBusyFlag[portIndex] = gpioCfg.bitBusyFlag[portIndex] & (~mask);
-
+    
     reg = inpw(REG_GPIOA_DIR + offset);
     reg = reg & (~mask);
     outpw(REG_GPIOA_DIR + offset, reg);
@@ -462,10 +475,10 @@ INT32 GPIO_SetBit(GPIO_PORT port, UINT32 bit)
     UINT32 bitMap;
     INT32 offset;
     INT32 reg;
-
+    
     offset = (INT32)port;
     bitMap = (UINT32)bit;
-
+    
     reg = inpw(REG_GPIOA_DATAOUT + offset);
     reg = reg | bitMap;
     outpw(REG_GPIOA_DATAOUT + offset, reg);
@@ -473,17 +486,17 @@ INT32 GPIO_SetBit(GPIO_PORT port, UINT32 bit)
     return SUCCESSFUL;
 }
 
-/**
-* @brief       Clear GPIO port Interrupt Flag
-*
-* @param[in]   port        GPIO port. It could be \ref GPIOA, \ref GPIOB, ... or \ref GPIOJ
-* @param[in]   bitMap      GPIO port data. It could be 0x00 ~ 0xFF.
-*
-* @retval      <0              Fail
-* @retval      0               Success
-*
-* @details     Clear the interrupt status of specified GPIO port.
-*/
+ /**
+ * @brief       Clear GPIO port Interrupt Flag
+ *
+ * @param[in]   port        GPIO port. It could be \ref GPIOA, \ref GPIOB, ... or \ref GPIOJ
+ * @param[in]   bitMap      GPIO port data. It could be 0x00 ~ 0xFF.
+ *
+ * @retval      <0              Fail
+ * @retval      0               Success
+ *
+ * @details     Clear the interrupt status of specified GPIO port.
+ */
 INT32 GPIO_ClrISR(GPIO_PORT port, UINT32 bitMap)
 {
     INT32 offset;
@@ -519,26 +532,26 @@ INT32 GPIO_ClrISRBit(GPIO_PORT port, UINT32 bit)
     return SUCCESSFUL;
 }
 
-/**
-* @brief       Clear GPIO pin OUT Data
-*
-* @param[in]   port        GPIO port. It could be \ref GPIOA, \ref GPIOB, ... or \ref GPIOJ
-* @param[in]   bit         GPIO pin. It could be \ref BIT0 \ref BIT1, ... or \ref BIT31
-*
-* @retval      <0              Fail
-* @retval      0               Success
-*
-* @details     Set the Data into specified GPIO pin.
-*/
+ /**
+ * @brief       Clear GPIO pin OUT Data
+ *
+ * @param[in]   port        GPIO port. It could be \ref GPIOA, \ref GPIOB, ... or \ref GPIOJ
+ * @param[in]   bit         GPIO pin. It could be \ref BIT0 \ref BIT1, ... or \ref BIT31
+ *
+ * @retval      <0              Fail
+ * @retval      0               Success
+ *
+ * @details     Set the Data into specified GPIO pin.
+ */
 INT32 GPIO_ClrBit(GPIO_PORT port, UINT32 bit)
 {
     UINT32 bitMap;
     INT32 offset;
     INT32 reg;
-
+    
     offset = (INT32)port;
     bitMap = (UINT32)bit;
-
+    
     reg = inpw(REG_GPIOA_DATAOUT + offset);
     reg = reg & (~bitMap);
     outpw(REG_GPIOA_DATAOUT + offset, reg);
@@ -546,16 +559,16 @@ INT32 GPIO_ClrBit(GPIO_PORT port, UINT32 bit)
     return SUCCESSFUL;
 }
 
-/**
-* @brief       Read GPIO pin In Data
-*
-* @param[in]   port        GPIO port. It could be \ref GPIOA, \ref GPIOB, ... or \ref GPIOJ
-* @param[in]   bit         GPIO pin. It could be \ref BIT0 \ref BIT1, ... or \ref BIT31
-*
-* @retval      1/0         GPIO pin input data.
-*
-* @details     Read the In Data from GPIO pin.
-*/
+ /**
+ * @brief       Read GPIO pin In Data
+ *
+ * @param[in]   port        GPIO port. It could be \ref GPIOA, \ref GPIOB, ... or \ref GPIOJ
+ * @param[in]   bit         GPIO pin. It could be \ref BIT0 \ref BIT1, ... or \ref BIT31
+ *
+ * @retval      1/0         GPIO pin input data.
+ *
+ * @details     Read the In Data from GPIO pin.
+ */
 INT32 GPIO_ReadBit(GPIO_PORT port, UINT32 bit)
 {
     UINT32 reg;
@@ -564,37 +577,38 @@ INT32 GPIO_ReadBit(GPIO_PORT port, UINT32 bit)
 
     offset = (INT32)port;
     bitMap = (UINT32)bit;
-
+    
     reg = inpw(REG_GPIOA_DATAIN + offset);
-
+    
     return ((reg & bitMap)?1:0);
 }
 
-/**
-* @brief       Set GPIO pin direction
-*
-* @param[in]   port        GPIO port. It could be \ref GPIOA, \ref GPIOB, ... or \ref GPIOJ
-* @param[in]   bit         GPIO pin. It could be \ref BIT0 \ref BIT1, ... or \ref BIT31
-* @param[in]   direction   GPIO direction. It could be \ref DIR_INPUT, \ref DIR_OUTPUT.
-*
-* @retval      <0              Fail
-* @retval      0               Success
-*
-* @details     Set the GPIO direction into specified GPIO pin.
-*/
+ /**
+ * @brief       Set GPIO pin direction
+ *
+ * @param[in]   port        GPIO port. It could be \ref GPIOA, \ref GPIOB, ... or \ref GPIOJ
+ * @param[in]   bit         GPIO pin. It could be \ref BIT0 \ref BIT1, ... or \ref BIT31
+ * @param[in]   direction   GPIO direction. It could be \ref DIR_INPUT, \ref DIR_OUTPUT.
+ *
+ * @retval      <0              Fail
+ * @retval      0               Success
+ *
+ * @details     Set the GPIO direction into specified GPIO pin.
+ */
 INT32 GPIO_SetBitDir(GPIO_PORT port, UINT32 bit, GPIO_DIR direction)
 {
     UINT32 reg;
     UINT32 bitMap;
     INT32 offset;
-
+    
     offset = (INT32)port;
     bitMap = (UINT32)bit;
-
+    
     reg = inpw(REG_GPIOA_DIR + offset);
     reg = reg & (~bitMap);
-
-    if(direction == DIR_OUTPUT) {
+    
+    if(direction == DIR_OUTPUT)
+    {
         reg = reg | bitMap;
     }
 
@@ -603,15 +617,15 @@ INT32 GPIO_SetBitDir(GPIO_PORT port, UINT32 bit, GPIO_DIR direction)
     return SUCCESSFUL;
 }
 
-/**
-* @brief       Check GPIO pin is used
-*
-* @param[in]   port        GPIO port. It could be \ref GPIOA, \ref GPIOB, ... or \ref GPIOJ
-* @param[in]   bit         GPIO pin. It could be \ref BIT0 \ref BIT1, ... or \ref BIT31
-* @retval      None
-*
-* @details     It is function is used to check GPIO pin is used.
-*/
+ /**
+ * @brief       Check GPIO pin is used
+ *
+ * @param[in]   port        GPIO port. It could be \ref GPIOA, \ref GPIOB, ... or \ref GPIOJ
+ * @param[in]   bit         GPIO pin. It could be \ref BIT0 \ref BIT1, ... or \ref BIT31
+ * @retval      None
+ *
+ * @details     It is function is used to check GPIO pin is used.
+ */
 BOOL GPIO_BitIsUsed(GPIO_PORT port, UINT32 bit)
 {
     UINT32 mask;
@@ -619,7 +633,7 @@ BOOL GPIO_BitIsUsed(GPIO_PORT port, UINT32 bit)
 
     portIndex = (port / 0x40);
     mask = (UINT32)bit;
-
+    
     return ((gpioCfg.bitBusyFlag[portIndex] & mask)?TRUE:FALSE);
 }
 
@@ -639,7 +653,8 @@ INT32 GPIO_EnableInt(GPIO_PORT port, GPIO_CALLBACK callback, UINT32 userData)
 {
     INT32 portIndex;
     portIndex = (INT32)port/0x40;
-    if(callback != NULL) {
+    if(callback != NULL)
+    {
         gpioCfg.IRQCallback[portIndex] = (GPIO_CALLBACK)callback;
         gpioCfg.IRQUserData[portIndex] = userData;
     }
@@ -667,9 +682,9 @@ INT32 GPIO_DisableInt(GPIO_PORT port)
     gpioCfg.IRQCallback[portIndex] = NULL;
     gpioCfg.IRQUserData[portIndex] = 0;
 
-    for(i=0; i<MAX_PORT; i++)
-        if(gpioCfg.IRQCallback[i]!=0)
-            return SUCCESSFUL;
+    for(i=0;i<MAX_PORT;i++)
+      if(gpioCfg.IRQCallback[i]!=0) 
+        return SUCCESSFUL;
     sysDisableInterrupt(GPIO_IRQn);
     return SUCCESSFUL;
 }
@@ -688,42 +703,54 @@ INT32 GPIO_DisableInt(GPIO_PORT port)
  */
 INT32 GPIO_EnableEINT(GPIO_NIRQ nIrq, GPIO_CALLBACK callback, UINT32 userData)
 {
-    if(callback != NULL) {
+    if(callback != NULL)
+    {
         gpioCfg.EINTIRQCallback[nIrq] = (GPIO_CALLBACK)callback;
         gpioCfg.EINTIRQUserData[nIrq] = userData;
     }
     sysSetLocalInterrupt(ENABLE_IRQ);
-    switch(nIrq) {
-        case 0:
-            sysInstallISR(IRQ_LEVEL_7, EINT0_IRQn, (PVOID)GPIO_IRQHandler0);
-            sysEnableInterrupt(EINT0_IRQn);
-            break;
+    switch(nIrq)
+    {
+    case 0:
+      sysInstallISR(IRQ_LEVEL_7, EINT0_IRQn, (PVOID)GPIO_IRQHandler0);
+      sysEnableInterrupt(EINT0_IRQn);
+    break;
 
-        case 1:
-            sysInstallISR(IRQ_LEVEL_7, EINT1_IRQn, (PVOID)GPIO_IRQHandler1);
-            sysEnableInterrupt(EINT1_IRQn);
-            break;
+    case 1:
+      sysInstallISR(IRQ_LEVEL_7, EINT1_IRQn, (PVOID)GPIO_IRQHandler1);
+      sysEnableInterrupt(EINT1_IRQn);
+    break;
 
-        case 2:
-            sysInstallISR(IRQ_LEVEL_7, EINT2_IRQn, (PVOID)GPIO_IRQHandler2);
-            sysEnableInterrupt(EINT2_IRQn);
-            break;
+    case 2:
+      sysInstallISR(IRQ_LEVEL_7, EINT2_IRQn, (PVOID)GPIO_IRQHandler2);
+      sysEnableInterrupt(EINT2_IRQn);
+    break;
 
-        case 3:
-            sysInstallISR(IRQ_LEVEL_7, EINT3_IRQn, (PVOID)GPIO_IRQHandler3);
-            sysEnableInterrupt(EINT3_IRQn);
-            break;
+    case 3:
+      sysInstallISR(IRQ_LEVEL_7, EINT3_IRQn, (PVOID)GPIO_IRQHandler3);
+      sysEnableInterrupt(EINT3_IRQn);
+    break;
 
-        case 6:
-            sysInstallISR(IRQ_LEVEL_7, EINT6_IRQn, (PVOID)GPIO_IRQHandler6);
-            sysEnableInterrupt(EINT6_IRQn);
-            break;
+    case 4:
+      sysInstallISR(IRQ_LEVEL_7, EINT4_IRQn, (PVOID)GPIO_IRQHandler4);
+      sysEnableInterrupt(EINT4_IRQn);
+    break;
 
-        case 7:
-            sysInstallISR(IRQ_LEVEL_7, EINT7_IRQn, (PVOID)GPIO_IRQHandler7);
-            sysEnableInterrupt(EINT7_IRQn);
-            break;
-    };
+    case 5:
+      sysInstallISR(IRQ_LEVEL_7, EINT5_IRQn, (PVOID)GPIO_IRQHandler5);
+      sysEnableInterrupt(EINT5_IRQn);
+    break;
+
+    case 6:
+      sysInstallISR(IRQ_LEVEL_7, EINT6_IRQn, (PVOID)GPIO_IRQHandler6);
+      sysEnableInterrupt(EINT6_IRQn);
+    break;
+
+    case 7:
+      sysInstallISR(IRQ_LEVEL_7, EINT7_IRQn, (PVOID)GPIO_IRQHandler7);
+      sysEnableInterrupt(EINT7_IRQn);
+    break;
+   };
     sysSetLocalInterrupt(ENABLE_IRQ);
     return SUCCESSFUL;
 }
@@ -745,60 +772,61 @@ INT32 GPIO_EnableTriggerType(GPIO_PORT port, UINT32 bitMap, GPIO_TRIGGER_TYPE tr
 {
     UINT32 reg;
     INT32 offset;
-
+    
     offset = (INT32)port;
 
-    switch(triggerType) {
-        case LOW:
-            reg = inpw(REG_GPIOA_IMD+offset);
-            outpw(REG_GPIOA_IMD+offset,reg | bitMap);
+    switch(triggerType)
+    {
+       case LOW:
+         reg = inpw(REG_GPIOA_IMD+offset);
+         outpw(REG_GPIOA_IMD+offset,reg | bitMap);
 
-            reg = inpw(REG_GPIOA_IREN+offset);
-            outpw(REG_GPIOA_IREN+offset,reg & ~bitMap);
+         reg = inpw(REG_GPIOA_IREN+offset);
+         outpw(REG_GPIOA_IREN+offset,reg & ~bitMap);
 
-            reg = inpw(REG_GPIOA_IFEN+offset);
-            outpw(REG_GPIOA_IFEN+offset,reg  | bitMap);
-            break;
-        case HIGH:
-            reg = inpw(REG_GPIOA_IMD+offset);
-            outpw(REG_GPIOA_IMD+offset,reg | bitMap);
+         reg = inpw(REG_GPIOA_IFEN+offset);
+         outpw(REG_GPIOA_IFEN+offset,reg  | bitMap);
+       break;
+       case HIGH:
+         reg = inpw(REG_GPIOA_IMD+offset);
+         outpw(REG_GPIOA_IMD+offset,reg | bitMap);
 
-            reg = inpw(REG_GPIOA_IREN+offset);
-            outpw(REG_GPIOA_IREN+offset,reg | bitMap);
+         reg = inpw(REG_GPIOA_IREN+offset);
+         outpw(REG_GPIOA_IREN+offset,reg | bitMap);
 
-            reg = inpw(REG_GPIOA_IFEN+offset);
-            outpw(REG_GPIOA_IFEN+offset,reg & ~bitMap);
-            break;
-        case FALLING:
-            reg = inpw(REG_GPIOA_IMD+offset);
-            outpw(REG_GPIOA_IMD+offset,reg & ~bitMap);
+         reg = inpw(REG_GPIOA_IFEN+offset);
+         outpw(REG_GPIOA_IFEN+offset,reg & ~bitMap);
+       break;
+       case FALLING:
+         reg = inpw(REG_GPIOA_IMD+offset);
+         outpw(REG_GPIOA_IMD+offset,reg & ~bitMap);
 
-            reg = inpw(REG_GPIOA_IREN+offset);
-            outpw(REG_GPIOA_IREN+offset,reg & ~bitMap);
+         reg = inpw(REG_GPIOA_IREN+offset);
+         outpw(REG_GPIOA_IREN+offset,reg & ~bitMap);
 
-            reg = inpw(REG_GPIOA_IFEN+offset);
-            outpw(REG_GPIOA_IFEN+offset,reg  | bitMap);
-            break;
-        case RISING:
-            reg = inpw(REG_GPIOA_IMD+offset);
-            outpw(REG_GPIOA_IMD+offset,reg & ~bitMap);
+         reg = inpw(REG_GPIOA_IFEN+offset);
+         outpw(REG_GPIOA_IFEN+offset,reg  | bitMap);
+       break;
+       case RISING:
+         reg = inpw(REG_GPIOA_IMD+offset);
+         outpw(REG_GPIOA_IMD+offset,reg & ~bitMap);
 
-            reg = inpw(REG_GPIOA_IREN+offset);
-            outpw(REG_GPIOA_IREN+offset,reg | bitMap);
+         reg = inpw(REG_GPIOA_IREN+offset);
+         outpw(REG_GPIOA_IREN+offset,reg | bitMap);
 
-            reg = inpw(REG_GPIOA_IFEN+offset);
-            outpw(REG_GPIOA_IFEN+offset,reg & ~bitMap);
-            break;
-        case BOTH_EDGE:
-            reg = inpw(REG_GPIOA_IMD+offset);
-            outpw(REG_GPIOA_IMD+offset,reg & ~bitMap);
+         reg = inpw(REG_GPIOA_IFEN+offset);
+         outpw(REG_GPIOA_IFEN+offset,reg & ~bitMap);
+       break;
+       case BOTH_EDGE:
+         reg = inpw(REG_GPIOA_IMD+offset);
+         outpw(REG_GPIOA_IMD+offset,reg & ~bitMap);
 
-            reg = inpw(REG_GPIOA_IREN+offset);
-            outpw(REG_GPIOA_IREN+offset,reg | bitMap);
+         reg = inpw(REG_GPIOA_IREN+offset);
+         outpw(REG_GPIOA_IREN+offset,reg | bitMap);
 
-            reg = inpw(REG_GPIOA_IFEN+offset);
-            outpw(REG_GPIOA_IFEN+offset,reg | bitMap);
-            break;
+         reg = inpw(REG_GPIOA_IFEN+offset);
+         outpw(REG_GPIOA_IFEN+offset,reg | bitMap);
+       break;
     }
     return SUCCESSFUL;
 }
@@ -818,7 +846,7 @@ INT32 GPIO_DisableTriggerType(GPIO_PORT port, UINT32 bitMap)
 {
     UINT32 reg;
     INT32 offset;
-
+    
     offset = (INT32)port;
 
     reg = inpw(REG_GPIOA_IMD+offset);
@@ -889,7 +917,7 @@ INT32 GPIO_EnableDebounce(INT32 debounceClkSel)
     /* Enable the debounce function */
     reg = reg | 0x20;
     outpw(REG_GPIO_DBNCECON, reg);
-
+    
     return SUCCESSFUL;
 }
 
@@ -913,7 +941,7 @@ INT32 GPIO_DisableDebounce(void)
     /* Enable the debounce function */
     reg = reg | 0x20;
     outpw(REG_GPIO_DBNCECON, reg);
-
+    
     return SUCCESSFUL;
 }
 
@@ -923,4 +951,3 @@ INT32 GPIO_DisableDebounce(void)
 
 /*@}*/ /* end of group N9H30_Device_Driver */
 
-/*** (C) COPYRIGHT 2018 Nuvoton Technology Corp. ***/
