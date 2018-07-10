@@ -18,15 +18,15 @@ extern "C"
 {
 #endif
 
-/** @addtogroup NUC980_Device_Driver NUC980 Device Driver
+/** @addtogroup N9H30_Library N9H30 Library
   @{
 */
 
-/** @addtogroup NUC980_USBH_Library USB Host Library
+/** @addtogroup N9H30_USBH_Library USB Host Library
   @{
 */
 
-/** @addtogroup NUC980_USBH_EXPORTED_CONSTANTS USB Host Exported Constants
+/** @addtogroup N9H30_USBH_EXPORTED_CONSTANTS USB Host Exported Constants
   @{
 */
 
@@ -118,10 +118,10 @@ extern "C"
 #define UVC_RET_PARSER              -3013  /*!< Failed to parse UVC descriptor                  */
 #define UVC_RET_IS_STREAMING        -3015  /*!< Video pipe is on streaming.                     */
 
-/*@}*/ /* end of group NUC980_USBH_EXPORTED_CONSTANTS */
+/*@}*/ /* end of group N9H30_USBH_EXPORTED_CONSTANTS */
 
 
-/** @addtogroup NUC980_USBH_EXPORTED_STRUCT Data structure
+/** @addtogroup N9H30_USBH_EXPORTED_STRUCT Data structure
   @{
 */
 struct udev_t;
@@ -147,12 +147,12 @@ typedef enum image_format_e
     UVC_FORMAT_MJPEG   = 11,
 }  IMAGE_FORMAT_E;
 
-/*@}*/ /* end of group NUC980_USBH_EXPORTED_STRUCT */
+/*@}*/ /* end of group N9H30_USBH_EXPORTED_STRUCT */
 
 
 
 
-/** @addtogroup NUC980_USBH_EXPORTED_FUNCTIONS USB Host Exported Functions
+/** @addtogroup N9H30_USBH_EXPORTED_FUNCTIONS USB Host Exported Functions
   @{
 */
 
@@ -244,11 +244,11 @@ extern uint32_t  usbh_memory_used(void);
 /// @endcond HIDDEN_SYMBOLS
 
 
-/*@}*/ /* end of group NUC980_USBH_EXPORTED_FUNCTIONS */
+/*@}*/ /* end of group N9H30_USBH_EXPORTED_FUNCTIONS */
 
-/*@}*/ /* end of group NUC980_USBH_Library */
+/*@}*/ /* end of group N9H30_USBH_Library */
 
-/*@}*/ /* end of group NUC980_Device_Driver */
+/*@}*/ /* end of group N9H30_Library */
 
 #ifdef __cplusplus
 }

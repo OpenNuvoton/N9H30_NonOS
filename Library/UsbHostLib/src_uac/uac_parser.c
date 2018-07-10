@@ -3,7 +3,7 @@
  * @version  V1.00
  * $Revision: 1 $
  * $Date: 15/06/10 2:03p $
- * @brief    NUC980 MCU USB Host Audio Class driver
+ * @brief    N9H30 MCU USB Host Audio Class driver
  *
  * @note
  * Copyright (C) 2016 Nuvoton Technology Corp. All rights reserved.

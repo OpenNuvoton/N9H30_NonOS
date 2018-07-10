@@ -3,7 +3,7 @@
 * @version  V1.00
 * @brief    N9H30 CAP driver source file
 *
-* @ncopyright (C) 2018 Nuvoton Technology Corp. All rights reserved.
+* @copyright (C) 2018 Nuvoton Technology Corp. All rights reserved.
 *****************************************************************************/
 
 #include <stdio.h>

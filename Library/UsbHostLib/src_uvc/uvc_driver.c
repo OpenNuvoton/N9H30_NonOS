@@ -18,7 +18,7 @@
 #include "usbh_uvc.h"
 
 
-/** @addtogroup N9H30_Device_Driver N9H30 Device Driver
+/** @addtogroup N9H30_Library N9H30 Library
   @{
 */
 
@@ -328,7 +328,7 @@ UVC_DEV_T * usbh_uvc_get_device_list(void)
 
 /*@}*/ /* end of group N9H30_USBH_Library */
 
-/*@}*/ /* end of group N9H30_Device_Driver */
+/*@}*/ /* end of group N9H30_Library */
 
 /*** (C) COPYRIGHT 2018 Nuvoton Technology Corp. ***/
 
