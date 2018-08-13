@@ -291,7 +291,7 @@ void GUIDEMO_ZoomAndRotate    (void);
 *
 **********************************************************************
 */
-extern GUI_CONST_STORAGE GUI_BITMAP bmSeggerLogo;
+//extern GUI_CONST_STORAGE GUI_BITMAP bmSeggerLogo;
 extern GUI_CONST_STORAGE GUI_BITMAP bmSeggerLogo70x35;
 extern GUI_CONST_STORAGE GUI_BITMAP bmplay;
 extern GUI_CONST_STORAGE GUI_BITMAP bmforward;
@@ -318,6 +318,9 @@ extern GUI_CONST_STORAGE GUI_BITMAP bmDolphin_12;
 extern GUI_CONST_STORAGE GUI_BITMAP bmDolphin_13;
 extern GUI_CONST_STORAGE GUI_BITMAP bmDolphin_14;
 
+extern GUI_CONST_STORAGE GUI_BITMAP bmnuvoton_qrcode;
+extern GUI_CONST_STORAGE GUI_BITMAP bmnuvoton_logo_140x70;
+extern GUI_CONST_STORAGE GUI_BITMAP bmnuvoton_logo_70x35;
 #if defined(__cplusplus)
   }
 #endif

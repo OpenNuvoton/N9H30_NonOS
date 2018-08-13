@@ -252,6 +252,7 @@ int LCD_X_DisplayDriver(unsigned LayerIndex, unsigned Cmd, void * pData) {
     LCD_X_SETVRAMADDR_INFO * p;
     p = (LCD_X_SETVRAMADDR_INFO *)pData;
 		pData=(void*)g_VAFrameBuf;
+    GUI_USE_PARA(p);
     //...
     return 0;
   }
@@ -262,6 +263,7 @@ int LCD_X_DisplayDriver(unsigned LayerIndex, unsigned Cmd, void * pData) {
     LCD_X_SETORG_INFO * p;
     p = (LCD_X_SETORG_INFO *)pData;
 		pData=(void*)g_VAFrameBuf;
+    GUI_USE_PARA(p);
     //...
     return 0;
   }
@@ -271,6 +273,7 @@ int LCD_X_DisplayDriver(unsigned LayerIndex, unsigned Cmd, void * pData) {
     //
     LCD_X_SHOWBUFFER_INFO * p;
     p = (LCD_X_SHOWBUFFER_INFO *)pData;
+    GUI_USE_PARA(p);
     //...
     return 0;
   }
@@ -280,6 +283,7 @@ int LCD_X_DisplayDriver(unsigned LayerIndex, unsigned Cmd, void * pData) {
     //
     LCD_X_SETLUTENTRY_INFO * p;
     p = (LCD_X_SETLUTENTRY_INFO *)pData;
+    GUI_USE_PARA(p);
     //...
     return 0;
   }

@@ -1,18 +1,25 @@
 /**************************************************************************//**
  * @file     main.c
- * @version  V1.00
- * $Date: 15/04/30 4:30p $
- * @brief    NUC970 Driver Sample Code
+ * @version  V1.01
+ * $Date: 18/08/11 06:00p $
+ * @brief    To utilize emWin library to demonstrate  widgets feature.
  *
  * @note
- * Copyright (C) 2015 Nuvoton Technology Corp. All rights reserved.
+ * Copyright (C) 2018 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include "N9H30.h"
 #include "sys.h"
+
+#ifdef __USE_SD__
 #include "sdh.h"
+#else
+#include "spi.h"
+#include "spilib.h"
+#endif
+
 #include "gpio.h"
 #include "lcd.h"
 
@@ -26,8 +33,10 @@
 #include "text.h"
 #endif
 
+#ifdef __USE_SD__
 #include "diskio.h"
 #include "ff.h"
+#endif
 
 //#define LCD_XSIZE 800
 //#define LCD_YSIZE 480
@@ -40,18 +49,24 @@ uint8_t *g_VAFrameBuf;
 //volatile int ts_flag;
 extern volatile int pendown_complete;
 
+#ifdef __USE_SD__
 FATFS FatFs[_VOLUMES];      /* File system object for logical drive */
 
 __align(32) BYTE Buff[1024] ;       /* Working buffer */
 
 FIL hFile;
+#else
+uint32_t * g_pu32Res;
+uint8_t DestArray[1024];
+#endif
 
 extern int ts_writefile(void);
 extern int ts_readfile(void);
 extern int ts_calibrate(int xsize, int ysize);
 extern int ts_phy2log(int *sumx, int *sumy);
-//extern int ts_TestMain(int xsize, int ysize);
+extern int ts_test(int xsize, int ysize);
 
+#ifdef __USE_SD__
 /*---------------------------------------------------------*/
 /* User Provided RTC Function for FatFs module             */
 /*---------------------------------------------------------*/
@@ -68,6 +83,7 @@ unsigned long get_fattime (void)
 
     return tmr;
 }
+#endif
 
 void LCD_initial(void)
 {
@@ -136,6 +152,7 @@ void TMR0_IRQHandler(void)
     }
 }
 
+#ifdef __USE_SD__
 BYTE SD_Drv; // select SD0
 unsigned int volatile gCardInit = 0;
 void SDH_IRQHandler(void)
@@ -254,9 +271,11 @@ void SDH_IRQHandler(void)
         outpw(REG_SDH_INTSTS, SDH_INTSTS_CRCIF_Msk);      // clear interrupt flag
     }
 }
+#endif
 
 void SYS_Init(void)
 {
+#ifdef __USE_SD__
     /* enable SDH */
     outpw(REG_CLK_HCLKEN, inpw(REG_CLK_HCLKEN) | 0x40000000);
 
@@ -264,6 +283,7 @@ void SYS_Init(void)
     /* SD Port 0 -> PD0~7 */
     outpw(REG_SYS_GPD_MFPL, 0x66666666);
     SD_Drv = 0;
+#endif
 
 #if 0 // port 1
     /* initial SD1 pin -> PI5~10, 12~13 */
@@ -278,7 +298,11 @@ void MainTask(void);
 
 int main(void)
 {
+#ifdef __USE_SD__
     FRESULT     res;
+#else
+    uint16_t u16ID;
+#endif
 
     *((volatile unsigned int *)REG_AIC_MDCR)=0xFFFFFFFF;  // disable all interrupt channel
     *((volatile unsigned int *)REG_AIC_MDCRH)=0xFFFFFFFF;  // disable all interrupt channel
@@ -301,21 +325,22 @@ int main(void)
     sysStartTimer(TIMER0, 1000, PERIODIC_MODE);         /* 1000 ticks/per sec ==> 1tick/1ms */
     sysSetTimerEvent(TIMER0, 1, (PVOID)TMR0_IRQHandler);    /* 1 ticks = 1s call back */
 
+#ifdef __USE_SD__
     sysInstallISR(HIGH_LEVEL_SENSITIVE|IRQ_LEVEL_1, SDH_IRQn, (PVOID)SDH_IRQHandler);
-    sysSetLocalInterrupt(ENABLE_IRQ);
     sysEnableInterrupt(SDH_IRQn);
+#endif
+
+    sysSetLocalInterrupt(ENABLE_IRQ);
 
     sysprintf("+-------------------------------------------------+\n");
     sysprintf("|                 Tslib Sample Code                |\n");
     sysprintf("+-------------------------------------------------+\n\n");
     LCD_initial();
-    //Init_TouchPanel();
-    //ts_calibrate(LCD_XSIZE, LCD_YSIZE);
-    //ts_TestMain(LCD_XSIZE, LCD_YSIZE);
 
 #ifdef GUI_SUPPORT_TOUCH
     Init_TouchPanel();
 
+#ifdef __USE_SD__
     SD_SetReferenceClock(300000);
     SD_Open_Disk(SD_PORT0 | CardDetect_From_GPIO);
     if (gCardInit)
@@ -329,9 +354,11 @@ int main(void)
     sysprintf("rc=%d\n", (WORD)disk_initialize(0));
     disk_read(0, Buff, 2, 1);
     f_mount(&FatFs[0], "", 0);  // for FATFS v0.11
+#endif
 
     GUI_Init();
 
+#ifdef __USE_SD__
     res = f_open(&hFile, "0:\\ts_calib", FA_OPEN_EXISTING | FA_READ);
     if (res)
     {
@@ -344,7 +371,7 @@ int main(void)
             while(1);
         }
 
-        ts_calibrate(LCD_XSIZE, LCD_YSIZE);
+        ts_calibrate(__DEMO_TS_WIDTH__, __DEMO_TS_HEIGHT__);
         //GUI_SetDrawMode(GUI_DRAWMODE_NORMAL);
         ts_writefile();
     }
@@ -353,8 +380,38 @@ int main(void)
         ts_readfile();
     }
     f_close(&hFile);
+#else
+    _DemoSpiInit();
 
-    //ts_test(LCD_XSIZE, LCD_YSIZE);
+    // check flash id
+    if((u16ID = SpiFlash_ReadMidDid()) == 0xEF17)
+        sysprintf("Flash found: W25Q128BV ...\n");
+    else
+        sysprintf("Flash ID, 0x%x\n", u16ID);
+
+    SpiFlash_NormalRead(__DEMO_TSFILE_ADDR__, DestArray);
+    g_pu32Res = (uint32_t *)DestArray;
+    sysprintf("%x\n", g_pu32Res[7]);
+    if (g_pu32Res[7] != 0x55AAA55A)
+    {
+        ts_calibrate(XSIZE_PHYS, YSIZE_PHYS);
+        //GUI_SetDrawMode(GUI_DRAWMODE_NORMAL);
+        sysprintf("Sector Erase ...");
+
+        /* Sector erase SPI flash */
+        SpiFlash_EraseSector(__DEMO_TSFILE_ADDR__);
+
+        /* Wait ready */
+        SpiFlash_WaitReady();
+
+        ts_writefile();
+        sysprintf("[OK]\n");
+    }
+    else
+        ts_readfile();
+#endif
+
+//    ts_test(__DEMO_TS_WIDTH__, __DEMO_TS_HEIGHT__);
 
     g_enable_Touch = 1;
 #endif
