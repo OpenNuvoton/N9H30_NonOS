@@ -171,6 +171,7 @@ typedef struct
 #define DIS_PANEL_E50A2V1       0
 #define DIS_PANEL_ILI9341_MPU80 1
 #define DIS_LSA40AT9001         2
+#define DIS_PANEL_FW070TFT      3
 typedef struct
 {
     uint32_t u32DevWidth;           /*!< Panel width */
