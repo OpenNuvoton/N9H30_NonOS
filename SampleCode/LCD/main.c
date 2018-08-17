@@ -12,8 +12,8 @@
 #include "sys.h"
 #include "lcd.h"
 
-#define DISPLAY_RGB565
-//#define DISPLAY_RGB888
+//#define DISPLAY_RGB565
+#define DISPLAY_RGB888
 
 #ifdef DISPLAY_RGB888
 #include "image_rgb888.dat"
@@ -49,12 +49,24 @@ int32_t main(void)
     outpw(REG_SYS_GPA_MFPL, 0x22222222);
     //GPA8 ~ GPA15 (DATA8~15)
     outpw(REG_SYS_GPA_MFPH, 0x22222222);
+#ifdef DISPLAY_RGB888
+    //GPD8 ~ GPD15 (DATA16~23)
+    outpw(REG_SYS_GPD_MFPH, 0x22222222);
+#endif
 
+#ifdef DISPLAY_RGB888
+    // LCD clock is selected from UPLL and divide to 30MHz
+    outpw(REG_CLK_DIVCTL1, (inpw(REG_CLK_DIVCTL1) & ~0xff1f) | 0x918);
+
+    // Init LCD interface for FW070TFT LCD module
+    vpostLCMInit(DIS_PANEL_FW070TFT);
+#else
     // LCD clock is selected from UPLL and divide to 20MHz
-    outpw(REG_CLK_DIVCTL1, (inpw(REG_CLK_DIVCTL1) & ~0xff1f) | 0xe18);
+    outpw(REG_CLK_DIVCTL1, (inpw(REG_CLK_DIVCTL1) & ~0xff1f) | 0xE18);
 
     // Init LCD interface for E50A2V1 LCD module
     vpostLCMInit(DIS_PANEL_E50A2V1);
+#endif
     // Set scale to 1:1
     vpostVAScalingCtrl(1, 0, 1, 0, VA_SCALE_INTERPOLATION);
 

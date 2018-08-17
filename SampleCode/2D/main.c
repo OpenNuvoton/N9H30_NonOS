@@ -14,6 +14,8 @@
 #include "lcd.h"
 #include "2d.h"
 
+#define DISPLAY_RGB888
+
 UINT8 ColorPatternData[2][8*8*4] = { // 8*8*4
     {
 #include "pat8x8-0.dat"
@@ -27,13 +29,25 @@ UINT8 picRGB88840x30[] = {
 #include "40x30RGB888.dat"
 };
 
+#ifdef DISPLAY_RGB888
+UINT8 picRGB888160x120[] = {
+#include "160x120RGB888.dat"
+};
+#else
 UINT8 picRGB565160x120[] = {
 #include "160x120RGB565.dat"
 };
+#endif
+#ifdef DISPLAY_RGB888
+UINT8 picRGB88864x80[] = {
+#include "64x80RGB888.dat"
+};
+
+#else
 UINT8 picRGB56564x80[] = {
 #include "64x80RGB565.dat"
 };
-
+#endif
 const int ColorTbl[3]= {0xff0000, 0x00ff00, 0x0000ff};
 
 void GE_Rotate(void)
@@ -42,9 +56,11 @@ void GE_Rotate(void)
     void *_ColorSrcBufferPtr2;
 
     _ColorSrcBufferPtr2 = malloc(800*480*2);
-
+#ifdef DISPLAY_RGB888
+    memcpy((void *)_ColorSrcBufferPtr2, (void *)picRGB888160x120, 160*120*4);
+#else
     memcpy((void *)_ColorSrcBufferPtr2, (void *)picRGB565160x120, 160*120*2);
-
+#endif
     ge2dSpriteBlt_Screen(0,0,160,120,_ColorSrcBufferPtr2);
 
     for(idx=0; idx<=7; idx++) {
@@ -177,16 +193,25 @@ void GE_Alpha(void)
     void *pic1_ptr,*pic2_ptr;
     void *_ColorSrcBufferPtr2;
 
+#ifdef DISPLAY_RGB888
+    _ColorSrcBufferPtr2 = malloc(160*120*4);
+    pic1_ptr = malloc(160*120*4);
+    pic2_ptr = malloc(64*80*4);
+#else
     _ColorSrcBufferPtr2 = malloc(160*120*2);
     pic1_ptr = malloc(160*120*2);
     pic2_ptr = malloc(64*80*2);
-
+#endif
     ks = kd = 128;
-
+#ifdef DISPLAY_RGB888
+    memcpy((void *)_ColorSrcBufferPtr2, (void *)picRGB888160x120, 160*120*4);
+    memcpy((void *)pic1_ptr, (void *)picRGB888160x120, 160*120*4);
+    memcpy((void *)pic2_ptr, (void *)picRGB88864x80, 64*80*4);
+#else
     memcpy((void *)_ColorSrcBufferPtr2, (void *)picRGB565160x120, 160*120*2);
     memcpy((void *)pic1_ptr, (void *)picRGB565160x120, 160*120*2);
     memcpy((void *)pic2_ptr, (void *)picRGB56564x80, 64*80*2);
-
+#endif
     ge2dSpriteBlt_Screen(0, 0, 160, 120, _ColorSrcBufferPtr2);
     ge2dBitblt_SetAlphaMode(1, ks, kd);
     ge2dClip_SetClipMode(0);
@@ -433,18 +458,32 @@ int32_t main(void)
     outpw(REG_SYS_GPA_MFPL, 0x22222222);
     //GPA8 ~ GPA15 (DATA8~15)
     outpw(REG_SYS_GPA_MFPH, 0x22222222);
+#ifdef DISPLAY_RGB888
+    //GPA8 ~ GPA15 (DATA16~23)
+    outpw(REG_SYS_GPD_MFPH, 0x22222222);
+#endif
+#ifdef DISPLAY_RGB888
+    // LCD clock is selected from UPLL and divide to 30MHz
+    outpw(REG_CLK_DIVCTL1, (inpw(REG_CLK_DIVCTL1) & ~0xff1f) | 0x918);
 
+    // Init LCD interface for FW070TFT LCD module
+    vpostLCMInit(DIS_PANEL_FW070TFT);
+#else
     // LCD clock is selected from UPLL and divide to 20MHz
-    outpw(REG_CLK_DIVCTL1, (inpw(REG_CLK_DIVCTL1) & ~0xff1f) | 0xe18);
+    outpw(REG_CLK_DIVCTL1, (inpw(REG_CLK_DIVCTL1) & ~0xff1f) | 0xE18);
 
     // Init LCD interface for E50A2V1 LCD module
     vpostLCMInit(DIS_PANEL_E50A2V1);
+#endif
     // Set scale to 1:1
     vpostVAScalingCtrl(1, 0, 1, 0, VA_SCALE_INTERPOLATION);
 
     // Set display color depth
+#ifdef DISPLAY_RGB888
+    vpostSetVASrc(VA_SRC_RGB888);
+#else
     vpostSetVASrc(VA_SRC_RGB565);
-
+#endif
     // Get pointer of video frame buffer
     // Note: before get pointer of frame buffer, must set display color depth first
     u8FrameBufPtr = vpostGetFrameBuffer();
@@ -453,7 +492,7 @@ int32_t main(void)
         return 0;
     }
 
-    ge2dInit(16, 800, 480, (void *)u8FrameBufPtr);
+    ge2dInit(32, 800, 480, (void *)u8FrameBufPtr);
     ge2dClearScreen(0x808080);
 
     vpostVAStartTrigger();
