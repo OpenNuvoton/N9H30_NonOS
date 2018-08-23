@@ -1,7 +1,7 @@
 #ifndef __SPILIB_H__
 #define __SPILIB_H__
 
-#define __DEMO_TSFILE_ADDR__    0x00200000 /* SPI flash 2MB address */
+#define __DEMO_TSFILE_ADDR__    0x00180000 /* SPI flash 1.5MB address */
 
 void _DemoSpiInit(void);
 void SpiFlash_EraseSector(uint32_t u32Addr);

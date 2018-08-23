@@ -65,13 +65,23 @@ Purpose     : Display controller configuration (single layer)
 //
 // Color conversion
 //
+#ifdef _PANEL_E50A2V1_16BPP_
 #define COLOR_CONVERSION GUICC_M565
+#endif
+#ifdef _PANEL_FW070TFT_24BPP_
+#define COLOR_CONVERSION GUICC_M888
+#endif
 
 //
 // Display driver
 //
 //#define DISPLAY_DRIVER GUIDRV_FLEXCOLOR
+#ifdef _PANEL_E50A2V1_16BPP_
 #define DISPLAY_DRIVER GUIDRV_LIN_16
+#endif
+#ifdef _PANEL_FW070TFT_24BPP_
+#define DISPLAY_DRIVER GUIDRV_LIN_32
+#endif
 //
 // Buffers / VScreens
 //

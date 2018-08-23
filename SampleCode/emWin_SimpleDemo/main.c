@@ -1,7 +1,7 @@
 /**************************************************************************//**
  * @file     main.c
- * @version  V1.01
- * $Date: 18/08/11 06:00p $
+ * @version  V1.02
+ * $Date: 18/08/23 06:00p $
  * @brief    To utilize emWin library to demonstrate interactive feature.
  *
  * @note
@@ -38,12 +38,6 @@
 #include "diskio.h"
 #include "ff.h"
 #endif
-
-//#define LCD_XSIZE 800
-//#define LCD_YSIZE 480
-
-#define DISPLAY_RGB565
-//#define DISPLAY_RGB888
 
 uint8_t *g_VAFrameBuf;
 
@@ -99,22 +93,37 @@ void LCD_initial(void)
     outpw(REG_SYS_GPA_MFPL, 0x22222222);
     //GPA8 ~ GPA15 (DATA8~15)
     outpw(REG_SYS_GPA_MFPH, 0x22222222);
-    //GPD8~D15 (DATA16~23)
-    //outpw(REG_SYS_GPD_MFPH, (inpw(REG_SYS_GPD_MFPH)& ~0xFFFFFFFF) | 0x22222222);
+#ifdef _PANEL_FW070TFT_24BPP_
+    //GPD8 ~ GPD15 (DATA16~23)
+    outpw(REG_SYS_GPD_MFPH, 0x22222222);
+#endif
 
+#ifdef _PANEL_E50A2V1_16BPP_
     // LCD clock is selected from UPLL and divide to 20MHz
     outpw(REG_CLK_DIVCTL1, (inpw(REG_CLK_DIVCTL1) & ~0xff1f) | 0xe18);
+#endif
+#ifdef _PANEL_FW070TFT_24BPP_
+    // LCD clock is selected from UPLL and divide to 30MHz
+    outpw(REG_CLK_DIVCTL1, (inpw(REG_CLK_DIVCTL1) & ~0xff1f) | 0x918);
+#endif
 
+#ifdef _PANEL_E50A2V1_16BPP_
     // Init LCD interface for E50A2V1 LCD module
     vpostLCMInit(DIS_PANEL_E50A2V1);
+#endif
+#ifdef _PANEL_FW070TFT_24BPP_
+    // Init LCD interface for FW070TFT LCD module
+    vpostLCMInit(DIS_PANEL_FW070TFT);
+#endif
     // Set scale to 1:1
     vpostVAScalingCtrl(1, 0, 1, 0, VA_SCALE_INTERPOLATION);
 
     // Set display color depth
-#ifdef DISPLAY_RGB888
-    vpostSetVASrc(VA_SRC_RGB888);
-#else
+#ifdef _PANEL_E50A2V1_16BPP_
     vpostSetVASrc(VA_SRC_RGB565);
+#endif
+#ifdef _PANEL_FW070TFT_24BPP_
+    vpostSetVASrc(VA_SRC_RGB888);
 #endif
 
     // Get pointer of video frame buffer
@@ -126,10 +135,11 @@ void LCD_initial(void)
         while(1);
     }
 
-#ifdef DISPLAY_RGB888
-    memset((void *)g_VAFrameBuf, 0, LCD_XSIZE*LCD_YSIZE*4);
-#else
+#ifdef _PANEL_E50A2V1_16BPP_
     memset((void *)g_VAFrameBuf, 0, LCD_XSIZE*LCD_YSIZE*2);
+#endif
+#ifdef _PANEL_FW070TFT_24BPP_
+    memset((void *)g_VAFrameBuf, 0, LCD_XSIZE*LCD_YSIZE*4);
 #endif
 
     // Start video
