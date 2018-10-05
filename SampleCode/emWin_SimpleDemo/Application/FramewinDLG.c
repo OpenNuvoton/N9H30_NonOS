@@ -59,7 +59,7 @@
 *       _aDialogCreate
 */
 static const GUI_WIDGET_CREATE_INFO _aDialogCreate[7] = {
-  { FRAMEWIN_CreateIndirect, "Framewin", ID_FRAMEWIN_0, 0, 0, 320, 240, 0, 0x0  },
+  { FRAMEWIN_CreateIndirect, "Framewin", ID_FRAMEWIN_0, 0, 0, 800, 480, 0, 0x0  },
   { BUTTON_CreateIndirect, "+ 1", ID_BUTTON_0, 43, 38, 80, 20, 0, 0x0  },
   { BUTTON_CreateIndirect, "+ 10", ID_BUTTON_1, 43, 77, 80, 20, 0, 0x0 },
   { BUTTON_CreateIndirect, "- 1", ID_BUTTON_2, 45, 116, 80, 20, 0, 0x0 },

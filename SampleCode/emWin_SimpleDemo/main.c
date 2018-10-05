@@ -1,7 +1,7 @@
 /**************************************************************************//**
  * @file     main.c
- * @version  V1.02
- * $Date: 18/08/23 06:00p $
+ * @version  V2.0
+ * $Date: 18/10/05 06:00p $
  * @brief    To utilize emWin library to demonstrate interactive feature.
  *
  * @note
@@ -358,7 +358,7 @@ int main(void)
     sysSetLocalInterrupt(ENABLE_IRQ);
 
     sysprintf("+-------------------------------------------------+\n");
-    sysprintf("|                 Tslib Sample Code                |\n");
+    sysprintf("|                 Tslib Sample Code               |\n");
     sysprintf("+-------------------------------------------------+\n\n");
     LCD_initial();
 

@@ -529,6 +529,16 @@
               <FileType>1</FileType>
               <FilePath>..\..\..\Driver\Source\spi.c</FilePath>
             </File>
+            <File>
+              <FileName>2d.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\Driver\Source\2d.c</FilePath>
+            </File>
+            <File>
+              <FileName>jpegcodec.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\Driver\Source\jpegcodec.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1431,6 +1441,16 @@
                 </FileArmAds>
               </FileOption>
             </File>
+            <File>
+              <FileName>2d.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\Driver\Source\2d.c</FilePath>
+            </File>
+            <File>
+              <FileName>jpegcodec.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\Driver\Source\jpegcodec.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -2232,6 +2252,16 @@
               <FileName>spi.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\Driver\Source\spi.c</FilePath>
+            </File>
+            <File>
+              <FileName>2d.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\Driver\Source\2d.c</FilePath>
+            </File>
+            <File>
+              <FileName>jpegcodec.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\Driver\Source\jpegcodec.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -3134,6 +3164,16 @@
                   </Cads>
                 </FileArmAds>
               </FileOption>
+            </File>
+            <File>
+              <FileName>2d.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\Driver\Source\2d.c</FilePath>
+            </File>
+            <File>
+              <FileName>jpegcodec.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\Driver\Source\jpegcodec.c</FilePath>
             </File>
           </Files>
         </Group>

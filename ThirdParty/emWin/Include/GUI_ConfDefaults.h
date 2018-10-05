@@ -90,7 +90,7 @@ Attention : Do not modify this file ! If you do, you will not
    ARGB: 0x00 means transparent, 0xFF means opaque
 */
 #ifndef GUI_USE_ARGB
-  #define GUI_USE_ARGB 0
+  #define GUI_USE_ARGB 1
 #endif
 
 /* Define "universal pointer". Normally, this is not needed (define will expand to nothing)
