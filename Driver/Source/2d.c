@@ -1564,6 +1564,58 @@ void ge2dFill_Solid(int dx, int dy, int width, int height, int color)
 }
 
 /**
+  * @brief Rectangle solid color fill with RGB565 foreground color.
+  * @param[in] dx x position
+  * @param[in] dy y position
+  * @param[in] width is display width
+  * @param[in] height is display height
+  * @param[in] color is RGB565 color of foreground
+  * @return none
+  */
+void ge2dFill_Solid_RGB565(int dx, int dy, int width, int height, int color)
+{
+    UINT32 cmd32;
+    UINT32 dest_start, dest_pitch, dest_dimension;
+
+#ifdef DEBUG
+    sysprintf("solid_fill()\n");
+    sysprintf("(%d,%d)-(%d,%d)\n", dx, dy, dx+width-1, dy+height-1);
+    sysprintf("color=0x%x\n", color);
+#endif
+
+    cmd32 = 0xcc430060;
+    outpw(REG_GE2D_CTL, cmd32);
+    outpw(REG_GE2D_FGCOLR, color); // fill with foreground color
+
+    dest_pitch = GFX_WIDTH << 16; // pitch in pixel
+    outpw(REG_GE2D_SDPITCH, dest_pitch);
+
+    dest_start = dy << 16 | dx;
+    outpw(REG_GE2D_DSTSPA, dest_start);
+
+    dest_dimension = height << 16 | width;
+    outpw(REG_GE2D_RTGLSZ, dest_dimension);
+
+    if (_ClipEnable) {
+        cmd32 |= 0x00000200;
+        if (_OutsideClip) {
+            cmd32 |= 0x00000100;
+        }
+        outpw(REG_GE2D_CTL, cmd32);
+        outpw(REG_GE2D_CLPBTL, _ClipTL);
+        outpw(REG_GE2D_CLPBBR, _ClipBR);
+    }
+
+    outpw(REG_GE2D_CTL, cmd32);
+
+    outpw(REG_GE2D_TRG, 1);
+
+    while ((inpw(REG_GE2D_INTSTS)&0x01)==0); // wait for command complete
+
+    outpw(REG_GE2D_INTSTS, 1); // clear interrupt status
+}
+
+/**
   * @brief Rectangle solid color fill with background color.
   * @param[in] dx x position
   * @param[in] dy y position

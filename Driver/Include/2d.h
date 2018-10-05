@@ -32,7 +32,7 @@ typedef struct {
     UINT32    PatternB;
 } MONOPATTERN;
 
-#define COLOR_KEY 0x6496c8
+#define COLOR_KEY 0xFF000000
 /// @endcond HIDDEN_SYMBOLS
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -147,6 +147,7 @@ void ge2dDrawFrame(int x1, int y1, int x2, int y2, int color, int opt);
 void ge2dLine_DrawSolidLine(int x1, int y1, int x2, int y2, int color);
 void ge2dLine_DrawStyledLine(int x1, int y1, int x2, int y2, int style, int fgcolor, int bkcolor, int draw_mode);
 void ge2dFill_Solid(int dx, int dy, int width, int height, int color);
+void ge2dFill_Solid_RGB565(int dx, int dy, int width, int height, int color);
 void ge2dFill_SolidBackground(int dx, int dy, int width, int height, int color);
 void ge2dFill_ColorPattern(int dx, int dy, int width, int height);
 void ge2dFill_MonoPattern(int dx, int dy, int width, int height, int opt);
