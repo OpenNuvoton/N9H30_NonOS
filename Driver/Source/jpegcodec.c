@@ -721,20 +721,23 @@ INT jpegOpen(void)
     outp32(REG_CLK_HCLKEN, (inp32(REG_CLK_HCLKEN) | (1 << 29))); // Enable JPEG clock
 
     //u32HclkHz =   sysGetHCLK1Clock();
-    u32HclkHz = sysGetClock(SYS_HCLK234);
+    u32HclkHz = sysGetClock(SYS_HCLK234) * 1000000;
     u32JPGSource = u32HclkHz / (((inp32(REG_CLK_DIVCTL3) & 0xf0000000) >> 28) + 1);
 
     u32JPGDiv = 0;
 
-    if(u32JPGSource > 130000000) {
-        if(u32JPGSource % 130000000) {
-            u32JPGDiv = (u32JPGSource / 130000000);
-        } else
-            u32JPGDiv = (u32JPGSource / 130000000) - 1;
+    if(u32JPGSource > 75000000)
+    {
+        if(u32JPGSource % 75000000)
+        {
+            u32JPGDiv = (u32JPGSource / 75000000);
+        }
+        else
+            u32JPGDiv = (u32JPGSource / 75000000) - 1;
     }
     outp32(REG_CLK_DIVCTL3, (inp32(REG_CLK_DIVCTL3) & ~(0xf0000000)) | ((u32JPGDiv & 0xf) << 28));
 
-    sysprintf("jpeg engine is %dHz\n",u32JPGSource / (u32JPGDiv+1));
+    //sysprintf("jpeg engine is %dHz\n",u32JPGSource / (u32JPGDiv+1));
 
     // 3.Reset IP
     outp32(REG_SYS_AHBIPRST, (1 << 22));  // JPEG IP Reset

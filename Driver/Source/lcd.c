@@ -138,7 +138,7 @@ static void vpostIntHandler(void)
     uintstatus = inpw(REG_LCM_INT_CS);
     if (uintstatus & VPOSTB_UNDERRUN_INT) {
         outpw(REG_LCM_INT_CS,inpw(REG_LCM_INT_CS) | VPOSTB_UNDERRUN_INT);
-        sysprintf("LCD under run error!!\n");
+        //sysprintf("LCD under run error!!\n");
     } else if (uintstatus & VPOSTB_BUS_ERROR_INT) {
         outpw(REG_LCM_INT_CS,inpw(REG_LCM_INT_CS) | VPOSTB_BUS_ERROR_INT);
         sysprintf("LCD bus error!!\n");
