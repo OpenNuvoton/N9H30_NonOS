@@ -26,6 +26,7 @@
 */
 
 /// @cond HIDDEN_SYMBOLS
+static unsigned int GFX_Mem = 0;
 static unsigned int GFX_BPP;
 static unsigned int GFX_WIDTH;
 static unsigned int GFX_HEIGHT;
@@ -39,12 +40,12 @@ static __align(32) void *CMODEL_START_ADDR;
 static __align(32) void *GFX_OFFSCREEN_ADDR;
 static __align(32) void *GFX_PAT_ADDR;
 
-static void *Orig_GFX_START_ADDR;
-static void *Orig_MONO_SOURCE_ADDR;
-static void *Orig_COLOR_SOURCE_ADDR;
-static void *Orig_CMODEL_START_ADDR;
-static void *Orig_GFX_OFFSCREEN_ADDR;
-static void *Orig_GFX_PAT_ADDR;
+void *Orig_GFX_START_ADDR;
+void *Orig_MONO_SOURCE_ADDR;
+void *Orig_COLOR_SOURCE_ADDR;
+void *Orig_CMODEL_START_ADDR;
+void *Orig_GFX_OFFSCREEN_ADDR;
+void *Orig_GFX_PAT_ADDR;
 
 #define  PN   1  // Quadrant 1
 #define  NN   2  // Quadrant 2
@@ -726,20 +727,23 @@ void ge2dInit(int bpp, int width, int height, void *destination)
         return;
 
     Orig_GFX_START_ADDR = GFX_START_ADDR = (void *)destination;
+    if(GFX_Mem == 0)
+    {
+        /* Only allocate memory once. Avoid memory fragmentation if calling ge2DInit() and ge2dReset repeatedly */
+        Orig_GFX_PAT_ADDR = GFX_PAT_ADDR = (void *)malloc((8*8*(GFX_BPP/8))*2);
+        GFX_PAT_ADDR = (void *)shift_pointer((int)GFX_PAT_ADDR, (8*8*(GFX_BPP/8))*2);  // two times of boundary size
 
-    Orig_GFX_PAT_ADDR = GFX_PAT_ADDR = (void *)malloc((8*8*(GFX_BPP/8))*2);
-    GFX_PAT_ADDR = (void *)shift_pointer((int)GFX_PAT_ADDR, (8*8*(GFX_BPP/8))*2);  // two times of boundary size
 
-
-    Orig_MONO_SOURCE_ADDR = MONO_SOURCE_ADDR = (void *)malloc(GFX_SIZE+32);
-    MONO_SOURCE_ADDR = (void *)shift_pointer((int)MONO_SOURCE_ADDR, 32);
-    Orig_COLOR_SOURCE_ADDR = COLOR_SOURCE_ADDR = (void *)malloc(GFX_SIZE+32);
-    COLOR_SOURCE_ADDR = (void *)shift_pointer((int)COLOR_SOURCE_ADDR, 32);
-    Orig_CMODEL_START_ADDR = CMODEL_START_ADDR = (void *)malloc(GFX_SIZE+32);
-    CMODEL_START_ADDR = (void *)shift_pointer((int)CMODEL_START_ADDR, 32);
-    Orig_GFX_OFFSCREEN_ADDR = GFX_OFFSCREEN_ADDR = (void *)malloc(GFX_SIZE+32);
-    GFX_OFFSCREEN_ADDR = (void *)shift_pointer((int)GFX_OFFSCREEN_ADDR, 32);
-
+        Orig_MONO_SOURCE_ADDR = MONO_SOURCE_ADDR = (void *)malloc(GFX_SIZE+32);
+        MONO_SOURCE_ADDR = (void *)shift_pointer((int)MONO_SOURCE_ADDR, 32);
+        Orig_COLOR_SOURCE_ADDR = COLOR_SOURCE_ADDR = (void *)malloc(GFX_SIZE+32);
+        COLOR_SOURCE_ADDR = (void *)shift_pointer((int)COLOR_SOURCE_ADDR, 32);
+        Orig_CMODEL_START_ADDR = CMODEL_START_ADDR = (void *)malloc(GFX_SIZE+32);
+        CMODEL_START_ADDR = (void *)shift_pointer((int)CMODEL_START_ADDR, 32);
+        Orig_GFX_OFFSCREEN_ADDR = GFX_OFFSCREEN_ADDR = (void *)malloc(GFX_SIZE+32);
+        GFX_OFFSCREEN_ADDR = (void *)shift_pointer((int)GFX_OFFSCREEN_ADDR, 32);
+        GFX_Mem = 1;
+    }
 #ifdef DEBUG
     sysprintf("init_GE()\n");
     sysprintf("screen width = %d\n", GFX_WIDTH);
@@ -782,12 +786,6 @@ void ge2dReset(void)
     outpw(REG_GE2D_MISCTL, 0x80); // Engine reset
     outpw(REG_GE2D_MISCTL, 0x00);
 
-    free(Orig_GFX_START_ADDR);
-    free(Orig_COLOR_SOURCE_ADDR);
-    free(Orig_CMODEL_START_ADDR);
-    free(Orig_GFX_OFFSCREEN_ADDR);
-    free(Orig_GFX_PAT_ADDR);
-    free(Orig_MONO_SOURCE_ADDR);
 }
 
 /**
