@@ -43,8 +43,8 @@ static VPOST_T DEF_E50A2V1 = {
     0x01e00320,                     /*!< CRTCDEND register value */
     0x03250321,                     /*!< CRTCHR register value */
     0x03780348,                     /*!< CRTCHSYNC register value */
-    0x01f001ed
-};                    /*!< CRTCVR register value */
+    0x01f001ed                      /*!< CRTCVR register value */
+};
 
 static VPOST_T DEF_ILI9341_MPU80 = {
     240,                            /*!< Panel width */
@@ -60,8 +60,8 @@ static VPOST_T DEF_ILI9341_MPU80 = {
     0x014000F0,                     /*!< CRTCDEND register value */
     0x00FA00F5,                     /*!< CRTCHR register value */
     0x00FC00FA,                     /*!< CRTCHSYNC register value */
-    0x01500145
-};                    /*!< CRTCVR register value */
+    0x01500145                      /*!< CRTCVR register value */
+};
 
 static VPOST_T DEF_LSA40AT9001 = {
     800,                            /*!< Panel width */
@@ -77,8 +77,8 @@ static VPOST_T DEF_LSA40AT9001 = {
     0x02580320,                     /*!< CRTCDEND register value */
     0x032F032A,                     /*!< CRTCHR register value */
     0x0334032A,                     /*!< CRTCHSYNC register value */
-    0x026C0262
-};                    /*!< CRTCVR register value */
+    0x026C0262                      /*!< CRTCVR register value */
+};
 
 
 static VPOST_T DEF_FW070TFT = {
@@ -95,8 +95,8 @@ static VPOST_T DEF_FW070TFT = {
     0x01e00320,                     /*!< CRTCDEND register value */
     0x033e0339,                     /*!< CRTCHR register value */
     0x040c03f8,                     /*!< CRTCHSYNC register value */
-    0x020001f6
-};                    /*!< CRTCVR register value */
+    0x020001f6                      /*!< CRTCVR register value */
+};
 
 
 
@@ -138,7 +138,6 @@ static void vpostIntHandler(void)
     uintstatus = inpw(REG_LCM_INT_CS);
     if (uintstatus & VPOSTB_UNDERRUN_INT) {
         outpw(REG_LCM_INT_CS,inpw(REG_LCM_INT_CS) | VPOSTB_UNDERRUN_INT);
-        //sysprintf("LCD under run error!!\n");
     } else if (uintstatus & VPOSTB_BUS_ERROR_INT) {
         outpw(REG_LCM_INT_CS,inpw(REG_LCM_INT_CS) | VPOSTB_BUS_ERROR_INT);
         sysprintf("LCD bus error!!\n");
