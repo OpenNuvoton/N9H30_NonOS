@@ -610,11 +610,6 @@
               <FilePath>..\tslib\fbutils.c</FilePath>
             </File>
             <File>
-              <FileName>font_8x8.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\tslib\font_8x8.c</FilePath>
-            </File>
-            <File>
               <FileName>testutils.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\tslib\testutils.c</FilePath>
@@ -738,11 +733,6 @@
                   </Cads>
                 </FileArmAds>
               </FileOption>
-            </File>
-            <File>
-              <FileName>ts_test.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\tslib\ts_test.c</FilePath>
             </File>
             <File>
               <FileName>spilib.c</FileName>
@@ -1352,11 +1342,6 @@
               <FilePath>..\tslib\fbutils.c</FilePath>
             </File>
             <File>
-              <FileName>font_8x8.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\tslib\font_8x8.c</FilePath>
-            </File>
-            <File>
               <FileName>testutils.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\tslib\testutils.c</FilePath>
@@ -1380,11 +1365,6 @@
               <FileName>SDGlue.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\tslib\SDGlue.c</FilePath>
-            </File>
-            <File>
-              <FileName>ts_test.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\tslib\ts_test.c</FilePath>
             </File>
             <File>
               <FileName>spilib.c</FileName>
@@ -2094,11 +2074,6 @@
               <FilePath>..\tslib\fbutils.c</FilePath>
             </File>
             <File>
-              <FileName>font_8x8.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\tslib\font_8x8.c</FilePath>
-            </File>
-            <File>
               <FileName>testutils.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\tslib\testutils.c</FilePath>
@@ -2222,11 +2197,6 @@
                   </Cads>
                 </FileArmAds>
               </FileOption>
-            </File>
-            <File>
-              <FileName>ts_test.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\tslib\ts_test.c</FilePath>
             </File>
             <File>
               <FileName>spilib.c</FileName>
@@ -2836,11 +2806,6 @@
               <FilePath>..\tslib\fbutils.c</FilePath>
             </File>
             <File>
-              <FileName>font_8x8.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\tslib\font_8x8.c</FilePath>
-            </File>
-            <File>
               <FileName>testutils.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\tslib\testutils.c</FilePath>
@@ -2864,11 +2829,6 @@
               <FileName>SDGlue.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\tslib\SDGlue.c</FilePath>
-            </File>
-            <File>
-              <FileName>ts_test.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\tslib\ts_test.c</FilePath>
             </File>
             <File>
               <FileName>spilib.c</FileName>

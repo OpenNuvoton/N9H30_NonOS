@@ -1,6 +1,6 @@
 /**************************************************************************//**
  * @file     main.c
- * @version  V2.0
+ * @version  V3.0
  * $Date: 18/10/05 06:00p $
  * @brief    To utilize emWin library to demonstrate interactive feature.
  *
@@ -152,14 +152,15 @@ volatile int g_enable_Touch;
 void TMR0_IRQHandler(void)
 {
     OS_TimeMS++;
-    if ( OS_TimeMS % 10 == 0 )
+}
+
+void TMR0_IRQHandler_TouchTask(void)
+{
+    //sysprintf("g_enable_Touch=%d\n", g_enable_Touch);
+    if ( g_enable_Touch == 1 )
     {
-        //sysprintf("g_enable_Touch=%d\n", g_enable_Touch);
-        if ( g_enable_Touch == 1 )
-        {
-            //sysprintf("enable_Touch=%d\n", g_enable_Touch);
-            GUI_TOUCH_Exec();
-        }
+        //sysprintf("enable_Touch=%d\n", g_enable_Touch);
+        GUI_TOUCH_Exec();
     }
 }
 
@@ -348,7 +349,8 @@ int main(void)
 
     sysSetTimerReferenceClock(TIMER0, 12000000);
     sysStartTimer(TIMER0, 1000, PERIODIC_MODE);         /* 1000 ticks/per sec ==> 1tick/1ms */
-    sysSetTimerEvent(TIMER0, 1, (PVOID)TMR0_IRQHandler);    /* 1 ticks = 1s call back */
+    sysSetTimerEvent(TIMER0,  1, (PVOID)TMR0_IRQHandler);           /*  1 tick  per call back */
+    sysSetTimerEvent(TIMER0, 10, (PVOID)TMR0_IRQHandler_TouchTask); /* 10 ticks per call back */
 
 #ifdef __USE_SD__
     sysInstallISR(HIGH_LEVEL_SENSITIVE|IRQ_LEVEL_1, SDH_IRQn, (PVOID)SDH_IRQHandler);
