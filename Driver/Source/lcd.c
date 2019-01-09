@@ -214,6 +214,47 @@ uint8_t* vpostGetFrameBuffer(void)
     return (uint8_t *)((uint32_t)u8BufPtr | 0x80000000);
 }
 
+
+/**
+  * @brief Get the pointer of frame buffer
+  * @param[in] u32Cnt is the frame buffer count to allocate. Min value is 1.
+  * @return pointer of frame buffer
+  * @retval NULL fail.
+  * @note before calling this function, display width, height and source format must be set first.
+  */
+uint8_t* vpostGetMultiFrameBuffer(uint32_t u32Cnt)
+{
+    uint8_t* u8BufPtr;
+    uint8_t u32BytePerPixel;
+
+    if((curDisplayDev.u32DevWidth == 0) || (curDisplayDev.u32DevHeight == 0) || (u32Cnt == 0))
+        return NULL;
+
+    switch(curVADev.ucVASrcFormat) {
+        case VA_SRC_YUV422:
+        case VA_SRC_YCBCR422:
+        case VA_SRC_RGB565:
+            u32BytePerPixel = 2;
+            break;
+
+        case VA_SRC_RGB666:
+        case VA_SRC_RGB888:
+            u32BytePerPixel = 4;
+            break;
+
+        default:
+            u32BytePerPixel = 2;
+    }
+
+    u8BufPtr = (uint8_t *)malloc((curDisplayDev.u32DevWidth * curDisplayDev.u32DevHeight * u32BytePerPixel) * u32Cnt + 32);
+    u8BufPtr = (uint8_t *)shift_pointer((uint32_t)u8BufPtr, 32);
+
+    outpw(REG_LCM_VA_BADDR0, (uint32_t)((uint32_t)u8BufPtr | 0x80000000));
+    outpw(REG_LCM_VA_FBCTRL, inpw(REG_LCM_VA_FBCTRL) & ~(1<<30) & ~VPOSTB_DB_EN);
+
+    return (uint8_t *)((uint32_t)u8BufPtr | 0x80000000);
+}
+
 /**
   * @brief Set active display window
   * @param[in] u16StartY is y start position

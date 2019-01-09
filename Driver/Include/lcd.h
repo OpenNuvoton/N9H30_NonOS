@@ -205,6 +205,7 @@ typedef struct
 
 void vpostLCMInit(uint32_t u32DisplayPanelID);
 uint8_t* vpostGetFrameBuffer(void);
+uint8_t* vpostGetMultiFrameBuffer(uint32_t u32Cnt);
 void vpostLCMDeinit(void);
 void vpostSetDisplayMode(uint8_t u8DisplayMode);
 void vpostSetVASrc(uint32_t u32VASrcType);
