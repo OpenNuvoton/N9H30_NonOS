@@ -3,6 +3,13 @@
 #include "sys.h"
 #include "spi.h"
 
+#define TIMEOUT  1000000 /* unit of timeout is micro second */
+#define ERR_TIMEOUT  (-1)
+#define ERR_ALIGNMENT  (-2)
+#define BLOCK_SIZE 0x10000 /* 64 KB */
+#define SECTOR_SIZE 0x1000 /* 4 KB */
+#define PAGE_SIZE 256
+
 void _DemoSpiInit(void)
 {
     /* Configure multi function pins to SPI0 */
@@ -47,17 +54,25 @@ void SpiFlash_ChipErase(void)
     spiIoctl(0, SPI_IOC_DISABLE_SS, SPI_SS_SS0, 0);
 }
 
-void SpiFlash_EraseSector(uint32_t u32Addr)
+int SpiFlash_SectorErase(uint32_t StartAddress)
 {
+    /* Check if sector alignment */
+    if (StartAddress % SECTOR_SIZE)
+    {
+        sysprintf("\nErase address 0x%x is not 0x%x alignment!\n",StartAddress,SECTOR_SIZE);
+        return ERR_ALIGNMENT;
+    }
+
     // /CS: active
     spiIoctl(0, SPI_IOC_ENABLE_SS, SPI_SS_SS0, 0);
 
     // send Command: 0x06, Write enable
     spiWrite(0, 0, 0x06);
-
-    // wait tx finish
     spiIoctl(0, SPI_IOC_TRIGGER, 0, 0);
-    while(spiGetBusyStatus(0));
+    while(spiGetBusyStatus(0))
+    {
+        ;
+    }
 
     // /CS: de-active
     spiIoctl(0, SPI_IOC_DISABLE_SS, SPI_SS_SS0, 0);
@@ -69,19 +84,41 @@ void SpiFlash_EraseSector(uint32_t u32Addr)
 
     // send Command: 0x20, Sector Erase
     spiWrite(0, 0, 0x20);
+    spiIoctl(0, SPI_IOC_TRIGGER, 0, 0);
+    while(spiGetBusyStatus(0))
+    {
+        ;
+    }
 
     // send 24-bit start address
-    spiWrite(0, 0, (u32Addr>>16) & 0xFF);
-    spiWrite(0, 0, (u32Addr>>8)  & 0xFF);
-    spiWrite(0, 0,  u32Addr      & 0xFF);
-
-    // wait tx finish
+    spiWrite(0, 0, (StartAddress>>16) & 0xFF);
     spiIoctl(0, SPI_IOC_TRIGGER, 0, 0);
-    while(spiGetBusyStatus(0));
+    while(spiGetBusyStatus(0))
+    {
+        ;
+    }
+
+    spiWrite(0, 0, (StartAddress>>8) & 0xFF);
+    spiIoctl(0, SPI_IOC_TRIGGER, 0, 0);
+    while(spiGetBusyStatus(0))
+    {
+        ;
+    }
+
+    spiWrite(0, 0, StartAddress & 0xFF);
+    spiIoctl(0, SPI_IOC_TRIGGER, 0, 0);
+    while(spiGetBusyStatus(0))
+    {
+        ;
+    }
+
 
     // /CS: de-active
     spiIoctl(0, SPI_IOC_DISABLE_SS, SPI_SS_SS0, 0);
+
+    return 0;
 }
+
 
 uint8_t SpiFlash_ReadStatusReg(void)
 {
@@ -119,7 +156,7 @@ void SpiFlash_WaitReady(void)
     while(ReturnValue!=0);   // check the BUSY bit
 }
 
-void SpiFlash_NormalPageProgram(uint32_t StartAddress, uint8_t *u8DataBuffer)
+static int SpiFlash_NormalPageProgram(uint32_t StartAddress, uint8_t *u8DataBuffer)
 {
     uint32_t i = 0;
 
@@ -129,7 +166,10 @@ void SpiFlash_NormalPageProgram(uint32_t StartAddress, uint8_t *u8DataBuffer)
     // send Command: 0x06, Write enable
     spiWrite(0, 0, 0x06);
     spiIoctl(0, SPI_IOC_TRIGGER, 0, 0);
-    while(spiGetBusyStatus(0));
+    while(spiGetBusyStatus(0))
+    {
+        ;
+    }
 
     // /CS: de-active
     spiIoctl(0, SPI_IOC_DISABLE_SS, SPI_SS_SS0, 0);
@@ -141,20 +181,32 @@ void SpiFlash_NormalPageProgram(uint32_t StartAddress, uint8_t *u8DataBuffer)
     // send Command: 0x02, Page program
     spiWrite(0, 0, 0x02);
     spiIoctl(0, SPI_IOC_TRIGGER, 0, 0);
-    while(spiGetBusyStatus(0));
+    while(spiGetBusyStatus(0))
+    {
+        ;
+    }
 
     // send 24-bit start address
     spiWrite(0, 0, (StartAddress>>16) & 0xFF);
     spiIoctl(0, SPI_IOC_TRIGGER, 0, 0);
-    while(spiGetBusyStatus(0));
+    while(spiGetBusyStatus(0))
+    {
+        ;
+    }
 
     spiWrite(0, 0, (StartAddress>>8) & 0xFF);
     spiIoctl(0, SPI_IOC_TRIGGER, 0, 0);
-    while(spiGetBusyStatus(0));
+    while(spiGetBusyStatus(0))
+    {
+        ;
+    }
 
     spiWrite(0, 0, StartAddress & 0xFF);
     spiIoctl(0, SPI_IOC_TRIGGER, 0, 0);
-    while(spiGetBusyStatus(0));
+    while(spiGetBusyStatus(0))
+    {
+        ;
+    }
 
     // write data
     for(i=0; i<28; i++)
@@ -182,11 +234,46 @@ void SpiFlash_NormalPageProgram(uint32_t StartAddress, uint8_t *u8DataBuffer)
 
     // /CS: de-active
     spiIoctl(0, SPI_IOC_DISABLE_SS, SPI_SS_SS0, 0);
+
+    return 0;
 }
 
-void SpiFlash_NormalRead(uint32_t StartAddress, uint8_t *u8DataBuffer)
+int SpiFlash_NormalProgram(uint32_t StartAddress, uint8_t *u8DataBuffer, uint32_t data_len)
+{
+    uint32_t i = 0;
+    uint32_t page_no;
+
+    /* Check if page alignment */
+    if (StartAddress % PAGE_SIZE)
+    {
+        sysprintf("\nProgram address 0x%x is not 0x%x alignment!\n",StartAddress,PAGE_SIZE);
+        return ERR_ALIGNMENT;
+    }
+
+    page_no = data_len/PAGE_SIZE;
+    if (data_len % PAGE_SIZE)
+        page_no++;
+
+    for (i = 0; i < page_no; i++)
+    {
+        SpiFlash_NormalPageProgram((StartAddress + (PAGE_SIZE*i)), (u8DataBuffer + (PAGE_SIZE*i) ));
+        SpiFlash_WaitReady();
+    }
+
+    return 0;
+}
+
+
+static int SpiFlash_NormalPageRead(uint32_t StartAddress, uint8_t *u8DataBuffer)
 {
     uint32_t i;
+
+    /* Check if page alignment */
+    if (StartAddress % PAGE_SIZE)
+    {
+        sysprintf("\nRead address 0x%x is not 0x%x alignment!\n",StartAddress,PAGE_SIZE);
+        return ERR_ALIGNMENT;
+    }
 
     // /CS: active
     spiIoctl(0, SPI_IOC_ENABLE_SS, SPI_SS_SS0, 0);
@@ -194,30 +281,77 @@ void SpiFlash_NormalRead(uint32_t StartAddress, uint8_t *u8DataBuffer)
     // send Command: 0x03, Read data
     spiWrite(0, 0, 0x03);
     spiIoctl(0, SPI_IOC_TRIGGER, 0, 0);
-    while(spiGetBusyStatus(0));
+    while(spiGetBusyStatus(0))
+    {
+        ;
+    }
 
     // send 24-bit start address
     spiWrite(0, 0, (StartAddress>>16) & 0xFF);
     spiIoctl(0, SPI_IOC_TRIGGER, 0, 0);
-    while(spiGetBusyStatus(0));
+    while(spiGetBusyStatus(0))
+    {
+        ;
+    }
 
     spiWrite(0, 0, (StartAddress>>8) & 0xFF);
     spiIoctl(0, SPI_IOC_TRIGGER, 0, 0);
-    while(spiGetBusyStatus(0));
+    while(spiGetBusyStatus(0))
+    {
+        ;
+    }
 
     spiWrite(0, 0, StartAddress & 0xFF);
     spiIoctl(0, SPI_IOC_TRIGGER, 0, 0);
-    while(spiGetBusyStatus(0));
+    while(spiGetBusyStatus(0))
+    {
+        ;
+    }
 
     // read data
-    for(i=0; i<256; i++)
+    for(i=0; i < PAGE_SIZE; i++)
     {
         spiWrite(0, 0, 0x00);
         spiIoctl(0, SPI_IOC_TRIGGER, 0, 0);
-        while(spiGetBusyStatus(0));
+        while(spiGetBusyStatus(0))
+        {
+            ;
+        }
         u8DataBuffer[i] = spiRead(0, 0);
     }
+
+    return 0;
 }
+
+int SpiFlash_NormalRead(uint32_t StartAddress, uint8_t *u8DataBuffer, uint32_t data_len)
+{
+    uint32_t i;
+    uint32_t page_no;
+    uint8_t *pData = u8DataBuffer;
+
+    /* Check if page alignment */
+    if (StartAddress % PAGE_SIZE)
+    {
+        sysprintf("\nRead address 0x%x is not 0x%x alignment!\n",StartAddress,PAGE_SIZE);
+        return ERR_ALIGNMENT;
+    }
+
+    page_no = data_len/PAGE_SIZE;
+    if (data_len % PAGE_SIZE)
+        page_no++;
+
+    // read data
+    for(i=0; i < page_no; i++)
+    {
+        SpiFlash_NormalPageRead(StartAddress, pData);
+        SpiFlash_WaitReady();
+        StartAddress += PAGE_SIZE;
+        pData += PAGE_SIZE;
+    }
+
+    return 0;
+}
+
 
 uint16_t SpiFlash_ReadMidDid(void)
 {

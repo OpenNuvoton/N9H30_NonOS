@@ -391,7 +391,7 @@ int ts_writefile(void)
         return -1;
     }
 #else
-    SpiFlash_NormalPageProgram(__DEMO_TSFILE_ADDR__, (uint8_t *)&final_cal.a[0]);
+    SpiFlash_NormalProgram(__DEMO_TSFILE_ADDR__, (uint8_t *)&final_cal.a[0], 32);
 #endif
     return 0;
 }

@@ -1,11 +1,11 @@
 /**************************************************************************//**
  * @file     main.c
- * @version  V3.0
- * $Date: 18/10/05 06:00p $
+ * @version  V3.1
+ * $Date: 19/01/09 06:00p $
  * @brief    To utilize emWin library to demonstrate interactive feature.
  *
  * @note
- * Copyright (C) 2018 Nuvoton Technology Corp. All rights reserved.
+ * Copyright (C) 2019 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 #include <stdio.h>
 #include <string.h>
@@ -416,7 +416,7 @@ int main(void)
     else
         sysprintf("Flash ID, 0x%x\n", u16ID);
 
-    SpiFlash_NormalRead(__DEMO_TSFILE_ADDR__, DestArray);
+    SpiFlash_NormalRead(__DEMO_TSFILE_ADDR__, DestArray, 32);
     g_pu32Res = (uint32_t *)DestArray;
     sysprintf("%x\n", g_pu32Res[7]);
     if (g_pu32Res[7] != 0x55AAA55A)
@@ -426,7 +426,7 @@ int main(void)
         sysprintf("Sector Erase ...");
 
         /* Sector erase SPI flash */
-        SpiFlash_EraseSector(__DEMO_TSFILE_ADDR__);
+        SpiFlash_SectorErase(__DEMO_TSFILE_ADDR__);
 
         /* Wait ready */
         SpiFlash_WaitReady();
