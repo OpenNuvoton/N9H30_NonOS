@@ -1,7 +1,7 @@
 /**************************************************************************//**
  * @file     main.c
- * @version  V3.1
- * $Date: 19/01/09 06:00p $
+ * @version  V4.0
+ * $Date: 19/01/16 06:00p $
  * @brief    To utilize emWin library to demonstrate interactive feature.
  *
  * @note
@@ -42,7 +42,7 @@
 uint8_t *g_VAFrameBuf;
 
 //volatile int ts_flag;
-extern volatile int pendown_complete;
+extern void TouchTask(void);
 
 #ifdef __USE_SD__
 FATFS FatFs[_VOLUMES];      /* File system object for logical drive */
@@ -160,7 +160,7 @@ void TMR0_IRQHandler_TouchTask(void)
     if ( g_enable_Touch == 1 )
     {
         //sysprintf("enable_Touch=%d\n", g_enable_Touch);
-        GUI_TOUCH_Exec();
+        TouchTask();
     }
 }
 

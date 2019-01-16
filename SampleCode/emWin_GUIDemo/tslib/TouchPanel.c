@@ -5,6 +5,10 @@
 #include "adc.h"
 #include "TouchPanel.h"
 
+#include "GUI.h"
+
+extern int ts_phy2log(int *sumx, int *sumy);
+
 //#define XSIZE_PHYS        800
 //#define YSIZE_PHYS        480
 
@@ -111,22 +115,79 @@ int Check_TouchPanel(void)
 #endif
 }
 
+/*********************************************************************
+*
+*       TouchTask
+*
+* Function decription:
+*   Handles a controller driven touch screen and uses GUI_TOUCH_StoreState()
+*   to pass the values to emWin. Please note that multitasking for
+*   emWin is not required at this point.
+*/
+void TouchTask(void) {
+  static U16 xOld;
+  static U16 yOld;
+  static U8  PressedOld;
+  U16 x, y, xDiff, yDiff;
+    int sumx;
+    int sumy;
+  U8  Pressed;
 
-
-int fsFileSeek()
-{
-    /* TODO */
-    return 0;
+//  do {
+    Pressed = pendown_complete; // TBD: Insert function which returns:
+              //      1, if the touch screen is pressed
+              //      0, if the touch screen is released
+    //
+    // Touch screen is pressed
+    //
+    if (Pressed) {
+        Read_TouchPanel(&sumx, &sumy);
+        ts_phy2log(&sumx, &sumy);
+      x = sumx; // TBD: Insert function which reads current x value
+      y = sumy; // TBD: Insert function which reads current y value
+      //
+      // The touch has already been pressed
+      //
+      if (PressedOld == 1) {
+        //
+        // Calculate difference between new and old position
+        //
+        xDiff = (x > xOld) ? (x - xOld) : (xOld - x);
+        yDiff = (y > yOld) ? (y - yOld) : (yOld - y);
+        //
+        // Store state if new position differs significantly from old position
+        //
+        if (xDiff + yDiff > 2) {
+          xOld = x;
+          yOld = y;
+          GUI_TOUCH_StoreState(x, y);
+        }
+//      }
+      //
+      // The touch was previously released
+      // Store state regardless position
+      //
+      } else {
+        if ((x != 0) && (y != 0)) {
+          xOld = x;
+          yOld = y;
+          PressedOld = 1;
+          GUI_TOUCH_StoreState(x, y);
+        }
+      }
+    //
+    // Touch screen is not pressed
+    // Store state if it was released recently
+    //
+    } else {
+      if (PressedOld == 1) {
+        PressedOld = 0;
+        GUI_TOUCH_StoreState(-1, -1);
+      }
+    }
+    //
+    // Make sure 
+    //
+//    GUI_X_Delay(20);
+//  } while (1);
 }
-int fsReadFile()
-{
-    /* TODO */
-    return 0;
-}
-int fsWriteFile()
-{
-    /* TODO */
-    return 0;
-}
-
-

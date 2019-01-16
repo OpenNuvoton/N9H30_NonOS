@@ -98,7 +98,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     //
     // Initialization of 'Edit'
     //
-	  value = 123;
+	  value = 30;
 	  sprintf(sBuf,"%d    ", value);
     hItem = WM_GetDialogItem(pMsg->hWin, ID_EDIT_0);
     EDIT_SetText(hItem, sBuf);
