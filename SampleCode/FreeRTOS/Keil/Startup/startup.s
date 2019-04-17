@@ -1,10 +1,9 @@
+;/***************************************************************************
+; *                                                                         *
+; * Copyright (c) 2018 Nuvoton Technology. All rights reserved.             *
+; *                                                                         *
+; ***************************************************************************/
 
-	;/***************************************************************************
-    ; *                                                                         *
-    ; * Copyright (C) 2018 Nuvoton Technology. All rights reserved.             *
-    ; *                                                                         *
-    ; ***************************************************************************/
-    ;
 
     AREA NUC_INIT, CODE, READONLY
 
@@ -23,32 +22,33 @@ I_BIT       EQU     0x80
 F_BIT       EQU     0x40
 
 ;----------------------------
-; System / User Stack Memory
+; System / User Stack Memory Size
 ;----------------------------
-RAM_Limit       EQU     0x1000000            ; For unexpanded hardware board
+UND_Stack_Size  EQU     0x00000100
+ABT_Stack_Size  EQU     0x00000100
+FIQ_Stack_Size  EQU     0x00000200
+SVC_Stack_Size  EQU     0x00000C00
+IRQ_Stack_Size  EQU     0x00004000
+USR_Stack_Size  EQU     0x00004000
 
-UND_Stack       EQU     RAM_Limit
-Abort_Stack     EQU     RAM_Limit-256
-FIQ_Stack       EQU     RAM_Limit-512       ; followed by IRQ stack
-SVC_Stack       EQU     RAM_Limit-1024      ; SVC stack at top of memory
-IRQ_Stack       EQU     RAM_Limit-10240     ; followed by IRQ stack
-USR_Stack       EQU     RAM_Limit-20480
-
+REG_SDIC_SIZE0  EQU     0xB0001810  ; DDR size register
+REG_AIC_MDCR    EQU     0xB8002138  ; Mask disable command register
+REG_AIC_MDCRH   EQU     0xB800213C  ; Mask disable command register (High)
 
     ENTRY
 	IMPORT	vPortYieldProcessor
     EXPORT  Reset_Go
 
-        EXPORT  Vector_Table
+    EXPORT  Vector_Table
 Vector_Table
-        B       Reset_Go    ; Modified to be relative jumb for external boot
-        LDR     PC, Undefined_Addr
-        LDR     PC, SWI_Addr
-        LDR     PC, Prefetch_Addr
-        LDR     PC, Abort_Addr
-        DCD     0x0
-        LDR     PC, IRQ_Addr
-        LDR     PC, FIQ_Addr
+    B       Reset_Go    ; Modified to be relative jumb for external boot
+    LDR     PC, Undefined_Addr
+    LDR     PC, SWI_Addr
+    LDR     PC, Prefetch_Addr
+    LDR     PC, Abort_Addr
+    DCD     0x0
+    LDR     PC, IRQ_Addr
+    LDR     PC, FIQ_Addr
 
 
 Reset_Addr      DCD     Reset_Go
@@ -61,64 +61,97 @@ IRQ_Addr        DCD     IRQ_Handler
 FIQ_Addr        DCD     FIQ_Handler
 
 
-        ; ************************
-        ; Exception Handlers
-        ; ************************
+    ; ************************
+    ; Exception Handlers
+    ; ************************
 
-        ; The following dummy handlers do not do anything useful in this example.
-        ; They are set up here for completeness.
+    ; The following dummy handlers do not do anything useful in this example.
+    ; They are set up here for completeness.
 
 Undefined_Handler
-        B       Undefined_Handler
+    B       Undefined_Handler
 SWI_Handler1
-        B       SWI_Handler1
+    B       SWI_Handler1
 Prefetch_Handler
-        B       Prefetch_Handler
+    B       Prefetch_Handler
 Abort_Handler
-        B       Abort_Handler
+    B       Abort_Handler
 IRQ_Handler
-        B       IRQ_Handler
+    B       IRQ_Handler
 FIQ_Handler
-        B       FIQ_Handler
+    B       FIQ_Handler
 
 
 Reset_Go
-
+    ; Disable Interrupt in case code is load by ICE while other firmware is executing
+    LDR    r0, =REG_AIC_MDCR
+    LDR    r1, =0xFFFFFFFF
+    STR    r1, [r0]
+    LDR    r0, =REG_AIC_MDCRH
+    STR    r1, [r0]
     ;--------------------------------
     ; Initial Stack Pointer register
     ;--------------------------------
     ;INIT_STACK
-    MSR    CPSR_c, #UDF_MODE :OR: I_BIT :OR: F_BIT
-     LDR    SP, =UND_Stack
+    LDR    R2, =REG_SDIC_SIZE0
+    LDR    R3,[R2]
+    AND    R3, R3, #0x00000007
+    MOV    R1,#2
+    MOV    R0,#1
+LOOP_DRAMSIZE
+    CMP    R0,R3
+    BEQ    DONE_DRAMSIZE
+    LSL    R1,R1,#1
+    ADD    R0,R0,#1
+    B    LOOP_DRAMSIZE
+DONE_DRAMSIZE
+    ; Using DRAM Size to set Stack Pointer
+    LSL    R0,R1,#20
 
-     MSR    CPSR_c, #ABT_MODE :OR: I_BIT :OR: F_BIT
-     LDR    SP, =Abort_Stack
+    ; Enter Undefined Instruction Mode and set Stack Pointer
+    MSR    CPSR_c, #UDF_MODE:OR:I_BIT:OR:F_BIT
+    MOV    SP, R0
+    SUB    R0, R0, #UND_Stack_Size
 
-     MSR    CPSR_c, #IRQ_MODE :OR: I_BIT :OR: F_BIT
-     LDR    SP, =IRQ_Stack
+    ; Enter Abort Mode and set Stack Pointer
+    MSR    CPSR_c, #ABT_MODE:OR:I_BIT:OR:F_BIT
+    MOV    SP, R0
+    SUB    R0, R0, #ABT_Stack_Size
 
-     MSR    CPSR_c, #FIQ_MODE :OR: I_BIT :OR: F_BIT
-     LDR    SP, =FIQ_Stack
+    ; Enter IRQ Mode and set Stack Pointer
+    MSR    CPSR_c, #IRQ_MODE:OR:I_BIT:OR:F_BIT
+    MOV    SP, R0
+    SUB    R0, R0, #IRQ_Stack_Size
 
-     MSR    CPSR_c, #SYS_MODE :OR: I_BIT :OR: F_BIT
-     LDR    SP, =USR_Stack
+    ; Enter FIQ Mode and set Stack Pointer
+    MSR    CPSR_c, #FIQ_MODE:OR:I_BIT:OR:F_BIT
+    MOV    SP, R0
+    SUB    R0, R0, #FIQ_Stack_Size
 
-     MSR    CPSR_c, #SVC_MODE :OR: I_BIT :OR: F_BIT
-     LDR    SP, =SVC_Stack
+    ; Enter User Mode and set Stack Pointer
+    MSR    CPSR_c, #SYS_MODE:OR:I_BIT:OR:F_BIT
+    MOV    SP, R0
+    SUB    R0, R0, #USR_Stack_Size
+
+    ; Enter Supervisor Mode and set Stack Pointer
+    MSR    CPSR_c, #SVC_MODE:OR:I_BIT:OR:F_BIT
+    MOV    SP, R0
+    SUB    R0, R0, #SVC_Stack_Size
+
 
     ;------------------------------------------------------
     ; Set the normal exception vector of CP15 control bit
     ;------------------------------------------------------
-        MRC p15, 0, r0 , c1, c0     ; r0 := cp15 register 1
-        BIC r0, r0, #0x2000         ; Clear bit13 in r1
-        MCR p15, 0, r0 , c1, c0     ; cp15 register 1 := r0
+    MRC p15, 0, r0 , c1, c0     ; r0 := cp15 register 1
+    BIC r0, r0, #0x2000         ; Clear bit13 in r1
+    MCR p15, 0, r0 , c1, c0     ; cp15 register 1 := r0
 
 
-        IMPORT  __main
+    IMPORT  __main
     ;-----------------------------
     ;   enter the C code
     ;-----------------------------
-        B   __main
+    B   __main
 
     END
 

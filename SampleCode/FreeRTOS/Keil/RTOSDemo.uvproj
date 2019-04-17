@@ -416,7 +416,7 @@
             <File>
               <FileName>standalone.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\Driver\Source\standalone.c</FilePath>
+              <FilePath>.\Startup\standalone.c</FilePath>
             </File>
           </Files>
         </Group>
