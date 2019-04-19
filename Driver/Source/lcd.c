@@ -206,6 +206,8 @@ uint8_t* vpostGetFrameBuffer(void)
     }
 
     u8BufPtr = (uint8_t *)malloc((curDisplayDev.u32DevWidth * curDisplayDev.u32DevHeight * u32BytePerPixel)+32);
+    if(u8BufPtr == NULL)
+        return NULL;
     u8BufPtr = (uint8_t *)shift_pointer((uint32_t)u8BufPtr, 32);
 
     outpw(REG_LCM_VA_BADDR0, (uint32_t)((uint32_t)u8BufPtr | 0x80000000));
@@ -247,6 +249,8 @@ uint8_t* vpostGetMultiFrameBuffer(uint32_t u32Cnt)
     }
 
     u8BufPtr = (uint8_t *)malloc((curDisplayDev.u32DevWidth * curDisplayDev.u32DevHeight * u32BytePerPixel) * u32Cnt + 32);
+    if(u8BufPtr == NULL)
+        return NULL;
     u8BufPtr = (uint8_t *)shift_pointer((uint32_t)u8BufPtr, 32);
 
     outpw(REG_LCM_VA_BADDR0, (uint32_t)((uint32_t)u8BufPtr | 0x80000000));
@@ -499,6 +503,8 @@ uint8_t* vpostGetOSDBuffer(void)
     }
 
     u8BufPtr = (uint8_t *)malloc((curOSDDev.nOSDWidth * curOSDDev.nOSDHeight * u32BytePerPixel)+32);
+    if(u8BufPtr == NULL)
+        return NULL;
     u8BufPtr = (uint8_t *)shift_pointer((uint32_t)u8BufPtr, 32);
 
     outpw(REG_LCM_OSD_BADDR, (uint32_t)((uint32_t)u8BufPtr | 0x80000000));
