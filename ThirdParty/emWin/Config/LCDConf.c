@@ -48,7 +48,7 @@ Purpose     : Display controller configuration (single layer)
 #include "GUI.h"
 #include "GUIDRV_Lin.h"
 //#include "GUIDRV_FlexColor.h"
-#include "LCDconf.h"
+#include "LCDConf.h"
 #include "lcd.h"
 
 

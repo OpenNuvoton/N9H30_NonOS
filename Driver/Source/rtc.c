@@ -11,7 +11,7 @@
 #include <string.h>
 #include "N9H30.h"
 #include "sys.h"
-#include "RTC.h"
+#include "rtc.h"
 
 /** @addtogroup N9H30_Device_Driver N9H30 Device Driver
   @{

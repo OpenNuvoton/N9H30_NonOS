@@ -16,27 +16,27 @@
 #include "diskio.h"
 
 
-#define BUFF_SIZE		(64*1024)
+#define BUFF_SIZE       (64*1024)
 
 static UINT blen = BUFF_SIZE;
-DWORD acc_size;             			/* Work register for fs command */
+DWORD acc_size;                         /* Work register for fs command */
 WORD acc_files, acc_dirs;
 FILINFO Finfo;
 
-char Line[256];             			/* Console input buffer */
+char Line[256];                         /* Console input buffer */
 #if _USE_LFN
 char Lfname[512];
 #endif
 
-__align(32) BYTE Buff_Pool[BUFF_SIZE] ;       /* Working buffer */
+BYTE Buff_Pool[BUFF_SIZE] __attribute__((aligned(32)));       /* Working buffer */
 
 BYTE  *Buff;
 
 
 void delay_us(int usec)
 {
-	volatile int  loop = 300 * usec;
-	while (loop > 0) loop--;
+    volatile int  loop = 300 * usec;
+    while (loop > 0) loop--;
 }
 
 uint32_t get_ticks(void)
@@ -47,13 +47,13 @@ uint32_t get_ticks(void)
 
 void timer_init()
 {
-	sysprintf("timer_init() To do...\n");
+    sysprintf("timer_init() To do...\n");
 }
 
 uint32_t get_timer_value()
 {
-	sysprintf("get_timer_value() To do...\n");
-	return 1;
+    sysprintf("get_timer_value() To do...\n");
+    return 1;
 }
 
 
@@ -62,12 +62,14 @@ void  dump_buff_hex(uint8_t *pucBuff, int nBytes)
     int     nIdx, i;
 
     nIdx = 0;
-    while (nBytes > 0) {
+    while (nBytes > 0)
+    {
         sysprintf("0x%04X  ", nIdx);
         for (i = 0; i < 16; i++)
             sysprintf("%02x ", pucBuff[nIdx + i]);
         sysprintf("  ");
-        for (i = 0; i < 16; i++) {
+        for (i = 0; i < 16; i++)
+        {
             if ((pucBuff[nIdx + i] >= 0x20) && (pucBuff[nIdx + i] < 127))
                 sysprintf("%c", pucBuff[nIdx + i]);
             else
@@ -109,14 +111,17 @@ int xatoi (         /* 0:Failed, 1:Successful */
     *res = 0;
     while ((c = **str) == ' ') (*str)++;    /* Skip leading spaces */
 
-    if (c == '-') {     /* negative? */
+    if (c == '-')       /* negative? */
+    {
         s = 1;
         c = *(++(*str));
     }
 
-    if (c == '0') {
+    if (c == '0')
+    {
         c = *(++(*str));
-        switch (c) {
+        switch (c)
+        {
         case 'x':       /* hexadecimal */
             r = 16;
             c = *(++(*str));
@@ -130,16 +135,20 @@ int xatoi (         /* 0:Failed, 1:Successful */
             if (c < '0' || c > '9') return 0;   /* invalid char */
             r = 8;      /* octal */
         }
-    } else {
+    }
+    else
+    {
         if (c < '0' || c > '9') return 0;   /* EOL or invalid char */
         r = 10;         /* decimal */
     }
 
     val = 0;
-    while (c > ' ') {
+    while (c > ' ')
+    {
         if (c >= 'a') c -= 0x20;
         c -= '0';
-        if (c >= 17) {
+        if (c >= 17)
+        {
             c -= 7;
             if (c <= 9) return 0;   /* invalid char */
         }
@@ -194,23 +203,28 @@ FRESULT scan_files (
     char *fn;
 
 
-    if ((res = f_opendir(&dirs, path)) == FR_OK) {
+    if ((res = f_opendir(&dirs, path)) == FR_OK)
+    {
         i = strlen(path);
-        while (((res = f_readdir(&dirs, &Finfo)) == FR_OK) && Finfo.fname[0]) {
+        while (((res = f_readdir(&dirs, &Finfo)) == FR_OK) && Finfo.fname[0])
+        {
             if (_FS_RPATH && Finfo.fname[0] == '.') continue;
 #if _USE_LFN
             fn = *Finfo.lfname ? Finfo.lfname : Finfo.fname;
 #else
             fn = Finfo.fname;
 #endif
-            if (Finfo.fattrib & AM_DIR) {
+            if (Finfo.fattrib & AM_DIR)
+            {
                 acc_dirs++;
                 *(path+i) = '/';
                 strcpy(path+i+1, fn);
                 res = scan_files(path);
                 *(path+i) = '\0';
                 if (res != FR_OK) break;
-            } else {
+            }
+            else
+            {
                 /*              sysprintf("%s/%s\n", path, fn); */
                 acc_files++;
                 acc_size += Finfo.fsize;
@@ -232,7 +246,8 @@ void put_rc (FRESULT rc)
         _T("NOT_ENOUGH_CORE\0TOO_MANY_OPEN_FILES\0");
     //FRESULT i;
     uint32_t i;
-    for (i = 0; (i != (UINT)rc) && *p; i++) {
+    for (i = 0; (i != (UINT)rc) && *p; i++)
+    {
         while(*p++) ;
     }
     sysprintf(_T("rc=%d FR_%s\n"), (UINT)rc, p);
@@ -249,7 +264,8 @@ void get_line (char *buff, int len)
 //  DWORD dw;
 
 
-    for (;;) {
+    for (;;)
+    {
         c = sysGetChar();
         sysPutChar(c);
         if (c == '\r') break;
@@ -287,12 +303,12 @@ static FIL file1, file2;        /* File objects */
  *----------------------------------------------------------------------------*/
 int32_t main(void)
 {
-    char 		*ptr, *ptr2;
-    long 		p1, p2, p3;
-    BYTE 		*buf;
-    FATFS 		*fs;              /* Pointer to file system object */
-    TCHAR		usb_path[] = { '3', ':', 0 };    /* USB drive started from 3 */
-    FRESULT 	res;
+    char        *ptr, *ptr2;
+    long        p1, p2, p3;
+    BYTE        *buf;
+    FATFS       *fs;              /* Pointer to file system object */
+    TCHAR       usb_path[] = { '3', ':', 0 };    /* USB drive started from 3 */
+    FRESULT     res;
 
     DIR dir;                /* Directory object */
     UINT s1, s2, cnt;
@@ -304,11 +320,11 @@ int32_t main(void)
     sysEnableCache(CACHE_WRITE_BACK);
     sysInitializeUART();
 
-	outpw(REG_CLK_HCLKEN, inpw(REG_CLK_HCLKEN) | 0x40000);
-	outpw(REG_CLK_PCLKEN0, inpw(REG_CLK_PCLKEN0) | 0x10000);
+    outpw(REG_CLK_HCLKEN, inpw(REG_CLK_HCLKEN) | 0x40000);
+    outpw(REG_CLK_PCLKEN0, inpw(REG_CLK_PCLKEN0) | 0x10000);
 
-	// set PE.14 & PE.15 for USBH_PPWR0 & USBH_PPWR1
-	outpw(REG_SYS_GPE_MFPH, (inpw(REG_SYS_GPE_MFPH) & ~0xff000000) | 0x77000000);
+    // set PE.14 & PE.15 for USBH_PPWR0 & USBH_PPWR1
+    outpw(REG_SYS_GPE_MFPH, (inpw(REG_SYS_GPE_MFPH) & ~0xff000000) | 0x77000000);
 
     sysprintf("\n\n");
     sysprintf("+-----------------------------------------------+\n");
@@ -317,35 +333,37 @@ int32_t main(void)
     sysprintf("|                                               |\n");
     sysprintf("+-----------------------------------------------+\n");
 
-	/*--- init timer ---*/
-	sysSetTimerReferenceClock (TIMER0, 15000000);
-	sysStartTimer(TIMER0, 100, PERIODIC_MODE);
-	
-	Buff = (BYTE *)((UINT32)&Buff_Pool[0] | 0x80000000);   /* use non-cache buffer */
+    /*--- init timer ---*/
+    sysSetTimerReferenceClock (TIMER0, 15000000);
+    sysStartTimer(TIMER0, 100, PERIODIC_MODE);
 
-	usbh_core_init();    
-	usbh_umas_init();
-	usbh_pooling_hubs();
-	
-	f_chdrive(usb_path);          /* set default path */
+    Buff = (BYTE *)((UINT32)&Buff_Pool[0] | 0x80000000);   /* use non-cache buffer */
 
-    for (;;) {
-    	
-    	sysprintf("EHCI: 0x%x, 0x%x;  OHCI: 0x%x, 0x%x\n", HSUSBH->UPSCR[0], HSUSBH->UPSCR[1], USBH->HcRhPortStatus[0], USBH->HcRhPortStatus[1]);
-    	
-    	usbh_pooling_hubs();
-    	
+    usbh_core_init();
+    usbh_umas_init();
+    usbh_pooling_hubs();
+
+    f_chdrive(usb_path);          /* set default path */
+
+    for (;;)
+    {
+
+        sysprintf("EHCI: 0x%x, 0x%x;  OHCI: 0x%x, 0x%x\n", HSUSBH->UPSCR[0], HSUSBH->UPSCR[1], USBH->HcRhPortStatus[0], USBH->HcRhPortStatus[1]);
+
+        usbh_pooling_hubs();
+
         sysprintf(_T(">"));
         ptr = Line;
 
-		while (sysIsKbHit() == 0)
-			usbh_pooling_hubs();
-			
+        while (sysIsKbHit() == 0)
+            usbh_pooling_hubs();
+
         get_line(ptr, sizeof(Line));
 
-		//dump_buff_hex(ptr, 16);
+        //dump_buff_hex(ptr, 16);
 
-        switch (*ptr++) {
+        switch (*ptr++)
+        {
 
         case 'q' :  /* Exit program */
             return 0;
@@ -355,29 +373,32 @@ int32_t main(void)
         case '5' :
         case '6' :
         case '7' :
-        	ptr--;
-        	*(ptr+1) = ':';
-        	*(ptr+2) = 0;
-        	put_rc(f_chdrive((TCHAR *)ptr));
-        	break;
-        	
+            ptr--;
+            *(ptr+1) = ':';
+            *(ptr+2) = 0;
+            put_rc(f_chdrive((TCHAR *)ptr));
+            break;
+
         case '#':
             for (p1 = 0; p1 < 10000000; p1 += 8)
             {
                 res = (FRESULT)disk_read(3, Buff, p1, 8);
                 sysprintf("Read sector %d, rc=%d\n", p1, (WORD)res);
-                if (res) {
+                if (res)
+                {
                     break;
                 }
             }
             break;
 
         case 'd' :
-            switch (*ptr++) {
+            switch (*ptr++)
+            {
             case 'd' :  /* dd [<lba>] - Dump sector */
                 if (!xatoi(&ptr, &p2)) p2 = sect;
                 res = (FRESULT)disk_read(3, Buff, p2, 1);
-                if (res) {
+                if (res)
+                {
                     sysprintf("rc=%d\n", (WORD)res);
                     break;
                 }
@@ -391,7 +412,8 @@ int32_t main(void)
             break;
 
         case 'b' :
-            switch (*ptr++) {
+            switch (*ptr++)
+            {
             case 'd' :  /* bd <addr> - Dump R/W buffer */
                 if (!xatoi(&ptr, &p1)) break;
                 for (ptr=(char*)&Buff[p1], ofs = p1, cnt = 32; cnt; cnt--, ptr+=16, ofs+=16)
@@ -400,18 +422,23 @@ int32_t main(void)
 
             case 'e' :  /* be <addr> [<data>] ... - Edit R/W buffer */
                 if (!xatoi(&ptr, &p1)) break;
-                if (xatoi(&ptr, &p2)) {
-                    do {
+                if (xatoi(&ptr, &p2))
+                {
+                    do
+                    {
                         Buff[p1++] = (BYTE)p2;
-                    } while (xatoi(&ptr, &p2));
+                    }
+                    while (xatoi(&ptr, &p2));
                     break;
                 }
-                for (;;) {
+                for (;;)
+                {
                     sysprintf("%04X %02X-", (WORD)p1, Buff[p1]);
                     get_line(Line, sizeof(Line));
                     ptr = Line;
                     if (*ptr == '.') break;
-                    if (*ptr < ' ') {
+                    if (*ptr < ' ')
+                    {
                         p1++;
                         continue;
                     }
@@ -445,62 +472,70 @@ int32_t main(void)
 
 
         case 'f' :
-            switch (*ptr++) {
+            switch (*ptr++)
+            {
 
             case 's' :  /* fs - Show logical drive status */
                 res = f_getfree("", (DWORD*)&p2, &fs);
-                if (res) {
+                if (res)
+                {
                     put_rc(res);
                     break;
                 }
                 sysprintf("FAT type = FAT%d\nBytes/Cluster = %d\nNumber of FATs = %d\n"
-                       "Root DIR entries = %d\nSectors/FAT = %d\nNumber of clusters = %d\n"
-                       "FAT start (lba) = %d\nDIR start (lba,clustor) = %d\nData start (lba) = %d\n\n...",
-                       ft[fs->fs_type & 3], fs->csize * 512UL, fs->n_fats,
-                       fs->n_rootdir, fs->fsize, fs->n_fatent - 2,
-                       fs->fatbase, fs->dirbase, fs->database
-                      );
+                          "Root DIR entries = %d\nSectors/FAT = %d\nNumber of clusters = %d\n"
+                          "FAT start (lba) = %d\nDIR start (lba,clustor) = %d\nData start (lba) = %d\n\n...",
+                          ft[fs->fs_type & 3], fs->csize * 512UL, fs->n_fats,
+                          fs->n_rootdir, fs->fsize, fs->n_fatent - 2,
+                          fs->fatbase, fs->dirbase, fs->database
+                         );
                 acc_size = acc_files = acc_dirs = 0;
 #if _USE_LFN
                 Finfo.lfname = Lfname;
                 Finfo.lfsize = sizeof(Lfname);
 #endif
                 res = scan_files(ptr);
-                if (res) {
+                if (res)
+                {
                     put_rc(res);
                     break;
                 }
                 sysprintf("\r%d files, %d bytes.\n%d folders.\n"
-                       "%d KB total disk space.\n%d KB available.\n",
-                       acc_files, acc_size, acc_dirs,
-                       (fs->n_fatent - 2) * (fs->csize / 2), p2 * (fs->csize / 2)
-                      );
+                          "%d KB total disk space.\n%d KB available.\n",
+                          acc_files, acc_size, acc_dirs,
+                          (fs->n_fatent - 2) * (fs->csize / 2), p2 * (fs->csize / 2)
+                         );
                 break;
             case 'l' :  /* fl [<path>] - Directory listing */
                 while (*ptr == ' ') ptr++;
                 res = f_opendir(&dir, ptr);
-                if (res) {
+                if (res)
+                {
                     put_rc(res);
                     break;
                 }
                 p1 = s1 = s2 = 0;
-                for(;;) {
+                for(;;)
+                {
                     res = f_readdir(&dir, &Finfo);
                     if ((res != FR_OK) || !Finfo.fname[0]) break;
-                    if (Finfo.fattrib & AM_DIR) {
+                    if (Finfo.fattrib & AM_DIR)
+                    {
                         s2++;
-                    } else {
+                    }
+                    else
+                    {
                         s1++;
                         p1 += Finfo.fsize;
                     }
                     sysprintf("%c%c%c%c%c %d/%02d/%02d %02d:%02d    %9d  %s",
-                           (Finfo.fattrib & AM_DIR) ? 'D' : '-',
-                           (Finfo.fattrib & AM_RDO) ? 'R' : '-',
-                           (Finfo.fattrib & AM_HID) ? 'H' : '-',
-                           (Finfo.fattrib & AM_SYS) ? 'S' : '-',
-                           (Finfo.fattrib & AM_ARC) ? 'A' : '-',
-                           (Finfo.fdate >> 9) + 1980, (Finfo.fdate >> 5) & 15, Finfo.fdate & 31,
-                           (Finfo.ftime >> 11), (Finfo.ftime >> 5) & 63, Finfo.fsize, Finfo.fname);
+                              (Finfo.fattrib & AM_DIR) ? 'D' : '-',
+                              (Finfo.fattrib & AM_RDO) ? 'R' : '-',
+                              (Finfo.fattrib & AM_HID) ? 'H' : '-',
+                              (Finfo.fattrib & AM_SYS) ? 'S' : '-',
+                              (Finfo.fattrib & AM_ARC) ? 'A' : '-',
+                              (Finfo.fdate >> 9) + 1980, (Finfo.fdate >> 5) & 15, Finfo.fdate & 31,
+                              (Finfo.ftime >> 11), (Finfo.ftime >> 5) & 63, Finfo.fsize, Finfo.fname);
 #if _USE_LFN
                     for (p2 = strlen(Finfo.fname); p2 < 14; p2++)
                         sysprintf(" ");
@@ -536,16 +571,21 @@ int32_t main(void)
             case 'd' :  /* fd <len> - read and dump file from current fp */
                 if (!xatoi(&ptr, &p1)) break;
                 ofs = file1.fptr;
-                while (p1) {
-                    if ((UINT)p1 >= 16) {
+                while (p1)
+                {
+                    if ((UINT)p1 >= 16)
+                    {
                         cnt = 16;
                         p1 -= 16;
-                    } else                {
+                    }
+                    else
+                    {
                         cnt = p1;
                         p1 = 0;
                     }
                     res = f_read(&file1, Buff, cnt, &cnt);
-                    if (res != FR_OK) {
+                    if (res != FR_OK)
+                    {
                         put_rc(res);
                         break;
                     }
@@ -559,16 +599,21 @@ int32_t main(void)
                 if (!xatoi(&ptr, &p1)) break;
                 p2 = 0;
                 timer_init();
-                while (p1) {
-                    if ((UINT)p1 >= blen) {
+                while (p1)
+                {
+                    if ((UINT)p1 >= blen)
+                    {
                         cnt = blen;
                         p1 -= blen;
-                    } else {
+                    }
+                    else
+                    {
                         cnt = p1;
                         p1 = 0;
                     }
                     res = f_read(&file1, Buff, cnt, &s2);
-                    if (res != FR_OK) {
+                    if (res != FR_OK)
+                    {
                         put_rc(res);
                         break;
                     }
@@ -585,16 +630,21 @@ int32_t main(void)
                 memset(Buff, (BYTE)p2, blen);
                 p2 = 0;
                 timer_init();
-                while (p1) {
-                    if ((UINT)p1 >= blen) {
+                while (p1)
+                {
+                    if ((UINT)p1 >= blen)
+                    {
                         cnt = blen;
                         p1 -= blen;
-                    } else {
+                    }
+                    else
+                    {
                         cnt = p1;
                         p1 = 0;
                     }
                     res = f_write(&file1, Buff, cnt, &s2);
-                    if (res != FR_OK) {
+                    if (res != FR_OK)
+                    {
                         put_rc(res);
                         break;
                     }
@@ -652,21 +702,24 @@ int32_t main(void)
                 sysprintf("Opening \"%s\"", ptr);
                 res = f_open(&file1, ptr, FA_OPEN_EXISTING | FA_READ);
                 sysprintf("\n");
-                if (res) {
+                if (res)
+                {
                     put_rc(res);
                     break;
                 }
                 sysprintf("Creating \"%s\"", ptr2);
                 res = f_open(&file2, ptr2, FA_CREATE_ALWAYS | FA_WRITE);
                 sysPutChar('\n');
-                if (res) {
+                if (res)
+                {
                     put_rc(res);
                     f_close(&file1);
                     break;
                 }
                 sysprintf("Copying...");
                 p1 = 0;
-                for (;;) {
+                for (;;)
+                {
                     res = f_read(&file1, Buff, BUFF_SIZE, &s1);
                     if (res || s1 == 0) break;   /* error or eof */
                     res = f_write(&file2, Buff, s1, &s2);
@@ -685,8 +738,8 @@ int32_t main(void)
 
             case 'j' :  /* fj <drive#> - Change current drive */
                 while (*ptr == ' ') ptr++;
-				dump_buff_hex((uint8_t *)&p1, 16);
-				put_rc(f_chdrive((TCHAR *)ptr));
+                dump_buff_hex((uint8_t *)&p1, 16);
+                put_rc(f_chdrive((TCHAR *)ptr));
                 break;
 #endif
 #if _USE_MKFS

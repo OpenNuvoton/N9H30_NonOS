@@ -32,7 +32,6 @@ int32_t main (void)
     sysInstallISR(HIGH_LEVEL_SENSITIVE|IRQ_LEVEL_1, USBD_IRQn, (PVOID)USBD_IRQHandler);
     /* enable CPSR I bit */
     sysSetLocalInterrupt(ENABLE_IRQ);
-	sysEnableInterrupt(USBD_IRQn);
 
     USBD_Open(&gsInfo, HID_ClassRequest, NULL);
     USBD_SetVendorRequest(HID_VendorRequest);
@@ -40,6 +39,7 @@ int32_t main (void)
     /* Endpoint configuration */
     HID_Init();
 
+	sysEnableInterrupt(USBD_IRQn);
     /* Start transaction */
     USBD_Start();
 

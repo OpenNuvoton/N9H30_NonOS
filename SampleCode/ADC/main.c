@@ -192,11 +192,22 @@ void normal_demo()
 #define UNLOCKREG(x)  do{outpw(REG_SYS_REGWPCTL,0x59); outpw(REG_SYS_REGWPCTL,0x16); outpw(REG_SYS_REGWPCTL,0x88);}while(inpw(REG_SYS_REGWPCTL) == 0x00)
 /*! Lock protected register */
 #define LOCKREG(x)  do{outpw(REG_SYS_REGWPCTL,0x00);}while(0)
+
+#if defined ( __GNUC__ ) && !(__CC_ARM)
+void  __wfi(void)
+{
+	asm
+	(
+			"MCR p15, 0, r1, c7, c0, 4\n"
+	);
+}
+#else
 __asm void __wfi(void)
 {
   MCR p15, 0, r1, c7, c0, 4
   BX            lr
 }
+#endif
 
 void EnterPowerDown(void)
 {
@@ -204,6 +215,16 @@ void EnterPowerDown(void)
   int r0,r1,r2;
   outp32(REG_CLK_PLLSTBCNTR,0xFFFF);
   outp32(REG_SDIC_MR,  inpw(REG_SDIC_MR)|0x100); //Enable Reset DLL(bit[8]) of DDR2 
+
+#if defined ( __GNUC__ ) && !(__CC_ARM)
+  asm(
+		  "mov r2, #1000\n"
+		  "mov r1, #0\n"
+		  "loop1:  add   r1, r1, r0\n"
+		  "cmp r1, r2\n"
+		  "bne loop1\n"
+  );
+#else
   __asm
   {/*  Delay a moment until the escape self-refresh command reached to DDR/SDRAM */
       mov r2, #1000
@@ -213,7 +234,18 @@ void EnterPowerDown(void)
       cmp r1, r2
       bne loop1
   }
-  outp32(REG_SDIC_MR,  inpw(REG_SDIC_MR)&~0x100); //Disabe Reset DLL(bit[8]) of DDR2
+#endif
+  outp32(REG_SDIC_MR,  inpw(REG_SDIC_MR)&~0x100); //Disable Reset DLL(bit[8]) of DDR2
+
+#if defined ( __GNUC__ ) && !(__CC_ARM)
+  asm(
+		  "mov r2, #1000\n"
+		  "mov r1, #0\n"
+		  "loop2:  add   r1, r1, r0\n"
+		  "cmp r1, r2\n"
+		  "bne loop2\n"
+  );
+#else
   __asm
   {/*  Delay a moment until the escape self-refresh command reached to DDR/SDRAM */
       mov r2, #1000
@@ -223,6 +255,7 @@ void EnterPowerDown(void)
       cmp r1, r2
       bne loop2
   }
+#endif
   reg=inpw(REG_CLK_PMCON);   //Enable N9H30 to enter power down mode
   reg = reg & (0xFFFFFFFE); 
   outpw(REG_CLK_PMCON,reg);

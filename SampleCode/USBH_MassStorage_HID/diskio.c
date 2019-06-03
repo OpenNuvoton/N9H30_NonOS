@@ -16,9 +16,9 @@
 #include "ff.h"
 #include "diskio.h"
 
-#define SD0_DRIVE		0        /* for SD0          */
-#define SD1_DRIVE		1        /* for SD1          */
-#define EMMC_DRIVE		2        /* for eMMC/NAND    */
+#define SD0_DRIVE       0        /* for SD0          */
+#define SD1_DRIVE       1        /* for SD1          */
+#define EMMC_DRIVE      2        /* for eMMC/NAND    */
 #define USBH_DRIVE_0    3        /* USB Mass Storage */
 #define USBH_DRIVE_1    4        /* USB Mass Storage */
 #define USBH_DRIVE_2    5        /* USB Mass Storage */
@@ -26,7 +26,7 @@
 #define USBH_DRIVE_4    7        /* USB Mass Storage */
 
 
-static __align(32) BYTE  fatfs_win_buff_pool[_MAX_SS] ;       /* FATFS window buffer is cachable. Must not use it directly. */
+static BYTE  fatfs_win_buff_pool[_MAX_SS] __attribute__((aligned(32)));       /* FATFS window buffer is cachable. Must not use it directly. */
 BYTE  *fatfs_win_buff;
 
 
@@ -36,9 +36,9 @@ BYTE  *fatfs_win_buff;
 
 DSTATUS disk_initialize (BYTE pdrv)       /* Physical drive number (0..) */
 {
-	usbh_pooling_hubs();
+    usbh_pooling_hubs();
     if (usbh_umas_disk_status(pdrv) == UMAS_ERR_NO_DEVICE)
-    	return STA_NODISK;
+        return STA_NODISK;
     return RES_OK;
 }
 
@@ -49,9 +49,9 @@ DSTATUS disk_initialize (BYTE pdrv)       /* Physical drive number (0..) */
 
 DSTATUS disk_status (BYTE pdrv)       /* Physical drive number (0..) */
 {
-	usbh_pooling_hubs();
+    usbh_pooling_hubs();
     if (usbh_umas_disk_status(pdrv) == UMAS_ERR_NO_DEVICE)
-    	return STA_NODISK;
+        return STA_NODISK;
     return RES_OK;
 }
 
@@ -66,47 +66,37 @@ DRESULT disk_read (
     UINT count      /* Number of sectors to read (1..128) */
 )
 {
-	int       ret;
-	int       sec_size;
+    int       ret;
+    int       sec_size;
 
-	// sysprintf("disk_read - drv:%d, sec:%d, cnt:%d, buff:0x%x\n", pdrv, sector, count, (UINT32)buff);
-	
-	if (!((UINT32)buff & 0x80000000))
-	{
-		/* Disk read buffer is not non-cachable buffer. Use my non-cachable to do disk read. */
-		sec_size = 512; //usbh_umas_disk_sector_size(pdrv);
-		if (count * sec_size > _MAX_SS)
-			return RES_ERROR;
-			
-		fatfs_win_buff = (BYTE *)((unsigned int)fatfs_win_buff_pool | 0x80000000);
-		ret = (DRESULT) usbh_umas_read(pdrv, sector, count, fatfs_win_buff);
-		if (ret < 0)
-		{
-			usbh_umas_reset_disk(pdrv);
-			ret = usbh_umas_read(pdrv, sector, count, buff);
-		}
-		memcpy(buff, fatfs_win_buff, count * sec_size);
-	}
-	else
-	{
-		ret = usbh_umas_read(pdrv, sector, count, buff);
-		if (ret < 0)
-		{
-			usbh_umas_reset_disk(pdrv);
-			ret = usbh_umas_read(pdrv, sector, count, buff);
-		}
-	}
-	
-	if (ret == UMAS_OK)
-		return RES_OK;
-	
-	if (ret == UMAS_ERR_NO_DEVICE)
-		return RES_NOTRDY;
-		
-	if (ret == UMAS_ERR_IO)
-		return RES_ERROR;
-	
-	return (DRESULT) ret;
+    //sysprintf("disk_read - drv:%d, sec:%d, cnt:%d, buff:0x%x\n", pdrv, sector, count, (UINT32)buff);
+
+    if (!((UINT32)buff & 0x80000000))
+    {
+        /* Disk read buffer is not non-cachable buffer. Use my non-cachable to do disk read. */
+        sec_size = 512; // usbh_umas_disk_sector_size(pdrv);
+        if (count * sec_size > _MAX_SS)
+            return RES_ERROR;
+
+        fatfs_win_buff = (BYTE *)((unsigned int)fatfs_win_buff_pool | 0x80000000);
+        ret = (DRESULT) usbh_umas_read(pdrv, sector, count, fatfs_win_buff);
+        memcpy(buff, fatfs_win_buff, count * sec_size);
+    }
+    else
+    {
+        ret = usbh_umas_read(pdrv, sector, count, buff);
+    }
+
+    if (ret == UMAS_OK)
+        return RES_OK;
+
+    if (ret == UMAS_ERR_NO_DEVICE)
+        return RES_NOTRDY;
+
+    if (ret == UMAS_ERR_IO)
+        return RES_ERROR;
+
+    return (DRESULT) ret;
 }
 
 
@@ -122,47 +112,37 @@ DRESULT disk_write (
     UINT count          /* Number of sectors to write (1..128) */
 )
 {
-	int       ret;
-	int       sec_size;
+    int       ret;
+    int       sec_size;
 
-	//sysprintf("disk_write - drv:%d, sec:%d, cnt:%d, buff:0x%x\n", pdrv, sector, count, (UINT32)buff);
-	
-	if (!((UINT32)buff & 0x80000000))
-	{
-		/* Disk write buffer is not non-cachable buffer. Use my non-cachable to do disk write. */
-		sec_size = 512; //usbh_umas_disk_sector_size(pdrv);
-		if (count * sec_size > _MAX_SS)
-			return RES_ERROR;
-			
-		fatfs_win_buff = (BYTE *)((unsigned int)fatfs_win_buff_pool | 0x80000000);
-		memcpy(fatfs_win_buff, buff, count * sec_size);
-		ret = usbh_umas_write(pdrv, sector, count, fatfs_win_buff);
-		if (ret < 0)
-		{
-			usbh_umas_reset_disk(pdrv);
-			ret = usbh_umas_write(pdrv, sector, count, fatfs_win_buff);
-		}
-	}
-	else
-	{
-		ret = usbh_umas_write(pdrv, sector, count, (UINT8 *)buff);
-		if (ret < 0)
-		{
-			usbh_umas_reset_disk(pdrv);
-			ret = usbh_umas_write(pdrv, sector, count, (UINT8 *)buff);
-		}
-	}
+    //sysprintf("disk_write - drv:%d, sec:%d, cnt:%d, buff:0x%x\n", pdrv, sector, count, (UINT32)buff);
 
-	if (ret == UMAS_OK)
-		return RES_OK;
-	
-	if (ret == UMAS_ERR_NO_DEVICE)
-		return RES_NOTRDY;
-		
-	if (ret == UMAS_ERR_IO)
-		return RES_ERROR;
+    if (!((UINT32)buff & 0x80000000))
+    {
+        /* Disk write buffer is not non-cachable buffer. Use my non-cachable to do disk write. */
+        sec_size = 512;  //usbh_umas_disk_sector_size(pdrv);
+        if (count * sec_size > _MAX_SS)
+            return RES_ERROR;
 
-	return (DRESULT) ret;
+        fatfs_win_buff = (BYTE *)((unsigned int)fatfs_win_buff_pool | 0x80000000);
+        memcpy(fatfs_win_buff, buff, count * sec_size);
+        ret = usbh_umas_write(pdrv, sector, count, fatfs_win_buff);
+    }
+    else
+    {
+        ret = usbh_umas_write(pdrv, sector, count, (UINT8 *)buff);
+    }
+
+    if (ret == UMAS_OK)
+        return RES_OK;
+
+    if (ret == UMAS_ERR_NO_DEVICE)
+        return RES_NOTRDY;
+
+    if (ret == UMAS_ERR_IO)
+        return RES_ERROR;
+
+    return (DRESULT) ret;
 }
 
 
@@ -176,20 +156,20 @@ DRESULT disk_ioctl (
     void *buff      /* Buffer to send/receive control data */
 )
 {
-	int  ret;
-	
-	ret = usbh_umas_ioctl(pdrv, cmd, buff);
+    int  ret;
 
-	if (ret == UMAS_OK)
-		return RES_OK;
-	
-	if (ret == UMAS_ERR_IVALID_PARM)
-		return RES_PARERR;
-		
-	if (ret == UMAS_ERR_NO_DEVICE)
-		return RES_NOTRDY;
-		
-	return RES_PARERR;
+    ret = usbh_umas_ioctl(pdrv, cmd, buff);
+
+    if (ret == UMAS_OK)
+        return RES_OK;
+
+    if (ret == UMAS_ERR_IVALID_PARM)
+        return RES_PARERR;
+
+    if (ret == UMAS_ERR_NO_DEVICE)
+        return RES_NOTRDY;
+
+    return RES_PARERR;
 }
 
 

@@ -33,12 +33,21 @@ static unsigned int GFX_HEIGHT;
 static unsigned int GFX_PITCH;
 static unsigned int GFX_SIZE;
 
+#if defined ( __GNUC__ ) && !(__CC_ARM)
+__attribute__((aligned(32))) static void *GFX_START_ADDR;
+__attribute__((aligned(32))) static void *MONO_SOURCE_ADDR;
+__attribute__((aligned(32))) static void *COLOR_SOURCE_ADDR;
+__attribute__((aligned(32))) static void *CMODEL_START_ADDR;
+__attribute__((aligned(32))) static void *GFX_OFFSCREEN_ADDR;
+__attribute__((aligned(32))) static void *GFX_PAT_ADDR;
+#else
 static __align(32) void *GFX_START_ADDR;
 static __align(32) void *MONO_SOURCE_ADDR;
 static __align(32) void *COLOR_SOURCE_ADDR;
 static __align(32) void *CMODEL_START_ADDR;
 static __align(32) void *GFX_OFFSCREEN_ADDR;
 static __align(32) void *GFX_PAT_ADDR;
+#endif
 
 void *Orig_GFX_START_ADDR;
 void *Orig_MONO_SOURCE_ADDR;

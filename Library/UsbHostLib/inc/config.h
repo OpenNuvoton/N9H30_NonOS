@@ -64,7 +64,7 @@
 #define MAX_UDEV_DRIVER        8       /*!< Maximum number of registered drivers                      */
 #define MAX_ALT_PER_IFACE      8       /*!< maximum number of alternative interfaces per interface    */
 #define MAX_EP_PER_IFACE       8       /*!< maximum number of endpoints per interface                 */
-#define MAX_HUB_DEIVCE         8       /*!< Maximum number of hub devices                             */
+#define MAX_HUB_DEVICE         8       /*!< Maximum number of hub devices                             */
 
 /* Host controller hardware transfer descriptors memory pool. ED/TD/ITD of OHCI and QH/QTD of EHCI
    are all allocated from this pool. Allocated unit size is determined by MEM_POOL_UNIT_SIZE.
@@ -86,7 +86,7 @@
 /*----------------------------------------------------------------------------------------*/
 #define ENABLE_ERROR_MSG                    /* enable debug messages                      */
 #define ENABLE_DEBUG_MSG                    /* enable debug messages                      */
-//#define ENABLE_VERBOSE_DEBUG              /* verbos debug messages                      */
+#define ENABLE_VERBOSE_DEBUG              /* verbos debug messages                      */
 //#define DUMP_DESCRIPTOR                   /* dump descriptors                           */
 
 #ifdef ENABLE_ERROR_MSG
@@ -112,9 +112,9 @@
 #define   __IO    volatile             /*!< Defines 'read / write' permissions */
 
 
-typedef unsigned int     uint32_t;
-typedef unsigned short   uint16_t;
-typedef unsigned char    uint8_t;
+//typedef unsigned int     uint32_t;
+//typedef unsigned short   uint16_t;
+//typedef unsigned char    uint8_t;
 
 
 

@@ -152,7 +152,11 @@ sys_pvFunPtr sysFiqHandlerTable[] = { 0,
                                     };
 
 /* Interrupt Handler */
+#if defined ( __GNUC__ ) && !(__CC_ARM)
+static void __attribute__ ((interrupt("IRQ"))) sysIrqHandler(void)
+#else
 __irq void sysIrqHandler()
+#endif
 {
     UINT32 volatile _mIPER, _mISNR;
 
@@ -165,7 +169,11 @@ __irq void sysIrqHandler()
     }
 }
 
+#if defined ( __GNUC__ ) && !(__CC_ARM)
+static void __attribute__ ((interrupt("FIQ"))) sysFiqHandler(void)
+#else
 __irq void sysFiqHandler()
+#endif
 {
     UINT32 volatile _mIPER, _mISNR;
 
@@ -417,27 +425,51 @@ INT32 sysSetInterruptType(IRQn_Type eIntNo, UINT32 uIntSourceType)
  */
 INT32 sysSetLocalInterrupt(INT32 nIntState)
 {
-    INT32 temp;
+#if defined ( __GNUC__ ) && !(__CC_ARM)
 
-    switch (nIntState) {
+# else
+    INT32 temp;
+#endif
+
+   switch (nIntState)
+   {
         case ENABLE_IRQ:
         case ENABLE_FIQ:
         case ENABLE_FIQ_IRQ:
-            __asm {
+#if defined ( __GNUC__ ) && !(__CC_ARM)
+        asm
+        (
+            "mrs    r0, CPSR  \n"
+            "bic    r0, r0, #0x80  \n"
+            "msr    CPSR_c, r0  \n"
+        );
+#else
+           __asm
+           {
                 MRS    temp, CPSR
                 AND    temp, temp, nIntState
                 MSR    CPSR_c, temp
             }
+#endif
             break;
-
         case DISABLE_IRQ:
         case DISABLE_FIQ:
         case DISABLE_FIQ_IRQ:
-            __asm {
+#if defined ( __GNUC__ ) && !(__CC_ARM)
+        asm
+        (
+            "MRS    r0, CPSR  \n"
+            "ORR    r0, r0, #0x80  \n"
+            "MSR    CPSR_c, r0  \n"
+        );
+#else
+           __asm
+           {
                 MRS    temp, CPSR
                 ORR    temp, temp, nIntState
                 MSR    CPSR_c, temp
             }
+#endif
             break;
 
         default:
@@ -462,9 +494,18 @@ BOOL sysGetIBitState()
 {
     INT32 temp;
 
-    __asm {
+#if defined ( __GNUC__ ) && !(__CC_ARM)
+    asm
+    (
+        "MRS %0, CPSR   \n"
+        :"=r" (temp) : :
+    );
+#else
+    __asm
+    {
         MRS temp, CPSR
     }
+#endif
 
     if (temp & 0x80)
         return FALSE;

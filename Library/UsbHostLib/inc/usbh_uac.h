@@ -15,7 +15,7 @@
 
 #include "usb.h"
 #include "usbh_lib.h"
-#include "..\src_uac\uac.h"
+#include "../src_uac/uac.h"
 
 /** @addtogroup N9H30_Library N9H30 Library
   @{

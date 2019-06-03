@@ -28,7 +28,7 @@ uint16_t gCtrlSignal = 0;     /* BIT0: DTR(Data Terminal Ready) , BIT1: RTS(Requ
 #pragma data_alignment=4
 uint8_t gUsbRxBuf[64] = {0};
 #else
-__align(4) uint8_t gUsbRxBuf[64] = {0};
+uint8_t gUsbRxBuf[64] __attribute__((aligned(4))) = {0};
 #endif
 
 uint32_t gu32RxSize = 0;
@@ -78,12 +78,12 @@ int32_t main (void)
     sysInstallISR(HIGH_LEVEL_SENSITIVE|IRQ_LEVEL_1, USBD_IRQn, (PVOID)USBD_IRQHandler);
     /* enable CPSR I bit */
     sysSetLocalInterrupt(ENABLE_IRQ);
-	sysEnableInterrupt(USBD_IRQn);
 
     USBD_Open(&gsInfo, VCOM_ClassRequest, NULL);
 
     /* Endpoint configuration */
     VCOM_Init();
+	sysEnableInterrupt(USBD_IRQn);
 
     /* Start transaction */
     while(1) {

@@ -1,7 +1,7 @@
 /**************************************************************************//**
  * @file     main.c
- * @version  V4.0
- * $Date: 19/01/16 06:00p $
+ * @version  V5.1
+ * $Date: 19/05/22 06:00p $
  * @brief    To utilize emWin library to demonstrate  widgets feature.
  *
  * @note
@@ -24,13 +24,13 @@
 #include "lcd.h"
 
 #include "TouchPanel.h"
-#include "gui.h"
-#include "wm.h"
+#include "GUI.h"
+#include "WM.h"
 #include "LCD_Protected.h"
-#include "LCDconf.h"
+#include "LCDConf.h"
 #if GUI_WINSUPPORT
-#include "wm.h"
-#include "text.h"
+#include "WM.h"
+#include "TEXT.h"
 #endif
 
 #ifdef __USE_SD__
@@ -46,7 +46,13 @@ extern void TouchTask(void);
 #ifdef __USE_SD__
 FATFS FatFs[_VOLUMES];      /* File system object for logical drive */
 
-__align(32) BYTE Buff[1024] ;       /* Working buffer */
+/* Working buffer */
+#ifdef __ICCARM__
+#pragma data_alignment = 32
+BYTE Buff[1024];
+#else
+BYTE Buff[1024] __attribute__((aligned(32)));
+#endif
 
 FIL hFile;
 #else
@@ -335,7 +341,7 @@ int main(void)
     sysSetTimerReferenceClock(TIMER0, 12000000);
     sysStartTimer(TIMER0, 1000, PERIODIC_MODE);         /* 1000 ticks/per sec ==> 1tick/1ms */
     sysSetTimerEvent(TIMER0,  1, (PVOID)TMR0_IRQHandler);           /*  1 tick  per call back */
-    sysSetTimerEvent(TIMER0, 10, (PVOID)TMR0_IRQHandler_TouchTask); /* 10 ticks per call back */
+    sysSetTimerEvent(TIMER0, 20, (PVOID)TMR0_IRQHandler_TouchTask); /* 20 ticks per call back */
 
 #ifdef __USE_SD__
     sysInstallISR(HIGH_LEVEL_SENSITIVE|IRQ_LEVEL_1, SDH_IRQn, (PVOID)SDH_IRQHandler);

@@ -12,18 +12,18 @@
 /* Keyboard Modifiers */
 enum kbd_mod
 {
-	LeftCtrl   = 0x01,
-	LeftShift  = 0x02,
-	Alt        = 0x04,
-	LeftCmd    = 0x08,
-	RightCtrl  = 0x10,
-	RightShift = 0x20,
-	AltGr      = 0x40,
-	RightCmd   = 0x80
+    LeftCtrl   = 0x01,
+    LeftShift  = 0x02,
+    Alt        = 0x04,
+    LeftCmd    = 0x08,
+    RightCtrl  = 0x10,
+    RightShift = 0x20,
+    AltGr      = 0x40,
+    RightCmd   = 0x80
 };
 
 
-#define LED_NumLock		  0x01
+#define LED_NumLock       0x01
 #define LED_CapsLoock     0x02
 #define LED_ScrollLock    0x04
 
@@ -41,8 +41,8 @@ enum kbd_mod
 
 struct hid_kbd_dev
 {
-	uint8_t    pre_data[8];     /* previous received report */
-	uint8_t    bLED;
+    uint8_t    pre_data[8];     /* previous received report */
+    uint8_t    bLED;
 };
 
 

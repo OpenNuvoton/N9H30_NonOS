@@ -55,7 +55,7 @@ int Init_TouchPanel(void)
     return 1;
 }
 
-int z_th = 10;
+int z_th = 1;
 int old_x, old_y;
 int Read_TouchPanel(int *x, int *y)
 {
@@ -134,6 +134,7 @@ void TouchTask(void) {
   U8  Pressed;
 
 //  do {
+    Read_TouchPanel(&sumx, &sumy);
     Pressed = pendown_complete; // TBD: Insert function which returns:
               //      1, if the touch screen is pressed
               //      0, if the touch screen is released
@@ -141,7 +142,6 @@ void TouchTask(void) {
     // Touch screen is pressed
     //
     if (Pressed) {
-        Read_TouchPanel(&sumx, &sumy);
         ts_phy2log(&sumx, &sumy);
       x = sumx; // TBD: Insert function which reads current x value
       y = sumy; // TBD: Insert function which reads current y value

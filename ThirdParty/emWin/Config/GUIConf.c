@@ -52,7 +52,11 @@ Purpose     : Display controller initialization
 //
 // Define the available number of bytes available for the GUI
 //
+#ifdef __GUI_NUMBYTES__
+#define GUI_NUMBYTES  (1024 * 1024 * __GUI_NUMBYTES__)
+#else
 #define GUI_NUMBYTES  (1024 * 1024 * 12)
+#endif
 
 /*********************************************************************
 *

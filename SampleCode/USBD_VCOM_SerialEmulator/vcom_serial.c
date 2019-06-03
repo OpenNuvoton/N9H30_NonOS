@@ -70,7 +70,7 @@ void USBD_IRQHandler(void)
 
             if (USBD->DMACTL & USBD_DMACTL_DMARD_Msk) {
                 if (g_usbd_ShortPacket == 1) {
-                    USBD->EP[EPA].EPRSPCTL = USBD->EP[EPA].EPRSPCTL & 0x10 | USB_EP_RSPCTL_SHORTTXEN;    // packet end
+                    USBD->EP[EPA].EPRSPCTL = (USBD->EP[EPA].EPRSPCTL & 0x10) | USB_EP_RSPCTL_SHORTTXEN;    // packet end
                     g_usbd_ShortPacket = 0;
                 }
             }

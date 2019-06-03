@@ -7,7 +7,7 @@
 #include <stdio.h>
 #include "N9H30.h"
 #include "sys.h"
-#include "RTC.h"
+#include "rtc.h"
 
 /*---------------------------------------------------------------------------------------------------------*/
 /* Global variables                                                                                        */

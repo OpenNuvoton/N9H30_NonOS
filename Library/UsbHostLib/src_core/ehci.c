@@ -27,12 +27,7 @@ extern ISO_EP_T  *iso_ep_list;              /* list of activated isochronous pip
 extern int ehci_iso_xfer(UTR_T *utr);       /* EHCI isochronous transfer function         */
 extern int ehci_quit_iso_xfer(UTR_T *utr, EP_INFO_T *ep);
 
-#ifdef __ICCARM__
-#pragma data_alignment=4096
-uint32_t  _PFList_mem[FL_SIZE];             /* Periodic frame list (IAR)                  */
-#else
-__align(4096) uint32_t _PFList_mem[FL_SIZE];/* Periodic frame list (Keil)                 */
-#endif
+uint32_t _PFList_mem[FL_SIZE] __attribute__((aligned(4096)));/* Periodic frame list (Keil)                 */
 
 uint32_t  *_PFList;
 
@@ -97,7 +92,7 @@ void dump_ehci_asynclist(void)
         USB_debug("\n");
 
         qtd = QTD_PTR(qh->Curr_qTD);
-        while ((uint32_t)qtd != NULL)
+        while (qtd != NULL)
         {
             dump_ehci_qtd(qtd);
             qtd = QTD_PTR(qtd->Next_qTD);
@@ -222,9 +217,16 @@ static QH_T * get_int_tree_head_node(int interval)
     return _Iqh[NUM_IQH-1];
 }
 
-static int  make_int_s_mask(int interval)
+static int  make_int_s_mask(int bInterval)
 {
-    int   order;
+    int   order, interval;
+
+    interval = 1;
+    while (bInterval > 1)
+    {
+        interval *= 2;
+        bInterval--;
+    }
 
     if (interval < 2)
         return 0xFF;                        /* interval 1                                 */
