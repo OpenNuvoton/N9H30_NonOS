@@ -1416,6 +1416,103 @@ void ge2dLine_DrawSolidLine(int x1, int y1, int x2, int y2, int color)
 }
 
 /**
+  * @brief Draw an solid rectangle line with assigned RGB565 color
+  * @param[in] x1 is top-left x position
+  * @param[in] y1 is top-left y position
+  * @param[in] x2 is down-right x position
+  * @param[in] y2 is down-right y position
+  * @param[in] color is color of this line
+  * @return none
+  */
+void ge2dLine_DrawSolidLine_RGB565(int x1, int y1, int x2, int y2, int color)
+{
+    int abs_X, abs_Y, min, max;
+    UINT32 step_constant, initial_error, direction_code;
+    UINT32 cmd32, dest_pitch, dest_start;
+
+#ifdef DEBUG
+    sysprintf("draw_solid_line():\n");
+    sysprintf("(%d,%d)-(%d,%d)\n", x1, y1, x2, y2);
+    sysprintf("color=0x%x\n", color);
+#endif
+
+    abs_X = ABS(x2-x1);   //absolute value
+    abs_Y = ABS(y2-y1);   //absolute value
+    if (abs_X > abs_Y) {  // X major
+        max = abs_X;
+        min = abs_Y;
+
+        step_constant = (((UINT32)(2*(min-max))) << 16) | (UINT32)(2*min);
+        initial_error = (((UINT32)(2*(min)-max)) << 16) | (UINT32)(max);
+
+        if (x2 > x1) { // +X direction
+            if (y2 > y1) // +Y direction
+                direction_code = XpYpXl;
+            else // -Y direction
+                direction_code = XpYmXl;
+        } else { // -X direction
+            if (y2 > y1) // +Y direction
+                direction_code = XmYpXl;
+            else // -Y direction
+                direction_code = XmYmXl;
+        }
+    } else { // Y major
+        max = abs_Y;
+        min = abs_X;
+
+        step_constant = (((UINT32)(2*(min-max))) << 16) | (UINT32)(2*min);
+        initial_error = (((UINT32)(2*(min)-max)) << 16) | (UINT32)(max);
+
+        if (x2 > x1) { // +X direction
+            if (y2 > y1) // +Y direction
+                direction_code = XpYpYl;
+            else // -Y direction
+                direction_code = XpYmYl;
+        } else { // -X direction
+            if (y2 > y1) // +Y direction
+                direction_code = XmYpYl;
+            else // -Y direction
+                direction_code = XmYmYl;
+        }
+    }
+
+    outpw(REG_GE2D_BETSC, step_constant);
+    outpw(REG_GE2D_BIEPC, initial_error);
+
+    cmd32 = 0x008b0000 | direction_code;
+
+    outpw(REG_GE2D_CTL, cmd32);
+
+    outpw(REG_GE2D_BGCOLR, color);
+    outpw(REG_GE2D_FGCOLR, color);
+
+    dest_pitch = GFX_WIDTH << 16; // pitch in pixel
+    outpw(REG_GE2D_SDPITCH, dest_pitch);
+
+    outpw(REG_GE2D_XYDORG, (int)GFX_START_ADDR);
+
+    dest_start = y1 << 16 | x1;
+    outpw(REG_GE2D_DSTSPA, dest_start);
+
+    if (_ClipEnable) {
+        cmd32 |= 0x00000200;
+        if (_OutsideClip) {
+            cmd32 |= 0x00000100;
+        }
+        outpw(REG_GE2D_CTL, cmd32);
+        outpw(REG_GE2D_CLPBTL, _ClipTL);
+        outpw(REG_GE2D_CLPBBR, _ClipBR);
+    }
+
+    outpw(REG_GE2D_TRG, 1);
+
+    while ((inpw(REG_GE2D_INTSTS)&0x01)==0); // wait for command complete
+
+    outpw(REG_GE2D_INTSTS, 1); // clear interrupt status
+}
+
+
+/**
   * @brief Draw a styled line.
   * @param[in] x1 is top-left x position
   * @param[in] y1 is top-left y position
@@ -1571,7 +1668,7 @@ void ge2dFill_Solid(int dx, int dy, int width, int height, int color)
 }
 
 /**
-  * @brief Rectangle solid color fill with RGB565 foreground color.
+  * @brief Rectangle solid color fill with RGB565 color.
   * @param[in] dx x position
   * @param[in] dy y position
   * @param[in] width is display width
