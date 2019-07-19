@@ -32,7 +32,6 @@ static unsigned int GFX_WIDTH;
 static unsigned int GFX_HEIGHT;
 static unsigned int GFX_PITCH;
 static unsigned int GFX_SIZE;
-
 #if defined ( __GNUC__ ) && !(__CC_ARM)
 __attribute__((aligned(32))) static void *GFX_START_ADDR;
 __attribute__((aligned(32))) static void *MONO_SOURCE_ADDR;
@@ -85,8 +84,8 @@ static MONOPATTERN MonoPatternData[6] = {
 };
 
 static char _DrawMode = MODE_OPAQUE;
-static UINT32 _ColorKey;
-static UINT32 _ColorKeyMask;
+static UINT32 _ColorKey = COLOR_KEY;
+static UINT32 _ColorKeyMask = 0xFFFFFF;
 
 static BOOL _EnableAlpha = FALSE;
 static int _AlphaKs, _AlphaKd;
@@ -732,6 +731,11 @@ void ge2dInit(int bpp, int width, int height, void *destination)
     GFX_PITCH = (GFX_WIDTH*(GFX_BPP/8));
     GFX_SIZE = (GFX_HEIGHT*GFX_PITCH);
 
+    _DrawMode = MODE_OPAQUE;
+    _ColorKey = COLOR_KEY;
+    _ColorKeyMask = 0xFFFFFF;
+
+
     if(destination == NULL)
         return;
 
@@ -796,6 +800,7 @@ void ge2dReset(void)
     outpw(REG_GE2D_MISCTL, 0x00);
 
 }
+
 
 /**
   * @brief Reset FIFO of graphics engine.
@@ -2468,14 +2473,19 @@ void ge2dSpriteBlt_Screen(int destx, int desty, int sprite_width, int sprite_hei
         outpw(REG_GE2D_CLPBBR, _ClipBR);
     }
 
-    //
-    // default source color transparent is ON
-    //
 
-    cmd32 |= 0x00008000; // color transparency
-    outpw(REG_GE2D_CTL, cmd32);
-    outpw(REG_GE2D_TRNSCOLR, make_color(COLOR_KEY));
-    outpw(REG_GE2D_TCMSK, 0xffffff);
+    if (_DrawMode==MODE_TRANSPARENT) {
+        cmd32 |= 0x00008000; // color transparency
+        outpw(REG_GE2D_CTL, cmd32);
+        outpw(REG_GE2D_TRNSCOLR, _ColorKey);
+        outpw(REG_GE2D_TCMSK, _ColorKeyMask);
+    } else if (_DrawMode==MODE_DEST_TRANSPARENT) {
+        cmd32 |= 0x00009000;   // destination pixels control transparency
+        outpw(REG_GE2D_CTL, cmd32);
+        outpw(REG_GE2D_TRNSCOLR, _ColorKey);
+        outpw(REG_GE2D_TCMSK, _ColorKeyMask);
+    }
+
 
     if (_EnableAlpha) {
         cmd32 |= 0x00200000;
@@ -2549,13 +2559,17 @@ void ge2dSpriteBltx_Screen(int x, int y, int sprite_sx, int sprite_sy, int width
         outpw(REG_GE2D_CLPBBR, _ClipBR);
     }
 
-    //
-    // default source color transparent is ON
-    //
-    cmd32 |= 0x00008000; // color transparency
-    outpw(REG_GE2D_CTL, cmd32);
-    outpw(REG_GE2D_TRNSCOLR, make_color(COLOR_KEY));
-    outpw(REG_GE2D_TCMSK, 0xffffff);
+    if (_DrawMode==MODE_TRANSPARENT) {
+        cmd32 |= 0x00008000; // color transparency
+        outpw(REG_GE2D_CTL, cmd32);
+        outpw(REG_GE2D_TRNSCOLR, _ColorKey);
+        outpw(REG_GE2D_TCMSK, _ColorKeyMask);
+    } else if (_DrawMode==MODE_DEST_TRANSPARENT) {
+        cmd32 |= 0x00009000;   // destination pixels control transparency
+        outpw(REG_GE2D_CTL, cmd32);
+        outpw(REG_GE2D_TRNSCOLR, _ColorKey);
+        outpw(REG_GE2D_TCMSK, _ColorKeyMask);
+    }
 
     if (_EnableAlpha) {
         cmd32 |= 0x00200000;
@@ -2628,13 +2642,17 @@ void ge2dSpriteBlt_ScreenRop(int x, int y, int sprite_width, int sprite_height, 
         outpw(REG_GE2D_CLPBBR, _ClipBR);
     }
 
-    //
-    // default source color transparent is ON
-    //
-    cmd32 |= 0x00008000; // color transparency
-    outpw(REG_GE2D_CTL, cmd32);
-    outpw(REG_GE2D_TRNSCOLR, make_color(COLOR_KEY));
-    outpw(REG_GE2D_TCMSK, 0xffffff);
+    if (_DrawMode==MODE_TRANSPARENT) {
+        cmd32 |= 0x00008000; // color transparency
+        outpw(REG_GE2D_CTL, cmd32);
+        outpw(REG_GE2D_TRNSCOLR, _ColorKey);
+        outpw(REG_GE2D_TCMSK, _ColorKeyMask);
+    } else if (_DrawMode==MODE_DEST_TRANSPARENT) {
+        cmd32 |= 0x00009000;   // destination pixels control transparency
+        outpw(REG_GE2D_CTL, cmd32);
+        outpw(REG_GE2D_TRNSCOLR, _ColorKey);
+        outpw(REG_GE2D_TCMSK, _ColorKeyMask);
+    }
 
     if (_EnableAlpha) {
         cmd32 |= 0x00200000;
@@ -2716,13 +2734,17 @@ void ge2dSpriteBltx_ScreenRop(int x, int y, int sprite_sx, int sprite_sy, int wi
         outpw(REG_GE2D_CLPBBR, _ClipBR);
     }
 
-    //
-    // default source color transparent is ON
-    //
-    cmd32 |= 0x00008000; // color transparency
-    outpw(REG_GE2D_CTL, cmd32);
-    outpw(REG_GE2D_TRNSCOLR, make_color(COLOR_KEY));
-    outpw(REG_GE2D_TCMSK, 0xffffff);
+    if (_DrawMode==MODE_TRANSPARENT) {
+        cmd32 |= 0x00008000; // color transparency
+        outpw(REG_GE2D_CTL, cmd32);
+        outpw(REG_GE2D_TRNSCOLR, _ColorKey);
+        outpw(REG_GE2D_TCMSK, _ColorKeyMask);
+    } else if (_DrawMode==MODE_DEST_TRANSPARENT) {
+        cmd32 |= 0x00009000;   // destination pixels control transparency
+        outpw(REG_GE2D_CTL, cmd32);
+        outpw(REG_GE2D_TRNSCOLR, _ColorKey);
+        outpw(REG_GE2D_TCMSK, _ColorKeyMask);
+    }
 
     if (_EnableAlpha) {
         cmd32 |= 0x00200000;
