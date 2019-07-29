@@ -365,9 +365,9 @@ static INT pwmInitGPIO(const INT nTimerIdentity, const INT nValue)
             temp = (temp & ~0x0F000000) | 0xD000000;
             outpw(REG_SYS_GPA_MFPH, temp);
         } else if(nValue == PWM2_GPH2) {
-            temp = inpw(REG_SYS_GPB_MFPL);
+            temp = inpw(REG_SYS_GPH_MFPL);
             temp = (temp & ~0xF00) | 0xD00;
-            outpw(REG_SYS_GPB_MFPL, temp);
+            outpw(REG_SYS_GPH_MFPL, temp);
         } else
             return pwmInvalidPin;
     } else {
