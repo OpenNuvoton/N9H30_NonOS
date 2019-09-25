@@ -51,8 +51,9 @@ int32_t main (void)
         }
     }
 
-    while(1) {
-        if (g_u8MscStart)
+    while(1)
+    {
+        if (g_usbd_Configured)
             MSC_ProcessCmd();
     }
 }
