@@ -1,7 +1,7 @@
 /**************************************************************************//**
  * @file     main.c
- * @version  V5.1
- * $Date: 19/05/22 06:00p $
+ * @version  V5.2
+ * $Date: 19/11/19 06:00p $
  * @brief    To utilize emWin library to demonstrate interactive feature.
  *
  * @note
@@ -345,7 +345,7 @@ int main(void)
     sysEnableCache(CACHE_WRITE_BACK);
     sysInitializeUART();
 
-#ifdef GUI_SUPPORT_TOUCH
+#if GUI_SUPPORT_TOUCH
     g_enable_Touch = 0;
 #endif
 
@@ -370,7 +370,7 @@ int main(void)
     sysprintf("+-------------------------------------------------+\n\n");
     LCD_initial();
 
-#ifdef GUI_SUPPORT_TOUCH
+#if GUI_SUPPORT_TOUCH
     Init_TouchPanel();
 
 #ifdef __USE_SD__
