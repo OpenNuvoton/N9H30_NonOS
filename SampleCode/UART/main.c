@@ -105,14 +105,14 @@ void uartExample (void)
 		uartprintf("Set RX interrupt mode fail!\n");
 		return;	
 	}
-	
+#if 0   // Set 1 to enable hardware flow control (CTS/RTS)
 	retval = uartIoctl(param.ucUartNo, UART_IOC_ENABLEHWFLOWCONTROL, 0, 0);
 	if (retval != 0) 
 	{
 		uartprintf("Set H/W flow control fail!\n");
 		return;	
 	}
-	
+#endif
 	while(1)
 	{
 		uartprintf("\n Select TX/RX test [0/1]\n");
