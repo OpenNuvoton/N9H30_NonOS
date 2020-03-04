@@ -161,7 +161,7 @@ typedef struct {
     UINT32  width;          /*!< Image Width */
     UINT32  height;         /*!< Image High */
     UINT32  jpeg_width;     /*!< JPEG decode width*/
-    UINT32  jpeg_height;    /*!< JPEG devode high*/
+    UINT32  jpeg_height;    /*!< JPEG decode high*/
     UINT32  stride;         /*!< Stride for decode*/
     /*encode information*/
     UINT32  bufferend;     /*!< Encode buffer */
