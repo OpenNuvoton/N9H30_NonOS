@@ -1,11 +1,11 @@
 /**************************************************************************//**
  * @file     main.c
  * @version  V5.2
- * $Date: 19/11/19 06:00p $
+ * $Date: 20/05/15 06:00p $
  * @brief    To utilize emWin library to demonstrate interactive feature.
  *
  * @note
- * Copyright (C) 2019 Nuvoton Technology Corp. All rights reserved.
+ * Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
  ******************************************************************************/
 #include <stdio.h>
 #include <string.h>
@@ -313,15 +313,13 @@ void SYS_Init(void)
 }
 
 WM_HWIN CreateFramewin(void);
+
 void MainTask(void)
 {
-    WM_HWIN hWin;
-    char     acVersion[40] = "Framewin: Version of emWin: ";
+    GUI_Init();
 
-    //GUI_Init();
-    hWin = CreateFramewin();
-    strcat(acVersion, GUI_GetVersionString());
-    FRAMEWIN_SetText(hWin, acVersion);
+    CreateFramewin();
+
     while (1)
     {
         GUI_Delay(500);

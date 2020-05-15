@@ -44,7 +44,7 @@ union multiptr
 //static int fb_fd=0;
 static int bytes_per_pixel=2;
 static unsigned colormap [13];
-static unsigned colormap2[13];
+//static unsigned colormap2[13];
 unsigned int xres=__DEMO_TS_WIDTH__, yres=__DEMO_TS_HEIGHT__;
 
 int red_length = 5;
@@ -113,7 +113,7 @@ void put_string_center(int x, int y, char *s, unsigned colidx)
 void setcolor(unsigned colidx, unsigned value)
 {
     unsigned res;
-    //unsigned short red, green, blue;
+    unsigned short red, green, blue;
 //  struct fb_cmap cmap;
 
 #ifdef DEBUG
@@ -143,24 +143,18 @@ void setcolor(unsigned colidx, unsigned value)
 #endif
         break;
     case 2:
-#if 0
         red = (value >> 16) & 0xff;
         green = (value >> 8) & 0xff;
         blue = value & 0xff;
         res = ((red >> (8 - red_length)) << red_offset) |
               ((green >> (8 - green_length)) << green_offset) |
               ((blue >> (8 - blue_length)) << blue_offset);
-#endif
+        break;
     case 4:
         res = value;
+        break;
     }
-    colormap [colidx] = value;
-    GUI_SetColor(value);
-    GUI_DrawPixel(0, 0);
-    res = GUI_GetPixelIndex(0, 0);
-    colormap2[colidx] = res;
-    GUI_SetColor(0x00);
-    GUI_DrawPixel(0, 0);
+    colormap [colidx] = res;
 }
 #if 0
 static void __setpixel (union multiptr loc, unsigned xormode, unsigned color)
@@ -189,10 +183,38 @@ static void __setpixel (union multiptr loc, unsigned xormode, unsigned color)
     }
 }
 #endif
+static void __setpixel2 (unsigned color1, unsigned xormode, unsigned color)
+{
+    switch(bytes_per_pixel)
+    {
+//    case 1:
+//    default:
+//        if (xormode)
+//            *loc.p8 ^= color;
+//        else
+//            *loc.p8 = color;
+//        break;
+    case 2:
+    case 4:
+        if (xormode)
+            color1 ^= color;
+        else
+            color1 = color;
+        break;
+//    case 4:
+//        if (xormode)
+//            *loc.p32 ^= color;
+//        else
+//            *loc.p32 = color;
+//        break;
+    }
+    GUI_SetColorIndex(color1);
+}
+
 void pixel (int x, int y, unsigned colidx)
 {
     unsigned xormode;
-    unsigned color, color2;
+//    unsigned color, color2;
     //union multiptr loc;
 
     if ((x < 0) || (x >= __DEMO_TS_WIDTH__) ||
@@ -213,39 +235,7 @@ void pixel (int x, int y, unsigned colidx)
 
 //  loc.p8 = line_addr [y] + x * bytes_per_pixel;
 //  line_addr = (unsigned char *)g_VAFrameBuf+ y*(LCD_XSIZE*bytes_per_pixel);
-    color = GUI_GetPixelIndex(x, y);
-    if ( color == colormap2[0] )
-        color = colormap[0];
-    else if ( color == colormap2[1] )
-        color = colormap[1];
-    else if ( color == colormap2[2] )
-        color = colormap[2];
-    else if ( color == colormap2[3] )
-        color = colormap[3];
-    else if ( color == colormap2[4] )
-        color = colormap[4];
-    else if ( color == colormap2[5] )
-        color = colormap[5];
-    else if ( color == colormap2[6] )
-        color = colormap[6];
-    else if ( color == colormap2[7] )
-        color = colormap[7];
-    else if ( color == colormap2[8] )
-        color = colormap[8];
-    else if ( color == colormap2[9] )
-        color = colormap[9];
-    else if ( color == colormap2[10] )
-        color = colormap[10];
-    else if ( color == colormap2[11] )
-        color = colormap[11];
-    else if ( color == colormap2[12] )
-        color = colormap[12];
-    color2 = colormap [colidx];
-    if (xormode)
-        color ^= color2;
-    else
-        color = color2;
-    GUI_SetColor(color);
+    __setpixel2(GUI_GetPixelIndex(x, y), xormode, colormap [colidx]);
     GUI_DrawPixel(x, y);
 
 
@@ -318,7 +308,7 @@ void fillrect (int x1, int y1, int x2, int y2, unsigned colidx)
 {
     int tmp;
     unsigned xormode;
-    unsigned color, color2;
+//    unsigned color, color2;
     //union multiptr loc;
 
     /* Clipping and sanity checking */
@@ -358,7 +348,7 @@ void fillrect (int x1, int y1, int x2, int y2, unsigned colidx)
     }
 #endif
 
-    color2 = colormap [colidx];
+//    colidx = colormap [colidx];
 
     for (; y1 <= y2; y1++)
     {
@@ -369,39 +359,7 @@ void fillrect (int x1, int y1, int x2, int y2, unsigned colidx)
         {
             //__setpixel (loc, xormode, colidx);
             //loc.p8 += bytes_per_pixel;
-            color = GUI_GetPixelIndex(tmp, y1);
-            if ( color == colormap2[0] )
-                color = colormap[0];
-            else if ( color == colormap2[1] )
-                color = colormap[1];
-            else if ( color == colormap2[2] )
-                color = colormap[2];
-            else if ( color == colormap2[3] )
-                color = colormap[3];
-            else if ( color == colormap2[4] )
-                color = colormap[4];
-            else if ( color == colormap2[5] )
-                color = colormap[5];
-            else if ( color == colormap2[6] )
-                color = colormap[6];
-            else if ( color == colormap2[7] )
-                color = colormap[7];
-            else if ( color == colormap2[8] )
-                color = colormap[8];
-            else if ( color == colormap2[9] )
-                color = colormap[9];
-            else if ( color == colormap2[10] )
-                color = colormap[10];
-            else if ( color == colormap2[11] )
-                color = colormap[11];
-            else if ( color == colormap2[12] )
-                color = colormap[12];
-            color2 = colormap [colidx];
-            if (xormode)
-                color ^= color2;
-            else
-                color = color2;
-            GUI_SetColor(color);
+            __setpixel2(GUI_GetPixelIndex(tmp, y1), xormode, colormap [colidx]);
             GUI_DrawPixel(tmp, y1);
         }
     }
