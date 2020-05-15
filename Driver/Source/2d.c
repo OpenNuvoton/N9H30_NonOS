@@ -731,7 +731,7 @@ void ge2dInit(int bpp, int width, int height, void *destination)
     GFX_PITCH = (GFX_WIDTH*(GFX_BPP/8));
     GFX_SIZE = (GFX_HEIGHT*GFX_PITCH);
 
-    _DrawMode = MODE_OPAQUE;
+    _DrawMode = MODE_TRANSPARENT;
     _ColorKey = COLOR_KEY;
     _ColorKeyMask = 0xFFFFFF;
 
