@@ -414,8 +414,13 @@ void  uvc_parse_streaming_data(UVC_DEV_T *vdev, uint8_t *buff, int pkt_len)
             return;
         }
 
-        if (data_len == 0)
+        if ((buff[1] & UVC_PL_RES) && (buff[1] & UVC_PL_PTS))
+        {
+            if (vdev->func_rx && (vdev->img_size > 0))
+                vdev->func_rx(vdev, vdev->img_buff, vdev->img_size);
+            vdev->img_size = 0;
             return;
+        }
 
         if (vdev->img_size + data_len > vdev->img_buff_size)
         {
@@ -424,8 +429,11 @@ void  uvc_parse_streaming_data(UVC_DEV_T *vdev, uint8_t *buff, int pkt_len)
             return;
         }
 
-        memcpy(vdev->img_buff + vdev->img_size, buff+buff[0], data_len);
-        vdev->img_size += data_len;
+        if (data_len > 0)
+        {
+            memcpy(vdev->img_buff + vdev->img_size, buff+buff[0], data_len);
+            vdev->img_size += data_len;
+        }
 
         if (buff[1] & UVC_PL_EOF)
         {
