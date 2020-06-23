@@ -9,359 +9,240 @@
  * file COPYING for details.
  *
  */
+/*
+  2020/06/22, add the APIs function sort_by_x(), sort_by_y(), and getxy() 
+              from the file testutils.c.
+	      add the APIs function perform_calibration() and get_sample() 
+              from the file ts_calibrate.c.
+*/
 
-//#include "config.h"
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-//#include <unistd.h>
-//#include <sys/fcntl.h>
-//#include <sys/ioctl.h>
-//#include <sys/mman.h>
-//#include <sys/time.h>
+#include "stdlib.h"
 #include "fbutils.h"
-#include "N9H30.h"
-#include "lcd.h"
 #include "GUI.h"
-#include "TouchPanel.h"
 
-//#define LCD_XSIZE     320
-//#define LCD_YSIZE     240
+int ts_Read_TouchPanel(int *x, int *y);
 
-//#define LCD_XSIZE     800
-//#define LCD_YSIZE     480
-#if 0
-union multiptr
+
+void put_cross(int x, int y)
 {
-    unsigned char *p8;
-    unsigned short *p16;
-    unsigned long *p32;
-};
-#endif
-//static int con_fd, fb_fd, last_vt = -1;
-//static unsigned char *line_addr;
-//static int fb_fd=0;
-static int bytes_per_pixel=2;
-static unsigned colormap [13];
-//static unsigned colormap2[13];
-unsigned int xres=__DEMO_TS_WIDTH__, yres=__DEMO_TS_HEIGHT__;
+    GUI_DrawLine(x - 10, y, x - 2, y);
+    GUI_DrawLine(x + 2, y, x + 10, y); 
+    GUI_DrawLine(x, y - 10, x, y - 2); 
+    GUI_DrawLine(x, y + 2, x, y + 10); 
+    GUI_DrawLine(x - 6, y - 9, x - 9, y - 9); 
+    GUI_DrawLine(x - 9, y - 8, x - 9, y - 6); 
+    GUI_DrawLine(x - 9, y + 6, x - 9, y + 9); 
+    GUI_DrawLine(x - 8, y + 9, x - 6, y + 9); 
+    GUI_DrawLine(x + 6, y + 9, x + 9, y + 9); 
+    GUI_DrawLine(x + 9, y + 8, x + 9, y + 6); 
+    GUI_DrawLine(x + 9, y - 6, x + 9, y - 9); 
+    GUI_DrawLine(x + 8, y - 9, x + 6, y - 9); 
 
-int red_length = 5;
-int green_length = 6;
-int blue_length = 5;
-
-int red_offset = 11;
-int green_offset = 5;
-int blue_offset = 0;
-
-//extern void * g_VAFrameBuf;
-
-void line(int x1, int y1, int x2, int y2, unsigned colidx);
-
-void put_cross(int x, int y, unsigned colidx)
-{
-    line (x - 10, y, x - 2, y, colidx);
-    line (x + 2, y, x + 10, y, colidx);
-    line (x, y - 10, x, y - 2, colidx);
-    line (x, y + 2, x, y + 10, colidx);
-
-#if 1
-    line (x - 6, y - 9, x - 9, y - 9, colidx + 1);
-    line (x - 9, y - 8, x - 9, y - 6, colidx + 1);
-    line (x - 9, y + 6, x - 9, y + 9, colidx + 1);
-    line (x - 8, y + 9, x - 6, y + 9, colidx + 1);
-    line (x + 6, y + 9, x + 9, y + 9, colidx + 1);
-    line (x + 9, y + 8, x + 9, y + 6, colidx + 1);
-    line (x + 9, y - 6, x + 9, y - 9, colidx + 1);
-    line (x + 8, y - 9, x + 6, y - 9, colidx + 1);
-#else
-    line (x - 7, y - 7, x - 4, y - 4, colidx + 1);
-    line (x - 7, y + 7, x - 4, y + 4, colidx + 1);
-    line (x + 4, y - 4, x + 7, y - 7, colidx + 1);
-    line (x + 4, y + 4, x + 7, y + 7, colidx + 1);
-#endif
 }
-#if 0
-void put_char(int x, int y, int c, int colidx)
-{
-    int i,j,bits;
 
-    for (i = 0; i < font_vga_8x8.height; i++)
+
+int perform_calibration(calibration *cal)
+{
+    int j;
+    float n, x, y, x2, y2, xy, z, zx, zy;
+    float det, a, b, c, e, f, i;
+    float scaling = 65536.0;
+
+// Get sums for matrix
+    n = x = y = x2 = y2 = xy = 0;
+    for(j=0; j<5; j++)
     {
-        bits = font_vga_8x8.data [font_vga_8x8.height * c + i];
-        for (j = 0; j < font_vga_8x8.width; j++, bits <<= 1)
-            if (bits & 0x80)
-                pixel (x + j, y + i, colidx);
+        n += 1.0;
+        x += (float)cal->x[j];
+        y += (float)cal->y[j];
+        x2 += (float)(cal->x[j]*cal->x[j]);
+        y2 += (float)(cal->y[j]*cal->y[j]);
+        xy += (float)(cal->x[j]*cal->y[j]);
     }
-}
-
-void put_string(int x, int y, char *s, unsigned colidx)
-{
-    int i;
-    for (i = 0; *s; i++, x += font_vga_8x8.width, s++)
-        put_char (x, y, *s, colidx);
-}
-
-void put_string_center(int x, int y, char *s, unsigned colidx)
-{
-    size_t sl = strlen (s);
-    put_string (x - (sl / 2) * font_vga_8x8.width,
-                y - font_vga_8x8.height / 2, s, colidx);
-}
-#endif
-void setcolor(unsigned colidx, unsigned value)
-{
-    unsigned res;
-    unsigned short red, green, blue;
-//  struct fb_cmap cmap;
-
-#ifdef DEBUG
-    if (colidx > 255)
+// Get determinant of matrix -- check if determinant is too small
+    det = n*(x2*y2 - xy*xy) + x*(xy*y - x*y2) + y*(x*xy - y*x2);
+    if(det < 0.1 && det > -0.1)
     {
-        fprintf (stderr, "WARNING: color index = %u, must be <256\n",
-                 colidx);
-        return;
+ //       sysprintf("ts_calibrate: determinant is too small -- %f\n",det);
+        return 0;
     }
-#endif
 
-    switch (bytes_per_pixel)
+// Get elements of inverse matrix
+    a = (x2*y2 - xy*xy)/det;
+    b = (xy*y - x*y2)/det;
+    c = (x*xy - y*x2)/det;
+    e = (n*y2 - y*y)/det;
+    f = (x*y - n*xy)/det;
+    i = (n*x2 - x*x)/det;
+
+// Get sums for x calibration
+    z = zx = zy = 0;
+    for(j=0; j<5; j++)
     {
-    default:
-    case 1:
-#if 0
-        res = colidx;
-        red = (value >> 8) & 0xff00;
-        green = value & 0xff00;
-        blue = (value << 8) & 0xff00;
-        cmap.start = colidx;
-        cmap.len = 1;
-        cmap.red = &red;
-        cmap.green = &green;
-        cmap.blue = &blue;
-        cmap.transp = NULL;
-#endif
-        break;
-    case 2:
-        red = (value >> 16) & 0xff;
-        green = (value >> 8) & 0xff;
-        blue = value & 0xff;
-        res = ((red >> (8 - red_length)) << red_offset) |
-              ((green >> (8 - green_length)) << green_offset) |
-              ((blue >> (8 - blue_length)) << blue_offset);
-        break;
-    case 4:
-        res = value;
-        break;
+        z += (float)cal->xfb[j];
+        zx += (float)(cal->xfb[j]*cal->x[j]);
+        zy += (float)(cal->xfb[j]*cal->y[j]);
     }
-    colormap [colidx] = res;
-}
-#if 0
-static void __setpixel (union multiptr loc, unsigned xormode, unsigned color)
-{
-    switch(bytes_per_pixel)
+
+// Now multiply out to get the calibration for framebuffer x coord
+    cal->a[0] = (int)((a*z + b*zx + c*zy)*(scaling));
+    cal->a[1] = (int)((b*z + e*zx + f*zy)*(scaling));
+    cal->a[2] = (int)((c*z + f*zx + i*zy)*(scaling));
+#if 0 //close
+    sysprintf("%f %f %f\n",(a*z + b*zx + c*zy),
+              (b*z + e*zx + f*zy),
+              (c*z + f*zx + i*zy));
+#endif
+// Get sums for y calibration
+    z = zx = zy = 0;
+    for(j=0; j<5; j++)
     {
-    case 1:
-    default:
-        if (xormode)
-            *loc.p8 ^= color;
+        z += (float)cal->yfb[j];
+        zx += (float)(cal->yfb[j]*cal->x[j]);
+        zy += (float)(cal->yfb[j]*cal->y[j]);
+    }
+
+// Now multiply out to get the calibration for framebuffer y coord
+    cal->a[3] = (int)((a*z + b*zx + c*zy)*(scaling));
+    cal->a[4] = (int)((b*z + e*zx + f*zy)*(scaling));
+    cal->a[5] = (int)((c*z + f*zx + i*zy)*(scaling));
+#if 0  // closed
+    sysprintf("%f %f %f\n",(a*z + b*zx + c*zy),
+              (b*z + e*zx + f*zy),
+              (c*z + f*zx + i*zy));
+#endif
+// If we got here, we're OK, so assign scaling to a[6] and return
+    cal->a[6] = (int)scaling;
+    return 1;
+}
+
+int sort_by_x(const void* a, const void *b)
+{
+    return (((struct ts_sample *)a)->x - ((struct ts_sample *)b)->x);
+}
+
+int sort_by_y(const void* a, const void *b)
+{
+    return (((struct ts_sample *)a)->y - ((struct ts_sample *)b)->y);
+}
+
+
+
+
+void getxy(int *x, int *y)
+{
+#define MAX_SAMPLES 128
+    struct ts_sample samp[MAX_SAMPLES];
+    int index, middle;
+    int sumx, sumy;
+
+ //   sysprintf("getxy\n");
+again:
+    do
+    {
+        if ( ts_Read_TouchPanel(&sumx, &sumy) > 0 )
+        {
+            if ( (sumx < 0) || ( sumy < 0 ) )
+                continue;
+            break;
+        }
+    }
+    while (1);
+
+    /* Now collect up to MAX_SAMPLES touches into the samp array. */
+    index = 0;
+    do
+    {
+        if (index < MAX_SAMPLES-1)
+            index++;
+        if ( ts_Read_TouchPanel(&sumx, &sumy) > 0)
+        {
+            samp[index].x = sumx;
+            samp[index].y = sumy;
+            samp[index].pressure = 1000;
+        }
         else
-            *loc.p8 = color;
-        break;
-    case 2:
-        if (xormode)
-            *loc.p16 ^= color;
+        {
+            samp[index].x = samp[index-1].x;
+            samp[index].y = samp[index-1].y;
+            samp[index].pressure = 0;
+        }
+
+//      sysprintf("%d %d %d\n", samp[index].x, samp[index].y , samp[index].pressure);
+    }
+    while (samp[index].pressure > 0);
+ //   sysprintf("Took %d samples...\n",index);
+
+    /*
+     * At this point, we have samples in indices zero to (index-1)
+     * which means that we have (index) number of samples.  We want
+     * to calculate the median of the samples so that wild outliers
+     * don't skew the result.  First off, let's assume that arrays
+     * are one-based instead of zero-based.  If this were the case
+     * and index was odd, we would need sample number ((index+1)/2)
+     * of a sorted array; if index was even, we would need the
+     * average of sample number (index/2) and sample number
+     * ((index/2)+1).  To turn this into something useful for the
+     * real world, we just need to subtract one off of the sample
+     * numbers.  So for when index is odd, we need sample number
+     * (((index+1)/2)-1).  Due to integer division truncation, we
+     * can simplify this to just (index/2).  When index is even, we
+     * need the average of sample number ((index/2)-1) and sample
+     * number (index/2).  Calculate (index/2) now and we'll handle
+     * the even odd stuff after we sort.
+     */
+    middle = index/2;
+    if (x)
+    {
+        qsort(samp, index, sizeof(struct ts_sample), sort_by_x);
+        if (index & 1)
+            *x = samp[middle].x;
         else
-            *loc.p16 = color;
-        break;
-    case 4:
-        if (xormode)
-            *loc.p32 ^= color;
+            *x = (samp[middle-1].x + samp[middle].x) / 2;
+    }
+    if (y)
+    {
+        qsort(samp, index, sizeof(struct ts_sample), sort_by_y);
+        if (index & 1)
+            *y = samp[middle].y;
         else
-            *loc.p32 = color;
-        break;
+            *y = (samp[middle-1].y + samp[middle].y) / 2;
     }
-}
-#endif
-static void __setpixel2 (unsigned color1, unsigned xormode, unsigned color)
-{
-    switch(bytes_per_pixel)
-    {
-//    case 1:
-//    default:
-//        if (xormode)
-//            *loc.p8 ^= color;
-//        else
-//            *loc.p8 = color;
-//        break;
-    case 2:
-    case 4:
-        if (xormode)
-            color1 ^= color;
-        else
-            color1 = color;
-        break;
-//    case 4:
-//        if (xormode)
-//            *loc.p32 ^= color;
-//        else
-//            *loc.p32 = color;
-//        break;
-    }
-    GUI_SetColorIndex(color1);
+    if ( (index <= 3) || ( *x < 0) || ( *y < 0 ) )
+        goto again;
 }
 
-void pixel (int x, int y, unsigned colidx)
+
+void get_sample(calibration *cal,int index, int x, int y, char *name)
 {
-    unsigned xormode;
-//    unsigned color, color2;
-    //union multiptr loc;
+    static int last_x = -1, last_y;
 
-    if ((x < 0) || (x >= __DEMO_TS_WIDTH__) ||
-            (y < 0) || (y >= __DEMO_TS_HEIGHT__))
-        return;
-
-    xormode = colidx & XORMODE;
-    colidx &= ~XORMODE;
-
-#ifdef DEBUG
-    if (colidx > 255)
+    if (last_x != -1)
     {
-        fprintf (stderr, "WARNING: color value = %u, must be <256\n",
-                 colidx);
-        return;
-    }
-#endif
-
-//  loc.p8 = line_addr [y] + x * bytes_per_pixel;
-//  line_addr = (unsigned char *)g_VAFrameBuf+ y*(LCD_XSIZE*bytes_per_pixel);
-    __setpixel2(GUI_GetPixelIndex(x, y), xormode, colormap [colidx]);
-    GUI_DrawPixel(x, y);
-
-
-    //loc.p8 = line_addr + x*bytes_per_pixel;
-    //__setpixel(loc, xormode, colormap [colidx]);
-}
-
-void line(int x1, int y1, int x2, int y2, unsigned colidx)
-{
-    int tmp;
-    int dx = x2 - x1;
-    int dy = y2 - y1;
-
-    if (abs (dx) < abs (dy))
-    {
-        if (y1 > y2)
+#define NR_STEPS 10
+        int dx = ((x - last_x) << 16) / NR_STEPS;
+        int dy = ((y - last_y) << 16) / NR_STEPS;
+        int i;
+        last_x <<= 16;
+        last_y <<= 16;
+        for (i = 0; i < NR_STEPS; i++)
         {
-            tmp = x1;
-            x1 = x2;
-            x2 = tmp;
-            tmp = y1;
-            y1 = y2;
-            y2 = tmp;
-            dx = -dx;
-            dy = -dy;
-        }
-        x1 <<= 16;
-        /* dy is apriori >0 */
-        dx = (dx << 16) / dy;
-        while (y1 <= y2)
-        {
-            pixel (x1 >> 16, y1, colidx);
-            x1 += dx;
-            y1++;
+            put_cross (last_x >> 16, last_y >> 16);
+            //usleep (1000);
+//          GUI_Delay(1);
+            put_cross (last_x >> 16, last_y >> 16);
+            last_x += dx;
+            last_y += dy;
         }
     }
-    else
-    {
-        if (x1 > x2)
-        {
-            tmp = x1;
-            x1 = x2;
-            x2 = tmp;
-            tmp = y1;
-            y1 = y2;
-            y2 = tmp;
-            dx = -dx;
-            dy = -dy;
-        }
-        y1 <<= 16;
-        dy = dx ? (dy << 16) / dx : 0;
-        while (x1 <= x2)
-        {
-            pixel (x1, y1 >> 16, colidx);
-            y1 += dy;
-            x1++;
-        }
-    }
+
+
+    put_cross(x, y);
+    getxy (&cal->x [index], &cal->y [index]);
+    put_cross(x, y);
+
+    last_x = cal->xfb [index] = x;
+    last_y = cal->yfb [index] = y;
+
+//    sysprintf("%s : X = %4d Y = %4d\n", name, cal->x [index], cal->y [index]);
 }
-#if 1
-void rect (int x1, int y1, int x2, int y2, unsigned colidx)
-{
-    line (x1, y1, x2, y1, colidx);
-    line (x2, y1, x2, y2, colidx);
-    line (x2, y2, x1, y2, colidx);
-    line (x1, y2, x1, y1, colidx);
-}
-
-void fillrect (int x1, int y1, int x2, int y2, unsigned colidx)
-{
-    int tmp;
-    unsigned xormode;
-//    unsigned color, color2;
-    //union multiptr loc;
-
-    /* Clipping and sanity checking */
-    if (x1 > x2)
-    {
-        tmp = x1;
-        x1 = x2;
-        x2 = tmp;
-    }
-    if (y1 > y2)
-    {
-        tmp = y1;
-        y1 = y2;
-        y2 = tmp;
-    }
-    if (x1 < 0) x1 = 0;
-    if (x1 >= xres) x1 = xres - 1;
-    if (x2 < 0) x2 = 0;
-    if (x2 >= xres) x2 = xres - 1;
-    if (y1 < 0) y1 = 0;
-    if (y1 >= yres) y1 = yres - 1;
-    if (y2 < 0) y2 = 0;
-    if (y2 >= yres) y2 = yres - 1;
-
-    if ((x1 > x2) || (y1 > y2))
-        return;
-
-    xormode = colidx & XORMODE;
-    colidx &= ~XORMODE;
-
-#ifdef DEBUG
-    if (colidx > 255)
-    {
-        fprintf (stderr, "WARNING: color value = %u, must be <256\n",
-                 colidx);
-        return;
-    }
-#endif
-
-//    colidx = colormap [colidx];
-
-    for (; y1 <= y2; y1++)
-    {
-//      loc.p8 = line_addr [y1] + x1 * bytes_per_pixel;
-        //line_addr = (unsigned char *)g_VAFrameBuf+ y1*(LCD_XSIZE*bytes_per_pixel);
-        //loc.p8 = line_addr + x1* bytes_per_pixel;
-        for (tmp = x1; tmp <= x2; tmp++)
-        {
-            //__setpixel (loc, xormode, colidx);
-            //loc.p8 += bytes_per_pixel;
-            __setpixel2(GUI_GetPixelIndex(tmp, y1), xormode, colormap [colidx]);
-            GUI_DrawPixel(tmp, y1);
-        }
-    }
-}
-#endif

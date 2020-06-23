@@ -1,7 +1,7 @@
 /**************************************************************************//**
  * @file     main.c
- * @version  V5.2
- * $Date: 20/05/15 06:00p $
+ * @version  V5.3
+ * $Date: 2020/06/24 06:00p $
  * @brief    To utilize emWin library to demonstrate interactive feature.
  *
  * @note
@@ -298,8 +298,8 @@ void SYS_Init(void)
     outpw(REG_CLK_HCLKEN, inpw(REG_CLK_HCLKEN) | 0x40000000);
 
     /* select multi-function-pin */
-    /* SD Port 0 -> PD0~7 */
-    outpw(REG_SYS_GPD_MFPL, 0x66666666);
+    /* SD Port 0 -> PD0~6 */
+    outpw(REG_SYS_GPD_MFPL, 0x6666666);
     SD_Drv = 0;
 #endif
 
