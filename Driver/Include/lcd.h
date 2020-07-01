@@ -85,7 +85,7 @@ extern "C"
 #define VPOSTB_SWAP_YUYV    (1<<1)
 
 /* bit definition of REG_LCM_INT_CS register */
-#define VPOSTB_DISP_F_INT           (1<<31)
+#define VPOSTB_DISP_F_INT           ((UINT32)1<<31)
 #define VPOSTB_DISP_F_STATUS        (1<<30)
 #define VPOSTB_UNDERRUN_INT         (1<<29)
 #define VPOSTB_BUS_ERROR_INT        (1<<28)
