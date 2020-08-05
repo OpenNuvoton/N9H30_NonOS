@@ -3,6 +3,7 @@
 * @version  V1.00
 * @brief    N9H30 LCD driver header file
 *
+* SPDX-License-Identifier: Apache-2.0
 * @copyright (C) 2018 Nuvoton Technology Corp. All rights reserved.
 *****************************************************************************/
 #ifndef _LCD_H_

@@ -6,6 +6,7 @@
 * @brief    N9H30 CAP driver header file
 *
 * @note
+* SPDX-License-Identifier: Apache-2.0
 * Copyright (C) 2015 Nuvoton Technology Corp. All rights reserved.
 *****************************************************************************/
  

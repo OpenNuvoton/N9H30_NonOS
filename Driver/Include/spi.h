@@ -3,6 +3,7 @@
 * @brief    N9H30 SPI driver header file
 *
 * @note
+* SPDX-License-Identifier: Apache-2.0
 * Copyright (C) 2018 Nuvoton Technology Corp. All rights reserved.
 *****************************************************************************/
 #ifndef _SPI_H_

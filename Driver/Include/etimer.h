@@ -3,6 +3,7 @@
  * @brief    N9H30 series ETIMER driver header file
  *
  * @note
+ * SPDX-License-Identifier: Apache-2.0
  * Copyright (C) 2018 Nuvoton Technology Corp. All rights reserved.
  *****************************************************************************/
 #ifndef __ETIMER_H__
