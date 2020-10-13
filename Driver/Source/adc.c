@@ -436,6 +436,7 @@ INT adcIoctl(ADC_CMD cmd, INT32 arg1, INT32 arg2)
         break;
         case PEPOWER_ON: {        //Enable Pen Power
             UINT32 treg;
+            UINT32 delay;
             treg = inpw(REG_ADC_IER);
             outpw(REG_ADC_IER, treg & ~(ADC_IER_PEDEIEN | ADC_IER_PEUEIEN));
 
@@ -446,6 +447,7 @@ INT adcIoctl(ADC_CMD cmd, INT32 arg1, INT32 arg2)
             do {
                 reg = (ADC_ISR_PEDEF | ADC_ISR_PEUEF);
                 outpw(REG_ADC_ISR, reg);
+                for(delay=0;delay<10000;delay++) __nop();
             } while(inpw(REG_ADC_ISR)&(ADC_ISR_PEDEF | ADC_ISR_PEUEF));
 
             outpw(REG_ADC_IER,treg);
