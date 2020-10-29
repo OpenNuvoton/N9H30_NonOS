@@ -16,7 +16,7 @@ BOOL volatile _sys_IsCacheOn = FALSE;
 INT32 volatile _sys_CacheMode;
 extern void sys_flush_and_clean_dcache(void);
 
-#define  _CoarsePageSize  64  //MB
+#define  _CoarsePageSize  128  //MB
 
 /** \brief  Structure type of Coarse Table
  */

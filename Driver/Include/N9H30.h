@@ -45,7 +45,7 @@
    *
    * <b>Copyright Notice</b>
    *
-   * Copyright (C) 2018 Nuvoton Technology Corp. All rights reserved.
+   * Copyright (C) 2020 Nuvoton Technology Corp. All rights reserved.
    */
 
 #ifndef __N9H30_H__
