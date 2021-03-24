@@ -447,7 +447,13 @@ INT adcIoctl(ADC_CMD cmd, INT32 arg1, INT32 arg2)
             do {
                 reg = (ADC_ISR_PEDEF | ADC_ISR_PEUEF);
                 outpw(REG_ADC_ISR, reg);
-                for(delay=0;delay<10000;delay++) __nop();
+                for(delay=0;delay<10000;delay++) {
+#if defined ( __GNUC__ ) && !(__CC_ARM)
+                    asm ("nop");
+#else
+                    __nop();
+#endif
+                }
             } while(inpw(REG_ADC_ISR)&(ADC_ISR_PEDEF | ADC_ISR_PEUEF));
 
             outpw(REG_ADC_IER,treg);
