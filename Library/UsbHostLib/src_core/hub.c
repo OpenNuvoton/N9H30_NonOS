@@ -213,7 +213,7 @@ int hub_probe(IFACE_T *iface)
 {
     UDEV_T      *udev = iface->udev;
     ALT_IFACE_T *aif = iface->aif;
-    EP_INFO_T   *ep;
+    EP_INFO_T   *ep = NULL;
     HUB_DEV_T   *hub;
     UTR_T       *utr;
     uint32_t    read_len;
