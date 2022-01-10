@@ -658,4 +658,8 @@ INT32 uartRead(INT nNum, PUINT8 pucBuf, UINT32 uLen);
 
 /*@}*/ /* end of group N9H30_Device_Driver */
 
+#ifdef __cplusplus
+}
+#endif
+
 #endif
