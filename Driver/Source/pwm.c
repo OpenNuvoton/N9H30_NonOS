@@ -31,6 +31,7 @@ void pwmISR(PVOID pvParam);
 static INT pwmInitGPIO(const INT nTimerIdentity, const INT nValue);
 static INT pwmInitTimer(const INT nTimerIdentity);
 static INT pwmStartTimer(const INT nTimerIdentity);
+static INT pwmStartTimerPair(const INT nTimerIdentity);
 static INT pwmStopTimer(const INT nTimerIdentity, const INT nMethod);
 // Register operation
 static INT pwmSetCP(const INT nTimerIdentity, const INT nValue);
@@ -38,6 +39,7 @@ static INT pwmSetDZI(const INT nTimerIdentity, const INT nValue);
 static INT pwmSetCSR(const INT nTimerIdentity, const INT nValue);
 static INT pwmSetDZGenerator(const INT nTimerIdentity, const INT nStatus);
 static INT pwmSetTimerState(const INT nTimerIdentity, const INT nStatus);
+static INT pwmSetTimerPairState(const INT nTimerIdentity, const INT nStatus);
 static INT pwmSetInverter(const INT nTimerIdentity, const INT nStatus);
 static INT pwmSetMode(const INT nTimerIdentity, const INT nStatus);
 static INT pwmSetCNR(const INT nTimerIdentity, const INT nValue);
@@ -255,6 +257,10 @@ INT pwmIoctl(const INT nTimerIdentity, const UINT uCommand, const UINT uIndicati
     switch(uCommand) {
         case START_PWMTIMER: {
             nStatus=pwmStartTimer(nTimerIdentity);
+            break;
+        }
+        case START_PWMTIMERPAIR: {
+            nStatus=pwmStartTimerPair(nTimerIdentity);
             break;
         }
         case STOP_PWMTIMER: {
@@ -482,6 +488,27 @@ static INT pwmStartTimer(const INT nTimerIdentity)
         bPWMTimerStartStatus[nTimerIdentity] = TRUE;
     }
 
+    return Successful;
+}
+
+/**
+  * @brief This function starts PWM Pair timers according to the parameter
+  * @param[in] nTimerIdentity Timer channel number
+  * @retval Successful PWM start timer successfully
+  * @retval pwmInvalidTimerChannel PWM Timer channel number error
+  */
+static INT pwmStartTimerPair(const INT nTimerIdentity)
+{
+    if(nTimerIdentity != PWM_TIMER0 && nTimerIdentity != PWM_TIMER2) {
+        return pwmInvalidTimerChannel;// Timer_num value error
+    }
+    pwmSetTimerPairState(nTimerIdentity, PWM_ENABLE);
+    if(bPWMTimerMode[nTimerIdentity] == PWM_TOGGLE) {
+        bPWMTimerStartStatus[nTimerIdentity] = TRUE;
+    }
+    if(bPWMTimerMode[nTimerIdentity+1] == PWM_TOGGLE) {
+        bPWMTimerStartStatus[nTimerIdentity+1] = TRUE;
+    }
     return Successful;
 }
 
@@ -755,6 +782,41 @@ static INT pwmSetTimerState(const INT nTimerIdentity, INT nStatus)
             PWMPCR.field.ch3_en=nStatus;
             break;
         }
+    }
+    outpw(REG_PWM_PCR, PWMPCR.value);
+
+    return Successful;
+}
+
+/**
+  * @brief This function set two PWM channels enable/disable according to the
+  *        parameter nTimerIdentity and nStatus
+  * @param[in] nTimerIdentity Timer channel number
+  * @param[in] nStatus PWM_ENABLE/PWMDISABLE
+  * @retval Successful Set channel enable/disable successfully
+  * @retval pwmInvalidTimerChannel PWM Timer channel number error
+  */
+static INT pwmSetTimerPairState(const INT nTimerIdentity, INT nStatus)
+{
+    typePCR PWMPCR;
+    if(nTimerIdentity != PWM_TIMER0 && nTimerIdentity != PWM_TIMER2) {
+        return pwmInvalidTimerChannel;// Timer_num value error
+    }
+    if(nStatus != PWM_ENABLE && nStatus != PWM_DISABLE) {
+        return pwmInvalidTimerStatus;
+    }
+    PWMPCR.value=(UINT)inpw(REG_PWM_PCR);
+    switch(nTimerIdentity) {
+    case PWM_TIMER0: {
+        PWMPCR.field.ch0_en=nStatus;
+        PWMPCR.field.ch1_en=nStatus;
+        break;
+    }
+    case PWM_TIMER2: {
+        PWMPCR.field.ch2_en=nStatus;
+        PWMPCR.field.ch3_en=nStatus;
+        break;
+    }
     }
     outpw(REG_PWM_PCR, PWMPCR.value);
 

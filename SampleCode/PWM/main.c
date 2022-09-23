@@ -12,6 +12,7 @@
 
 void show_menu(void);
 INT PWM_Timer(INT timer_num);
+INT PWM_TimerPair(INT timer_num);
 INT PWM_TimerDZ(INT dz_num);
 
 
@@ -37,6 +38,8 @@ int main (void)
             case '3':    PWM_Timer(PWM_TIMER3);        break;
             case '4':    PWM_TimerDZ(PWM_TIMER0);    break;
             case '5':    PWM_TimerDZ(PWM_TIMER2);    break;
+            case '6':    PWM_TimerPair(PWM_TIMER0);    break;
+            case '7':    PWM_TimerPair(PWM_TIMER2);    break;
             default:                                break;
         }
     }
@@ -55,6 +58,8 @@ void show_menu(void)
     sysprintf("| PWM Timer3 test                                - [3] |\n");
     sysprintf("| PWM Dead zone 0 test                           - [4] |\n");
     sysprintf("| PWM Dead zone 1 test                           - [5] |\n");
+    sysprintf("| PWM Timer0,1 pair test                         - [6] |\n");
+    sysprintf("| PWM Timer2,3 pair test                         - [7] |\n");
     sysprintf("+------------------------------------------------------+\n");
     sysprintf("Please Select :\n");
 }
@@ -73,8 +78,8 @@ INT PWM_Timer(INT timer_num)
     pwmOpen(timer_num);
 
     // Change PWM Timer setting
-    pwmIoctl(timer_num, SET_CSR, 0, CSRD16);
-    pwmIoctl(timer_num, SET_CP, 0, 249);
+    pwmIoctl(timer_num, SET_CSR, 0, CSRD1);
+    pwmIoctl(timer_num, SET_CP, 0, 5);
     pwmIoctl(timer_num, SET_DZI, 0, 0);
     pwmIoctl(timer_num, SET_INVERTER, 0, PWM_INVOFF);
     pwmIoctl(timer_num, SET_MODE, 0, PWM_TOGGLE);
@@ -119,8 +124,8 @@ INT PWM_Timer(INT timer_num)
     }
 
      // Change PWM Timer setting
-    pwmIoctl(timer_num, SET_CSR, 0, CSRD16);
-    pwmIoctl(timer_num, SET_CP, 0, 255);
+    pwmIoctl(timer_num, SET_CSR, 0, CSRD1);
+    pwmIoctl(timer_num, SET_CP, 0, 7);
     pwmIoctl(timer_num, SET_DZI, 0, 0);
     pwmIoctl(timer_num, SET_INVERTER, 0, PWM_INVOFF);
     pwmIoctl(timer_num, SET_MODE, 0, PWM_TOGGLE);
@@ -164,6 +169,167 @@ INT PWM_Timer(INT timer_num)
     pwmIoctl(timer_num, STOP_PWMTIMER, 0, 0);
     pwmClose(timer_num);
     sysprintf("\nPWM Timer %d test finish\nPress any key to continue....", timer_num);
+    sysGetChar();
+    return Successful;
+}
+
+//timer_num should be Timer0 or Timer2
+INT PWM_TimerPair(INT timer_num)
+{
+    typePWMVALUE pwmvalue;
+    typePWMSTATUS PWMSTATUS;
+    INT nLoop=0;
+    INT nStatus=0;
+    INT nInterruptInterval=0;
+    PWMSTATUS.PDR=0;
+    PWMSTATUS.InterruptFlag=FALSE;
+
+    pwmInit();
+    pwmOpen(timer_num);
+    pwmOpen(timer_num+1);
+
+    // Change PWM Timer setting
+    pwmIoctl(timer_num, SET_CSR, 0, CSRD1);
+    pwmIoctl(timer_num+1, SET_CSR, 0, CSRD1);
+    pwmIoctl(timer_num, SET_CP, 0, 5);
+    pwmIoctl(timer_num+1, SET_CP, 0, 5);
+    pwmIoctl(timer_num, SET_DZI, 0, 0);
+    pwmIoctl(timer_num+1, SET_DZI, 0, 0);
+    pwmIoctl(timer_num, SET_INVERTER, 0, PWM_INVOFF);
+    pwmIoctl(timer_num+1, SET_INVERTER, 0, PWM_INVOFF);
+    pwmIoctl(timer_num, SET_MODE, 0, PWM_TOGGLE);
+    pwmIoctl(timer_num+1, SET_MODE, 0, PWM_TOGGLE);
+    pwmIoctl(timer_num, DISABLE_DZ_GENERATOR, 0, 0);
+    pwmIoctl(timer_num+1, DISABLE_DZ_GENERATOR, 0, 0);
+    if(timer_num == PWM_TIMER0)
+    {
+        pwmIoctl(timer_num, ENABLE_PWMGPIOOUTPUT, PWM_TIMER0, PWM0_GPA12);
+        pwmIoctl(timer_num+1, ENABLE_PWMGPIOOUTPUT, PWM_TIMER1, PWM1_GPA13);
+    }
+    else if(timer_num == PWM_TIMER2)
+    {
+        pwmIoctl(timer_num, ENABLE_PWMGPIOOUTPUT, PWM_TIMER2, PWM2_GPA14);
+        pwmIoctl(timer_num+1, ENABLE_PWMGPIOOUTPUT, PWM_TIMER3, PWM3_GPA15);
+    }
+
+    pwmvalue.field.cnr=59999;
+    pwmvalue.field.cmr=4999;
+    pwmWrite(timer_num, (PUCHAR)(&pwmvalue), sizeof(pwmvalue));
+    pwmWrite(timer_num+1, (PUCHAR)(&pwmvalue), sizeof(pwmvalue));
+
+    sysprintf("PWM Timer%d one shot mode test\nPWM. Timer interrupt will occure soon.", timer_num);
+
+    //Start PWM Timer
+    pwmIoctl(timer_num, START_PWMTIMERPAIR, 0, 0);
+
+    while(1)
+    {
+        nLoop++;
+        if(nLoop%100000 == 0)
+        {
+            sysprintf(".");
+        }
+        nStatus=pwmRead(timer_num, (PUCHAR)&PWMSTATUS, sizeof(PWMSTATUS));
+        if(nStatus != Successful)
+        {
+            sysprintf("PWM %d read error, ERR CODE:%d",timer_num,nStatus);
+            pwmClose(timer_num);
+            return Fail;
+        }
+        if(PWMSTATUS.InterruptFlag==TRUE)
+        {
+            sysprintf("\n\nPWM Timer%d interrupt occurred!\n\n",timer_num);
+            break;
+        }
+        nStatus=pwmRead(timer_num+1, (PUCHAR)&PWMSTATUS, sizeof(PWMSTATUS));
+        if(nStatus != Successful)
+        {
+            sysprintf("PWM %d read error, ERR CODE:%d",timer_num+1, nStatus);
+            pwmClose(timer_num+1);
+            return Fail;
+        }
+        if(PWMSTATUS.InterruptFlag==TRUE)
+        {
+            sysprintf("\n\nPWM Timer%d interrupt occurred!\n\n",timer_num+1);
+            break;
+        }
+    }
+
+     // Change PWM Timer setting
+    pwmIoctl(timer_num, SET_CSR, 0, CSRD1);
+    pwmIoctl(timer_num+1, SET_CSR, 0, CSRD1);
+    pwmIoctl(timer_num, SET_CP, 0, 7);
+    pwmIoctl(timer_num+1, SET_CP, 0, 7);
+    pwmIoctl(timer_num, SET_DZI, 0, 0);
+    pwmIoctl(timer_num+1, SET_DZI, 0, 0);
+    pwmIoctl(timer_num, SET_INVERTER, 0, PWM_INVOFF);
+    pwmIoctl(timer_num+1, SET_INVERTER, 0, PWM_INVOFF);
+    pwmIoctl(timer_num, SET_MODE, 0, PWM_TOGGLE);
+    pwmIoctl(timer_num+1, SET_MODE, 0, PWM_TOGGLE);
+    pwmIoctl(timer_num, DISABLE_DZ_GENERATOR, 0, 0);
+    pwmIoctl(timer_num+1, DISABLE_DZ_GENERATOR, 0, 0);
+    //pwmIoctl(timer_num, ENABLE_PWMGPIOOUTPUT, 0, 0);
+
+
+    nInterruptInterval=30000;
+    pwmvalue.field.cnr=nInterruptInterval;
+    pwmvalue.field.cmr=4999;
+    pwmWrite(timer_num, (PUCHAR)(&pwmvalue), sizeof(pwmvalue));
+    pwmWrite(timer_num+1, (PUCHAR)(&pwmvalue), sizeof(pwmvalue));
+
+    sysprintf("PWM Timer%d and Timer%d toggle mode test\nPWM Timer interrupt interval will decrease gradually\n", timer_num, timer_num+1);
+
+    //Start PWM Timer
+    pwmIoctl(timer_num, START_PWMTIMERPAIR, 0, 0);
+    nLoop=0;
+    while(1)
+    {
+        nStatus=pwmRead(timer_num, (PUCHAR)&PWMSTATUS, sizeof(PWMSTATUS));
+        if(nStatus != Successful)
+        {
+            sysprintf("PWM%d read error, ERR CODE:%d",timer_num, nStatus);
+            pwmClose(timer_num);
+            return Fail;
+        }
+        if(PWMSTATUS.InterruptFlag==TRUE)
+        {
+            sysprintf("PWM Timer %d interrupt [%d], CNR:%d\n",timer_num,nLoop,nInterruptInterval);
+            nInterruptInterval/=2;
+            pwmvalue.field.cnr=nInterruptInterval;
+            pwmvalue.field.cmr=4999;
+            pwmWrite(timer_num, (PUCHAR)(&pwmvalue), sizeof(pwmvalue));
+            nLoop++;
+            if(nLoop==10)
+            {
+                break;
+            }
+        }
+        nStatus=pwmRead(timer_num+1, (PUCHAR)&PWMSTATUS, sizeof(PWMSTATUS));
+        if(nStatus != Successful)
+        {
+            sysprintf("PWM%d read error, ERR CODE:%d",timer_num+1, nStatus);
+            pwmClose(timer_num+1);
+            return Fail;
+        }
+        if(PWMSTATUS.InterruptFlag==TRUE)
+        {
+            sysprintf("PWM Timer %d interrupt [%d], CNR:%d\n",timer_num+1,nLoop,nInterruptInterval);
+            nInterruptInterval/=2;
+            pwmvalue.field.cnr=nInterruptInterval;
+            pwmvalue.field.cmr=4999;
+            pwmWrite(timer_num+1, (PUCHAR)(&pwmvalue), sizeof(pwmvalue));
+            nLoop++;
+            if(nLoop==10)
+            {
+                break;
+            }
+        }
+    }
+    pwmIoctl(timer_num, STOP_PWMTIMER, 0, 0);
+    pwmIoctl(timer_num+1, STOP_PWMTIMER, 0, 0);
+    pwmClose(timer_num);
+    pwmClose(timer_num+1);
+    sysprintf("\nPWM Timer %d and %d test finish\nPress any key to continue....", timer_num, timer_num+1);
     sysGetChar();
     return Successful;
 }

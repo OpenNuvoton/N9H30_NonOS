@@ -49,6 +49,7 @@ extern "C"
 #define ENABLE_DZ_GENERATOR     7   ///< Enable dead zone ioctl command
 #define DISABLE_DZ_GENERATOR    8   ///< Disable dead zone ioctl command
 #define ENABLE_PWMGPIOOUTPUT    9   ///< Enable PWM output ioctl command
+#define START_PWMTIMERPAIR      10   ///< Enable PWM pair channels ioctl command
 
 #define PWM_STOP_METHOD1    1        ///< PWM stop method 1
 #define PWM_STOP_METHOD2    2        ///< PWM stop method 2
