@@ -17,7 +17,7 @@ SECTIONS
   {
     PROVIDE(__image_start = .);
 	PROVIDE(__text_start = .);
-
+  
     PROVIDE(__vectors_start = .);
     *(.vectors);
     . = ALIGN(4);
@@ -62,15 +62,18 @@ SECTIONS
     *(COMMON)
     . = ALIGN(4);
     PROVIDE (__bss_end__ = .);
-  }>RAM
+  }>RAM  
   ebss = .;
-  bss_size = ebss - sbss;
+  bss_size = ebss - sbss; 
 
   .heap :
   {
     . = ALIGN(8);
     end = .;
-  } >RAM
+  } > RAM
 
+  PROVIDE_HIDDEN (__exidx_start = .);
+  .ARM.exidx : { *(.ARM.exidx* .gnu.linkonce.armexidx.*) }
+  PROVIDE_HIDDEN (__exidx_end = .);
 }
 
