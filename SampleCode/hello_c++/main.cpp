@@ -33,14 +33,14 @@ int main( void )
     sysInitializeUART();
     sysSetLocalInterrupt(ENABLE_IRQ);
 
-    sysprintf("\n\nHello World!\r\n");
+    sysprintf((char *)"\n\nHello World!\r\n");
 
     int val_a = my_test_class_a.GetTestVariable();
-    sysprintf("static construction: %d\r\n", val_a);
+    sysprintf((char *)"static construction: %d\r\n", val_a);
 
     MyTestClass* my_test_class_b = new MyTestClass();
     int val_b = my_test_class_b->GetTestVariable();
-    sysprintf("dynamic construction: %d\r\n", val_b);
+    sysprintf((char *)"dynamic construction: %d\r\n", val_b);
     delete my_test_class_b;
 
     return 0;
