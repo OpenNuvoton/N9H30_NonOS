@@ -166,13 +166,20 @@ typedef struct
     uint32_t nOSDWidth;              /*!< User input, OSD width */
     uint32_t nOSDHeight;             /*!< User input, OSD height */
     uint32_t nImageWidth;            /*!< User input, The width of OSD source image width */
-    uint32_t* pFrameBuffer;          /*!< User input, The address of OSD source image */
+    uint32_t *pFrameBuffer;          /*!< User input, The address of OSD source image */
 } OSDFORMATEX;
 
-#define DIS_PANEL_E50A2V1       0
-#define DIS_PANEL_ILI9341_MPU80 1
-#define DIS_LSA40AT9001         2
-#define DIS_PANEL_FW070TFT      3
+enum DIS_PANEL
+{
+    DIS_PANEL_E50A2V1 = 0,
+    DIS_PANEL_ILI9341_MPU80,
+    DIS_LSA40AT9001,
+    DIS_PANEL_FW070TFT,
+    DIS_PANEL_FW043TFT,
+    DIS_PANEL_FW070TFT_WSVGA,
+    DIS_PANEL_CNT
+};
+
 typedef struct
 {
     uint32_t u32DevWidth;           /*!< Panel width */
@@ -205,8 +212,8 @@ typedef struct
 */
 
 void vpostLCMInit(uint32_t u32DisplayPanelID);
-uint8_t* vpostGetFrameBuffer(void);
-uint8_t* vpostGetMultiFrameBuffer(uint32_t u32Cnt);
+uint8_t *vpostGetFrameBuffer(void);
+uint8_t *vpostGetMultiFrameBuffer(uint32_t u32Cnt);
 void vpostLCMDeinit(void);
 void vpostSetDisplayMode(uint8_t u8DisplayMode);
 void vpostSetVASrc(uint32_t u32VASrcType);
@@ -219,16 +226,21 @@ void vpostOSDSetColMask(uint8_t u8MaskColorR, uint8_t u8MaskColorG, uint8_t u8Ma
 void vpostOSDSetBlinking(uint8_t u8OSDBlinkVcnt);
 void vpostOSDDisableBlinking(void);
 void vpostSetOSDSrc(uint32_t u32OSDSrcType);
-uint8_t* vpostGetOSDBuffer(void);
+uint8_t *vpostGetOSDBuffer(void);
 void vpostOSDEnable(void);
-void vpostOSDScalingCtrl(uint8_t u8HIntegral, uint16_t u16HDecimal,uint8_t u8VScall);
-void vpostOSDSetWindow(uint32_t u32XStart,uint32_t u32YStart,uint32_t u32Width,uint32_t u32Height);
+void vpostOSDDisable(void);
+void vpostOSDScalingCtrl(uint8_t u8HIntegral, uint16_t u16HDecimal, uint8_t u8VScall);
+void vpostOSDSetWindow(uint32_t u32XStart, uint32_t u32YStart, uint32_t u32Width, uint32_t u32Height);
 void vpostHCInit(uint32_t *u32CursorBMPBuff, VA_HCMODE_E ucMode);
 void vpostHCPosCtrl(uint32_t u32CursorX, uint32_t u32CursorY);
 void vpostOSDSetOverlay(uint8_t u8OSDDisplayMatch, uint8_t u8OSDDisplayUnMatch, uint8_t u8OSDSynW);
 void vpostMPUWriteAddr(uint16_t uscmd);
 void vpostMPUWriteData(uint16_t usdata);
 uint32_t vpostMPUReadData(void);
+VPOST_T *vpostLCMGetInstance(uint32_t u32DisplayPanelID);
+void vpostSetFrameBuffer(uint8_t *pu8BufPtr);
+void vpostSetOSDBuffer(uint8_t *pu8BufPtr);
+uint8_t *vpostGetMultiOSDBuffer(uint32_t u32Cnt);
 
 /*@}*/ /* end of group N9H30_LCD_EXPORTED_FUNCTIONS */
 
