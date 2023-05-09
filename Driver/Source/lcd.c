@@ -130,18 +130,18 @@ static VPOST_T DEF_FW043TFT =
     0x011C0112
 };
 
-#define FW070TFT_WSVGA_WIDTH        1024  /*!< XRES */
-#define FW070TFT_WSVGA_HEIGHT       600   /*!< YRES */
-#define FW070TFT_WSVGA_MARGIN_LEFT  160   /*!< HBP (Horizontal Back Porch) */
-#define FW070TFT_WSVGA_MARGIN_RIGHT 160   /*!< HFP (Horizontal Front Porch) */
-#define FW070TFT_WSVGA_MARGIN_UPPER 12    /*!< VBP (Vertical Back Porch) */
-#define FW070TFT_WSVGA_MARGIN_LOWER 23    /*!< VFP (Vertical Front Porch) */
-#define FW070TFT_WSVGA_HSYNC_LEN    1     /*!< HPW (HSYNC plus width) */
-#define FW070TFT_WSVGA_VSYNC_LEN    1     /*!< VPW (VSYNC width) */
-static VPOST_T DEF_FW070TFT_WSVGA  =
+#define ST70IPS1024600_WIDTH        1024  /*!< XRES */
+#define ST70IPS1024600_HEIGHT       600   /*!< YRES */
+#define ST70IPS1024600_MARGIN_LEFT  160   /*!< HBP (Horizontal Back Porch) */
+#define ST70IPS1024600_MARGIN_RIGHT 160   /*!< HFP (Horizontal Front Porch) */
+#define ST70IPS1024600_MARGIN_UPPER 12    /*!< VBP (Vertical Back Porch) */
+#define ST70IPS1024600_MARGIN_LOWER 23    /*!< VFP (Vertical Front Porch) */
+#define ST70IPS1024600_HSYNC_LEN    1     /*!< HPW (HSYNC plus width) */
+#define ST70IPS1024600_VSYNC_LEN    1     /*!< VPW (VSYNC width) */
+static VPOST_T DEF_ST70IPS1024600  =
 {
-    FW070TFT_WSVGA_WIDTH,                 /*!< Panel width */
-    FW070TFT_WSVGA_HEIGHT,                /*!< Panel height */
+    ST70IPS1024600_WIDTH,           /*!< Panel width */
+    ST70IPS1024600_HEIGHT,          /*!< Panel height */
     0,                              /*!< MPU command line low indicator */
     0,                              /*!< MPU command width */
     0,                              /*!< MPU bus width */
@@ -165,7 +165,7 @@ static VPOST_T *DisplayDevList[DIS_PANEL_CNT] =
     &DEF_LSA40AT9001,
     &DEF_FW070TFT,
     &DEF_FW043TFT,
-    &DEF_FW070TFT_WSVGA
+    &DEF_ST70IPS1024600
 };
 
 static VPOST_T curDisplayDev;
