@@ -27,6 +27,19 @@ __attribute__((aligned(32))) uint32_t u32CursorBuf[512];
 #else
 __align(32) uint32_t u32CursorBuf[512];
 #endif
+
+static void vpostIntHandler(void)
+{
+    /* clear VPOST interrupt state */
+    uint32_t uintstatus;
+
+    uintstatus = inpw(REG_LCM_INT_CS);
+    if (uintstatus & VPOSTB_DISP_F_INT)
+        outpw(REG_LCM_INT_CS,inpw(REG_LCM_INT_CS) | VPOSTB_DISP_F_INT);
+    else if (uintstatus & VPOSTB_BUS_ERROR_INT)
+        outpw(REG_LCM_INT_CS,inpw(REG_LCM_INT_CS) | VPOSTB_BUS_ERROR_INT);
+}
+
 int32_t main(void)
 {
     uint8_t *u8FrameBufPtr, *u8OSDFrameBufPtr, i;
@@ -78,6 +91,14 @@ int32_t main(void)
 #else
     vpostSetVASrc(VA_SRC_RGB565);
 #endif
+
+    // Enable LCD interrupt
+    outpw(REG_LCM_DCCS, inpw(REG_LCM_DCCS) | VPOSTB_DISP_INT_EN);
+    outpw(REG_LCM_INT_CS, inpw(REG_LCM_INT_CS) | VPOSTB_DISP_F_EN);
+
+    sysInstallISR(HIGH_LEVEL_SENSITIVE | IRQ_LEVEL_1, LCD_IRQn, (PVOID)vpostIntHandler);
+    sysSetLocalInterrupt(ENABLE_IRQ);
+    sysEnableInterrupt(LCD_IRQn);
 
     // Get pointer of video frame buffer
     // Note: before get pointer of frame buffer, must set display color depth first
