@@ -188,6 +188,7 @@ typedef struct datetime_t {
 #define D_CACHE         7
 #define I_D_CACHE       8
 
+#define DEF_CACHE_LINE_SIZE     32
 
 /// @endcond HIDDEN_SYMBOLS
 
@@ -254,6 +255,11 @@ INT32   sysSetCachePages(UINT32 addr, INT32 size, INT32 cache_mode);    /*!< set
 int sysSetMMUMappingMethod(int mode);   /*!< MMU mapping \hideinitializer */
 
 UINT32 sysGetClock(CLK_Type clk);
+
+void sysCleanInvalidatedDcache(UINT32 buffer, UINT32 size);
+void sysCleanDcache(UINT32 buffer, UINT32 size);
+void sysInvalidateDcache(UINT32 buffer, UINT32 size);
+void sysInvalidateDcacheAll(void);
 
 typedef void (*sys_pvFunPtr)();   /* function pointer */
 /// @cond HIDDEN_SYMBOLS
