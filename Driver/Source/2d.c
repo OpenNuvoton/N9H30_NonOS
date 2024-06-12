@@ -656,6 +656,17 @@ static unsigned long make_color(int color)
 /// @endcond /* HIDDEN_SYMBOLS */
 
 /**
+  * @brief  Wait for 2D gfx action completion.
+  * @param[in] none.
+  * @return none
+  */
+__attribute__((weak)) void ge2dWaitForCompletion (void)
+{
+    while ((inpw(REG_GE2D_INTSTS)&0x01)==0); // wait for command complete
+    outpw(REG_GE2D_INTSTS, 1); // clear interrupt status
+}
+
+/**
   * @brief  Clear the on screen buffer with a specified color.
   * @param[in] color clear with this color.
   * @return none
@@ -680,8 +691,9 @@ void ge2dClearScreen(int color)
     outpw(REG_GE2D_RTGLSZ, dest_dimension);
 
     outpw(REG_GE2D_TRG, 1);
-    while ((inpw(REG_GE2D_INTSTS)&0x01)==0); // wait for command complete
-    outpw(REG_GE2D_INTSTS, 1); // clear interrupt status
+
+    ge2dWaitForCompletion ();
+
 }
 
 /**
@@ -978,9 +990,7 @@ void ge2dBitblt_ScreenToScreen(int srcx, int srcy, int destx, int desty, int wid
 
     outpw(REG_GE2D_TRG, 1);
 
-    while ((inpw(REG_GE2D_INTSTS)&0x01)==0); // wait for command complete
-
-    outpw(REG_GE2D_INTSTS, 1); // clear interrupt status
+    ge2dWaitForCompletion ();
 }
 
 /**
@@ -1100,9 +1110,7 @@ void ge2dBitblt_ScreenToScreenRop(int srcx, int srcy, int destx, int desty, int 
 
     outpw(REG_GE2D_TRG, 1);
 
-    while ((inpw(REG_GE2D_INTSTS)&0x01)==0); // wait for command complete
-
-    outpw(REG_GE2D_INTSTS, 1); // clear interrupt status
+    ge2dWaitForCompletion ();
 }
 
 /**
@@ -1209,9 +1217,7 @@ void ge2dBitblt_SourceToDestination(int srcx, int srcy, int destx, int desty, in
 
     outpw(REG_GE2D_TRG, 1);
 
-    while ((inpw(REG_GE2D_INTSTS)&0x01)==0); // wait for command complete
-
-    outpw(REG_GE2D_INTSTS, 1); // clear interrupt status
+    ge2dWaitForCompletion ();
 }
 
 /**
@@ -1320,9 +1326,7 @@ void ge2dDrawFrame(int x1, int y1, int x2, int y2, int color, int opt)
 
     outpw(REG_GE2D_TRG, 1);
 
-    while ((inpw(REG_GE2D_INTSTS)&0x01)==0); // wait for command complete
-
-    outpw(REG_GE2D_INTSTS, 1); // clear interrupt status
+    ge2dWaitForCompletion ();
 }
 
 /**
@@ -1416,9 +1420,7 @@ void ge2dLine_DrawSolidLine(int x1, int y1, int x2, int y2, int color)
 
     outpw(REG_GE2D_TRG, 1);
 
-    while ((inpw(REG_GE2D_INTSTS)&0x01)==0); // wait for command complete
-
-    outpw(REG_GE2D_INTSTS, 1); // clear interrupt status
+    ge2dWaitForCompletion ();
 }
 
 /**
@@ -1512,9 +1514,7 @@ void ge2dLine_DrawSolidLine_RGB565(int x1, int y1, int x2, int y2, int color)
 
     outpw(REG_GE2D_TRG, 1);
 
-    while ((inpw(REG_GE2D_INTSTS)&0x01)==0); // wait for command complete
-
-    outpw(REG_GE2D_INTSTS, 1); // clear interrupt status
+    ge2dWaitForCompletion ();
 }
 
 
@@ -1615,9 +1615,7 @@ void ge2dLine_DrawStyledLine(int x1, int y1, int x2, int y2, int style, int fgco
 
     outpw(REG_GE2D_TRG, 1);
 
-    while ((inpw(REG_GE2D_INTSTS)&0x01)==0); // wait for command complete
-
-    outpw(REG_GE2D_INTSTS, 1); // clear interrupt status
+    ge2dWaitForCompletion ();
 }
 
 /**
@@ -1717,9 +1715,7 @@ void ge2dLine_DrawStyledLine_RGB565(int x1, int y1, int x2, int y2, int style, i
 
     outpw(REG_GE2D_TRG, 1);
 
-    while ((inpw(REG_GE2D_INTSTS)&0x01)==0); // wait for command complete
-
-    outpw(REG_GE2D_INTSTS, 1); // clear interrupt status
+    ge2dWaitForCompletion ();
 }
 
 /**
@@ -1770,9 +1766,7 @@ void ge2dFill_Solid(int dx, int dy, int width, int height, int color)
 
     outpw(REG_GE2D_TRG, 1);
 
-    while ((inpw(REG_GE2D_INTSTS)&0x01)==0); // wait for command complete
-
-    outpw(REG_GE2D_INTSTS, 1); // clear interrupt status
+    ge2dWaitForCompletion ();
 }
 
 /**
@@ -1822,9 +1816,7 @@ void ge2dFill_Solid_RGB565(int dx, int dy, int width, int height, int color)
 
     outpw(REG_GE2D_TRG, 1);
 
-    while ((inpw(REG_GE2D_INTSTS)&0x01)==0); // wait for command complete
-
-    outpw(REG_GE2D_INTSTS, 1); // clear interrupt status
+    ge2dWaitForCompletion ();
 }
 
 /**
@@ -1876,9 +1868,7 @@ void ge2dFill_SolidBackground(int dx, int dy, int width, int height, int color)
 
     outpw(REG_GE2D_TRG, 1);
 
-    while ((inpw(REG_GE2D_INTSTS)&0x01)==0); // wait for command complete
-
-    outpw(REG_GE2D_INTSTS, 1); // clear interrupt status
+    ge2dWaitForCompletion ();
 }
 
 /**
@@ -1924,8 +1914,8 @@ void ge2dFill_ColorPattern(int dx, int dy, int width, int height)
     }
 
     outpw(REG_GE2D_TRG, 1);
-    while ((inpw(REG_GE2D_INTSTS)&0x01)==0); // wait for command complete
-    outpw(REG_GE2D_INTSTS, 1); // clear interrupt status
+
+    ge2dWaitForCompletion ();
 }
 
 /**
@@ -1973,8 +1963,8 @@ void ge2dFill_MonoPattern(int dx, int dy, int width, int height, int opt)
     }
 
     outpw(REG_GE2D_TRG, 1);
-    while ((inpw(REG_GE2D_INTSTS)&0x01)==0); // wait for command complete
-    outpw(REG_GE2D_INTSTS, 1); // clear interrupt status
+
+    ge2dWaitForCompletion ();
 }
 
 /**
@@ -2020,8 +2010,8 @@ void ge2dFill_ColorPatternROP(int sx, int sy, int width, int height, int rop)
     }
 
     outpw(REG_GE2D_TRG, 1);
-    while ((inpw(REG_GE2D_INTSTS)&0x01)==0); // wait for command complete
-    outpw(REG_GE2D_INTSTS, 1); // clear interrupt status
+
+    ge2dWaitForCompletion ();
 }
 
 /**
@@ -2071,9 +2061,7 @@ void ge2dFill_MonoPatternROP(int sx, int sy, int width, int height, int rop, int
 
     outpw(REG_GE2D_TRG, 1);
 
-    while ((inpw(REG_GE2D_INTSTS)&0x01)==0); // wait for command complete
-
-    outpw(REG_GE2D_INTSTS, 1); // clear interrupt status
+    ge2dWaitForCompletion ();
 }
 
 /**
@@ -2133,8 +2121,8 @@ void ge2dFill_TileBlt(int srcx, int srcy, int destx, int desty, int width, int h
     outpw(REG_GE2D_TCNTVHSF, tile_ctl);
 
     outpw(REG_GE2D_TRG, 1);
-    while ((inpw(REG_GE2D_INTSTS)&0x01)==0); // wait for command complete
-    outpw(REG_GE2D_INTSTS, 1); // clear interrupt status
+
+    ge2dWaitForCompletion ();
 }
 
 /**
@@ -2195,8 +2183,7 @@ void ge2dHostBlt_Write(int x, int y, int width, int height, void *buf)
         }
     }
 
-    while ((inpw(REG_GE2D_INTSTS)&0x01)==0); // wait for command complete
-    outpw(REG_GE2D_INTSTS, 1); // clear interrupt status
+    ge2dWaitForCompletion ();
 }
 
 /**
@@ -2255,9 +2242,7 @@ void ge2dHostBlt_Read(int x, int y, int width, int height, void *buf)
         }
     }
 
-    while ((inpw(REG_GE2D_INTSTS)&0x01)==0); // wait for command complete
-
-    outpw(REG_GE2D_INTSTS, 1); // clear interrupt status
+    ge2dWaitForCompletion ();
 }
 
 /**
@@ -2350,9 +2335,7 @@ void ge2dHostBlt_Sprite(int x, int y, int width, int height, void *buf)
         }
     }
 
-    while ((inpw(REG_GE2D_INTSTS)&0x01)==0); // wait for command complete
-
-    outpw(REG_GE2D_INTSTS, 1); // clear interrupt status
+    ge2dWaitForCompletion ();
 }
 
 /**
@@ -2420,8 +2403,8 @@ void ge2dRotation(int srcx, int srcy, int destx, int desty, int width, int heigh
     outpw(REG_GE2D_CTL, cmd32);
 
     outpw(REG_GE2D_TRG, 1);
-    while ((inpw(REG_GE2D_INTSTS)&0x01)==0); // wait for command complete
-    outpw(REG_GE2D_INTSTS, 1); // clear interrupt status
+
+    ge2dWaitForCompletion ();
 
     free(tmpscreen);
 }
@@ -2501,8 +2484,8 @@ void ge2dSpriteBlt_Screen(int destx, int desty, int sprite_width, int sprite_hei
 
     outpw(REG_GE2D_CTL, cmd32);
 
-    outpw(REG_GE2D_TRG, 1);
-    while ((inpw(REG_GE2D_INTSTS)&0x01)==0); // wait for command complete
+    ge2dWaitForCompletion ();
+
     outpw(REG_GE2D_INTSTS, 1); // clear interrupt status
 }
 
@@ -2584,8 +2567,8 @@ void ge2dSpriteBltx_Screen(int x, int y, int sprite_sx, int sprite_sy, int width
     }
 
     outpw(REG_GE2D_TRG, 1);
-    while ((inpw(REG_GE2D_INTSTS)&0x01)==0); // wait for command complete
-    outpw(REG_GE2D_INTSTS, 1); // clear interrupt status
+
+    ge2dWaitForCompletion ();
 }
 
 /**
@@ -2672,8 +2655,8 @@ void ge2dSpriteBlt_ScreenRop(int x, int y, int sprite_width, int sprite_height, 
     }
 
     outpw(REG_GE2D_TRG, 1);
-    while ((inpw(REG_GE2D_INTSTS)&0x01)==0); // wait for command complete
-    outpw(REG_GE2D_INTSTS, 1); // clear interrupt status
+
+    ge2dWaitForCompletion ();
 }
 
 /**
@@ -2764,8 +2747,8 @@ void ge2dSpriteBltx_ScreenRop(int x, int y, int sprite_sx, int sprite_sy, int wi
     }
 
     outpw(REG_GE2D_TRG, 1);
-    while ((inpw(REG_GE2D_INTSTS)&0x01)==0); // wait for command complete
-    outpw(REG_GE2D_INTSTS, 1); // clear interrupt status
+
+    ge2dWaitForCompletion ();
 }
 
 /**
@@ -2825,8 +2808,8 @@ void ge2dColorExpansionBlt(int x, int y, int width, int height, int fore_color, 
     }
 
     outpw(REG_GE2D_TRG, 1);
-    while ((inpw(REG_GE2D_INTSTS)&0x01)==0); // wait for command complete
-    outpw(REG_GE2D_INTSTS, 1); // clear interrupt status
+
+    ge2dWaitForCompletion ();
 }
 
 /**
@@ -2895,9 +2878,7 @@ void ge2dHostColorExpansionBlt(int x, int y, int width, int height, int fore_col
         }
     }
 
-    while ((inpw(REG_GE2D_INTSTS)&0x01)==0); // wait for command complete
-
-    outpw(REG_GE2D_INTSTS, 1); // clear interrupt status
+    ge2dWaitForCompletion ();
 }
 
 /**
@@ -3149,8 +3130,8 @@ void ge2dFont_PutChar(int x, int y, char asc_code, int fore_color, int back_colo
     outpw(REG_GE2D_RTGLSZ, dest_dimension);
 
     outpw(REG_GE2D_TRG, 1);
-    while ((inpw(REG_GE2D_INTSTS)&0x01)==0); // wait for command complete
-    outpw(REG_GE2D_INTSTS, 1); // clear interrupt status
+
+    ge2dWaitForCompletion ();
 }
 
 /**
