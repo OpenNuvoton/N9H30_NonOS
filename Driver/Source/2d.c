@@ -2484,9 +2484,9 @@ void ge2dSpriteBlt_Screen(int destx, int desty, int sprite_width, int sprite_hei
 
     outpw(REG_GE2D_CTL, cmd32);
 
+    outpw(REG_GE2D_TRG, 1);
+		
     ge2dWaitForCompletion ();
-
-    outpw(REG_GE2D_INTSTS, 1); // clear interrupt status
 }
 
 /**
