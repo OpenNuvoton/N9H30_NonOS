@@ -10,8 +10,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "N9H30.h"
-#include "fmi.h"
+#include "n9h30.h"
+#include "sdh.h"
 #include "ff.h"
 #include "diskio.h"
 
@@ -25,6 +25,7 @@
 #define USBH_DRIVE_3    6        /* USB Mass Storage */
 #define USBH_DRIVE_4    7        /* USB Mass Storage */
 
+
 #define DISK_BUFFER_SIZE    (32*1024)
 #ifdef __ICCARM__
 #pragma data_alignment = 32
@@ -35,14 +36,30 @@ static BYTE  fatfs_win_buff_pool[DISK_BUFFER_SIZE] __attribute__((aligned(32)));
 
 BYTE  *fatfs_win_buff;
 
+/* Definitions of physical drive number for each media */
+
+#define DRV_SD0     0
+#define DRV_SD1     1
+
+
 /*-----------------------------------------------------------------------*/
 /* Initialize a Drive                                                    */
 /*-----------------------------------------------------------------------*/
 
 DSTATUS disk_initialize (BYTE pdrv)       /* Physical drive number (0..) */
 {
-    if (FMI_EMMC_GET_CARD_CAPACITY() == 0)
-        return STA_NOINIT;
+
+    switch (pdrv) {
+    case DRV_SD0 :
+        if (SD_GET_CARD_CAPACITY(SD_PORT0) == 0)
+            return STA_NOINIT;
+        break;
+
+    case DRV_SD1 :
+        if (SD_GET_CARD_CAPACITY(SD_PORT1) == 0)
+            return STA_NOINIT;
+        break;
+    }
     return RES_OK;
 }
 
@@ -53,10 +70,21 @@ DSTATUS disk_initialize (BYTE pdrv)       /* Physical drive number (0..) */
 
 DSTATUS disk_status (BYTE pdrv)       /* Physical drive number (0..) */
 {
-    if (FMI_EMMC_GET_CARD_CAPACITY() == 0)
-        return STA_NOINIT;
+
+    switch (pdrv) {
+    case DRV_SD0 :
+        if (SD_GET_CARD_CAPACITY(SD_PORT0) == 0)
+            return STA_NOINIT;
+        break;
+
+    case DRV_SD1 :
+        if (SD_GET_CARD_CAPACITY(SD_PORT1) == 0)
+            return STA_NOINIT;
+        break;
+    }
     return RES_OK;
 }
+
 
 
 /*-----------------------------------------------------------------------*/
@@ -72,7 +100,7 @@ DRESULT disk_read (
 {
 	DRESULT   ret;
 
-    outpw(REG_FMI_CTL, FMI_CTL_EMMCEN_Msk);
+    outpw(REG_SDH_GCTL, SDH_GCTL_SDEN_Msk);
 	//sysprintf("disk_read - drv:%d, sec:%d, cnt:%d, buff:0x%x\n", pdrv, sector, count, (UINT32)buff);
 	
 	if (!((UINT32)buff & 0x80000000))
@@ -82,12 +110,22 @@ DRESULT disk_read (
 			return RES_ERROR;
 			
 		fatfs_win_buff = (BYTE *)((unsigned int)fatfs_win_buff_pool | 0x80000000);
-        ret = (DRESULT) eMMC_Read(fatfs_win_buff, sector, count);
+        if (pdrv == DRV_SD0)
+            ret = (DRESULT) SD_Read(SD_PORT0, fatfs_win_buff, sector, count);
+        else if (pdrv == DRV_SD1)
+            ret = (DRESULT) SD_Read(SD_PORT1, fatfs_win_buff, sector, count);
+        else
+			return RES_ERROR;
 		memcpy(buff, fatfs_win_buff, count * 512);
 	}
 	else
 	{
-        ret = (DRESULT) eMMC_Read(buff, sector, count);
+        if (pdrv == DRV_SD0)
+            ret = (DRESULT) SD_Read(SD_PORT0, buff, sector, count);
+        else if (pdrv == DRV_SD1)
+            ret = (DRESULT) SD_Read(SD_PORT1, buff, sector, count);
+        else
+			return RES_ERROR;
 	}
 	return ret;
 }
@@ -107,7 +145,7 @@ DRESULT disk_write (
 {
 	DRESULT   ret;
 
-    outpw(REG_FMI_CTL, FMI_CTL_EMMCEN_Msk);
+    outpw(REG_SDH_GCTL, SDH_GCTL_SDEN_Msk);
 	//sysprintf("disk_write - drv:%d, sec:%d, cnt:%d, buff:0x%x\n", pdrv, sector, count, (UINT32)buff);
 	
 	if (!((UINT32)buff & 0x80000000))
@@ -118,11 +156,21 @@ DRESULT disk_write (
 			
 		fatfs_win_buff = (BYTE *)((unsigned int)fatfs_win_buff_pool | 0x80000000);
 		memcpy(fatfs_win_buff, buff, count * 512);
-        ret = (DRESULT) eMMC_Write(fatfs_win_buff, sector, count);
+        if (pdrv == DRV_SD0)
+            ret = (DRESULT) SD_Write(SD_PORT0, fatfs_win_buff, sector, count);
+        else if (pdrv == DRV_SD1)
+            ret = (DRESULT) SD_Write(SD_PORT1, fatfs_win_buff, sector, count);
+        else
+			return RES_ERROR;
 	}
 	else
 	{
-        ret = (DRESULT) eMMC_Write((UINT8 *)buff, sector, count);
+        if (pdrv == DRV_SD0)
+            ret = (DRESULT) SD_Write(SD_PORT0, (UINT8 *)buff, sector, count);
+        else if (pdrv == DRV_SD1)
+            ret = (DRESULT) SD_Write(SD_PORT1, (UINT8 *)buff, sector, count);
+        else
+			return RES_ERROR;
 	}
 	return ret;
 }
@@ -141,19 +189,45 @@ DRESULT disk_ioctl (
 
     DRESULT res = RES_OK;
 
-    switch(cmd) {
+    switch (pdrv) {
+    case DRV_SD0 :
+        switch(cmd) {
         case CTRL_SYNC:
             break;
         case GET_SECTOR_COUNT:
-            *(DWORD*)buff = eMMC.totalSectorN;
+            *(DWORD*)buff = SD0.totalSectorN;
             break;
         case GET_SECTOR_SIZE:
-            *(WORD*)buff = eMMC.sectorSize;
+            *(WORD*)buff = SD0.sectorSize;
             break;
 
         default:
             res = RES_PARERR;
             break;
+        }
+        break;
+
+    case DRV_SD1 :
+        switch(cmd) {
+        case CTRL_SYNC:
+            break;
+        case GET_SECTOR_COUNT:
+            *(DWORD*)buff = SD1.totalSectorN;
+            break;
+        case GET_SECTOR_SIZE:
+            *(WORD*)buff = SD1.sectorSize;
+            break;
+
+        default:
+            res = RES_PARERR;
+            break;
+        }
+        break;
+
+    default:
+        res = RES_PARERR;
+        break;
+
     }
     return res;
 }

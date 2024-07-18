@@ -25,10 +25,11 @@
 #define USBH_DRIVE_3    6        /* USB Mass Storage */
 #define USBH_DRIVE_4    7        /* USB Mass Storage */
 
+#define DISK_BUFFER_SIZE    (32*1024)
 #if defined ( __GNUC__ ) && !(__CC_ARM)
-    __attribute__((aligned(32))) BYTE  fatfs_win_buff_pool[_MAX_SS];
+    __attribute__((aligned(32))) BYTE  fatfs_win_buff_pool[DISK_BUFFER_SIZE];
 #else
-    static __align(32) BYTE  fatfs_win_buff_pool[_MAX_SS] ;       /* FATFS window buffer is cachable. Must not use it directly. */
+    static __align(32) BYTE  fatfs_win_buff_pool[DISK_BUFFER_SIZE] ;       /* FATFS window buffer is cachable. Must not use it directly. */
 #endif
 BYTE  *fatfs_win_buff;
 
@@ -110,7 +111,7 @@ DRESULT disk_read(
     if (!((UINT32)buff & 0x80000000))
     {
         /* Disk read buffer is not non-cachable buffer. Use my non-cachable to do disk read. */
-        if (count * 512 > _MAX_SS)
+        if (count * 512 > DISK_BUFFER_SIZE)
             return RES_ERROR;
 
         fatfs_win_buff = (BYTE *)((unsigned int)fatfs_win_buff_pool | 0x80000000);
@@ -156,7 +157,7 @@ DRESULT disk_write(
     if (!((UINT32)buff & 0x80000000))
     {
         /* Disk write buffer is not non-cachable buffer. Use my non-cachable to do disk write. */
-        if (count * 512 > _MAX_SS)
+        if (count * 512 > DISK_BUFFER_SIZE)
             return RES_ERROR;
 
         fatfs_win_buff = (BYTE *)((unsigned int)fatfs_win_buff_pool | 0x80000000);

@@ -1,9 +1,13 @@
 /**************************************************************************//**
- * @file     spi_flash.c
- * @brief    Read/write Flash via SPI interface
+ * @file     main.c
+ * @version  V1.00
+ * $Revision: 1 $
+ * $Date: 15/05/07 4:46p $
+ * @brief    This is an I2S demo using NAU8822 audio codec, and used to play
+ *           back the input from line-in or MIC interface..
  *
  * @note
- * Copyright (C) 2018 Nuvoton Technology Corp. All rights reserved.
+ * Copyright (C) 2015 Nuvoton Technology Corp. All rights reserved.
  *
  ******************************************************************************/
 #include <stdio.h>
