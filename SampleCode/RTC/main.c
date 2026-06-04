@@ -20,6 +20,7 @@ VOID Smpl_RTC_PowerOff_Control(UINT32 u32Mode);
 
 #define HW_POWER_OFF	0
 #define SW_POWER_OFF	1
+#define RTC_TEST_DATA   0x55AA55AA
 
 /*---------------------------------------------------------------------------------------------------------*/
 /* RTC Tick Callback function                                                                             */
@@ -108,6 +109,7 @@ int main()
         sysprintf("7. H/W Power Off (System Crash) Control Flow Test\n");
         sysprintf("8. RTC Alarm Mask Test for Hour\n");
         sysprintf("9. RTC Frequency Compensation\n");
+		sysprintf("A. RTC Spare Register Read/Write Test\n");
         sysprintf("Q. Exit\n");
         u32Item = sysGetChar();
 
@@ -321,6 +323,43 @@ int main()
             case '9': {
                 sysprintf("Set RTC Frequency Compensation\n");
                 RTC_Ioctl(0,RTC_IOC_SET_FREQUENCY, 0,0);
+                break;
+            }
+			case 'A':
+			case 'a':	{
+				int ret = 0;
+				uint32_t write_val = RTC_TEST_DATA;
+				uint32_t read_val  = 0;
+
+                sysprintf("\nA. RTC Spare Register R/W Test\n");
+
+				/* Write Spare Register Test */
+                ret = RTC_WriteSpareRegister(RTC_SPR0, write_val);
+				if(ret != 0)
+				{
+					sysprintf("[FAIL] RTC Write to SPR0 failed (Err: %d)\n", ret);
+					break;
+				}
+				sysprintf("[OK] Successfully wrote 0x%08X to SPR0\n", write_val);
+
+				/* Read Spare Register Test */
+				ret = RTC_ReadSpareRegister(RTC_SPR0, &read_val);
+				if (ret != 0)
+				{
+					sysprintf("[FAIL] RTC Read from SPR0 failed (Err: %d)\n", ret);
+					break;
+				}
+				sysprintf("[OK] Successfully read 0x%08X from SPR0\n", read_val);
+
+				/* Data Verification */
+				if (read_val == write_val)
+				{
+					sysprintf("===> [SUCCESS] RTC Spare Register R/W Verification PASSED! \n\n");
+				}
+				else
+				{
+					sysprintf("===> [ERROR] Data Mismatch! Expected: 0x%08X, Got: 0x%08X\n\n", write_val, read_val);
+				}
                 break;
             }
             default:
